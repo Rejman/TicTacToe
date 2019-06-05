@@ -1,54 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Line?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-
-<VBox fx:id="mainVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainController">
-   <children>
-      <HBox spacing="5.0">
-         <children>
-            <ImageView fx:id="field1" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#click1" pickOnBounds="true" preserveRatio="true" />
-            <Line endX="-99.17158508300781" endY="102.29289245605469" startX="-100.0" />
-            <ImageView fx:id="field2" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#click2" pickOnBounds="true" preserveRatio="true" />
-            <Line endX="-100.82843017578125" endY="102.29289245605469" startX="-100.0" />
-            <ImageView fx:id="field3" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#click3" pickOnBounds="true" preserveRatio="true" />
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <padding>
-            <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </HBox>
-      <Line endX="245.2928924560547" endY="0.2928932309150696" startX="-100.0" />
-      <HBox spacing="5.0">
-         <children>
-            <ImageView fx:id="field4" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#click4" pickOnBounds="true" preserveRatio="true" />
-            <Line endX="-100.82843017578125" endY="102.29289245605469" startX="-100.0" />
-            <ImageView fx:id="field5" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#click5" pickOnBounds="true" preserveRatio="true" />
-            <Line endX="-100.82843017578125" endY="102.29289245605469" startX="-100.0" />
-            <ImageView fx:id="field6" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#click6" pickOnBounds="true" preserveRatio="true" />
-         </children>
-         <padding>
-            <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </HBox>
-      <Line endX="245.2928924560547" endY="0.2928932309150696" startX="-100.0" />
-      <HBox spacing="5.0">
-         <children>
-            <ImageView fx:id="field7" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#click7" pickOnBounds="true" preserveRatio="true" />
-            <Line endX="-100.82843017578125" endY="102.29289245605469" startX="-100.0" />
-            <ImageView fx:id="field8" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#click8" pickOnBounds="true" preserveRatio="true" />
-            <Line endX="-100.82843017578125" endY="102.29289245605469" startX="-100.0" />
-            <ImageView fx:id="field9" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#click9" pickOnBounds="true" preserveRatio="true" />
-         </children>
-         <padding>
-            <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </HBox>
-   </children>
-</VBox>
+<GridPane fx:id="mainGridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="Controllers.MainController">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+</GridPane>

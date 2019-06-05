@@ -1,209 +1,102 @@
 package Controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 public class MainController {
 
-
+    private Random generator = new Random();
+    private final int SIZE = 3;
     @FXML
-    private VBox mainVBox;
+    private GridPane mainGridPane;
 
-    @FXML
-    private ImageView field1;
-
-    @FXML
-    private ImageView field2;
-
-    @FXML
-    private ImageView field3;
-
-    @FXML
-    private ImageView field4;
-
-    @FXML
-    private ImageView field5;
-
-    @FXML
-    private ImageView field6;
-
-    @FXML
-    private ImageView field7;
-
-    @FXML
-    private ImageView field8;
-
-    @FXML
-    private ImageView field9;
-
-    private boolean isCross = true;
     private Image cross = new Image("/img/cross.png");
     private Image circle = new Image("/img/circle.png");
+    private Image empty = new Image("/img/empty.png");
 
-
+    private List<Integer> emptyFields;
+    private List<ImageView> fields;
 
     @FXML
     void initialize() {
+        fields = new ArrayList<ImageView>();
+        emptyFields = new ArrayList<Integer>();
+        emptyFields.add(0);
+        emptyFields.add(1);
+        emptyFields.add(2);
+        emptyFields.add(3);
+        emptyFields.add(4);
+        emptyFields.add(5);
+        emptyFields.add(6);
+        emptyFields.add(7);
+        emptyFields.add(8);
 
-        Field fields[] = new Field[9];
-        fields[0]=new Field(field1);
-        fields[1]=new Field(field2);
-        fields[2]=new Field(field3);
-        fields[3]=new Field(field4);
-        fields[4]=new Field(field5);
-        fields[5]=new Field(field6);
-        fields[6]=new Field(field7);
-        fields[7]=new Field(field8);
-        fields[8]=new Field(field9);
+        buildFields();
+    }
 
-        for (final Field field:fields
-             ) {
-            field.field.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                public void handle(MouseEvent event) {
-                    if(field.isEmpty){
-                        if(isCross){
-                            field.field.setImage(cross);
-                        }
-                        else
-                        {
-                            field.field.setImage(circle);
-                        }
-                        if(isCross) isCross=false;
-                        else isCross=true;
-                        field.isEmpty=false;
+    private void buildFields(){
+        final int WIDTH = 100;
+        final int HEIGHT = 100;
+
+        for(int i=0; i<SIZE; i++){
+
+            for(int j=0;j<SIZE; j++){
+
+                final ImageView imageView = new ImageView();
+                imageView.setFitWidth(WIDTH);
+                imageView.setFitWidth(HEIGHT);
+                imageView.setImage(empty);
+                imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    public void handle(MouseEvent event) {
+                        int id = mainGridPane.getChildren().indexOf(imageView);
+                        click(id);
+                        move();
                     }
-                }
-            });
+                });
+                fields.add(imageView);
+                mainGridPane.add(imageView, j, i);
+            }
         }
-
-
-    }
-
-    void click(MouseEvent event){
-
-    }
-
-    @FXML
-    void click1(MouseEvent event) {
+        mainGridPane.setGridLinesVisible(true);
+        mainGridPane.setCursor(Cursor.HAND);
 
     }
 
-    @FXML
-    void click2(MouseEvent event) {
-        if(isCross){
-            field2.setImage(cross);
+    private boolean click(int id){
+        int field = emptyFields.indexOf(id);
+        if(field>=0){
+            emptyFields.remove(new Integer(id));
+            ImageView imageView = (ImageView) mainGridPane.getChildren().get(id);
+            imageView.setImage(cross);
+            return true;
         }
-        else
-        {
-            field2.setImage(circle);
+        else{
+            System.out.println("Fields is not empty");
+            return false;
         }
-        if(isCross) isCross=false;
-        else isCross=true;
     }
 
-    @FXML
-    void click3(MouseEvent event) {
-        if(isCross){
-            field3.setImage(cross);
-        }
-        else
-        {
-            field3.setImage(circle);
-        }
-        if(isCross) isCross=false;
-        else isCross=true;
-    }
-
-    @FXML
-    void click4(MouseEvent event) {
-        if(isCross){
-            field4.setImage(cross);
-        }
-        else
-        {
-            field4.setImage(circle);
-        }
-        if(isCross) isCross=false;
-        else isCross=true;
-    }
-
-    @FXML
-    void click5(MouseEvent event) {
-        if(isCross){
-            field5.setImage(cross);
-        }
-        else
-        {
-            field5.setImage(circle);
-        }
-        if(isCross) isCross=false;
-        else isCross=true;
-    }
-
-    @FXML
-    void click6(MouseEvent event) {
-        if(isCross){
-            field6.setImage(cross);
-        }
-        else
-        {
-            field6.setImage(circle);
-        }
-        if(isCross) isCross=false;
-        else isCross=true;
-    }
-
-    @FXML
-    void click7(MouseEvent event) {
-        if(isCross){
-            field7.setImage(cross);
-        }
-        else
-        {
-            field7.setImage(circle);
-        }
-        if(isCross) isCross=false;
-        else isCross=true;
-    }
-
-    @FXML
-    void click8(MouseEvent event) {
-        if(isCross){
-            field8.setImage(cross);
-        }
-        else
-        {
-            field8.setImage(circle);
-        }
-        if(isCross) isCross=false;
-        else isCross=true;
-    }
-
-    @FXML
-    void click9(MouseEvent event) {
-        if(isCross){
-            field9.setImage(cross);
-        }
-        else
-        {
-            field9.setImage(circle);
-        }
-        if(isCross) isCross=false;
-        else isCross=true;
-    }
-    class Field{
-        public ImageView field;
-        public boolean isEmpty = true;
-
-        public Field(ImageView field) {
-            this.field = field;
+    private void move(){
+        int moves = emptyFields.size();
+        if(moves>0){
+            int id = generator.nextInt(moves);
+            int field = emptyFields.get(id);
+            ImageView imageView = (ImageView) mainGridPane.getChildren().get(field);
+            imageView.setImage(circle);
+            emptyFields.remove(id);
         }
     }
 }
+
