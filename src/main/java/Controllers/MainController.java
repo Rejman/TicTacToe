@@ -62,6 +62,7 @@ public class MainController {
                     public void handle(MouseEvent event) {
                         int id = mainGridPane.getChildren().indexOf(imageView);
                         click(id);
+                        move();
                     }
                 });
                 fields.add(imageView);
@@ -87,6 +88,15 @@ public class MainController {
         }
     }
 
-
+    private void move(){
+        int moves = emptyFields.size();
+        if(moves>0){
+            int id = generator.nextInt(moves);
+            int field = emptyFields.get(id);
+            ImageView imageView = (ImageView) mainGridPane.getChildren().get(field);
+            imageView.setImage(circle);
+            emptyFields.remove(id);
+        }
+    }
 }
 
