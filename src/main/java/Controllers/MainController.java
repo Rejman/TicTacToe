@@ -77,26 +77,27 @@ public class MainController {
     private void addMauseAction(final ImageView imageView){
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
-                int id = mainGridPane.getChildren().indexOf(imageView);
-                move(id, cross);
-                randomMove(circle);
-                statistics();
+
+                int id = allFields.indexOf(imageView);
+                
+                if(emptyFields.indexOf(id)!=(-1)){
+                    move(id, cross);
+                    randomMove(circle);
+                    statistics();
+                }else{
+                    System.out.println("Not empty");
+                }
+
             }
         });
     }
-    private boolean move(int id, Image sign){
-        int field = emptyFields.indexOf(id);
-        if(field>=0){
-            playerSteps.add(id);
-            emptyFields.remove(new Integer(id));
-            ImageView imageView = (ImageView) mainGridPane.getChildren().get(id);
-            imageView.setImage(sign);
-            return true;
-        }
-        else{
-            System.out.println("Fields is not empty");
-            return false;
-        }
+    private void move(int id, Image sign){
+
+        playerSteps.add(id);
+        emptyFields.remove(new Integer(id));
+        ImageView imageView = (ImageView) mainGridPane.getChildren().get(id);
+        imageView.setImage(sign);
+
         
     }
 
