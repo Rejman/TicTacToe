@@ -15,13 +15,10 @@ public class MainController {
 
     private final int SIZE_OF_BOARD = 3;
     private final int NUMBER_OF_FIELDS = 9;
-    private final int MAX_HEIGHT_OF_LOGS_LIST = 100;
     private Random generator = new Random();
 
     @FXML
     private GridPane gameBoard;
-    @FXML
-    private ListView<String> logListView;
 
     private Image cross = new Image("/img/cross.png");
     private Image circle = new Image("/img/circle.png");
@@ -36,7 +33,6 @@ public class MainController {
 
     @FXML
     void initialize() {
-        logListView.setMaxHeight(MAX_HEIGHT_OF_LOGS_LIST);
 
         computerSteps = new LinkedHashSet<Integer>();
         playerSteps = new LinkedHashSet<Integer>();
@@ -85,9 +81,8 @@ public class MainController {
                 if (emptyFields.indexOf(id) != (-1)) {
                     move(id, cross);
                     randomMove(circle);
-                    statistics();
                 } else {
-                    addLog("Not empty");
+                    System.out.println("Not empty");
                 }
             }
         });
@@ -116,15 +111,6 @@ public class MainController {
         }
     }
 
-    private void statistics() {
-
-        addLog("Player - " + playerSteps.toString());
-        addLog("Computer - " + computerSteps.toString());
-    }
-
-    private void addLog(String message){
-        logListView.getItems().add(message);
-    }
 
 }
 
