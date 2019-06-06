@@ -10,10 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class MainController {
 
@@ -29,8 +26,13 @@ public class MainController {
     private List<Integer> emptyFields;
     private List<ImageView> fields;
 
+    private Set<Integer> computerSteps;
+    private Set<Integer> playerSteps;
+
     @FXML
     void initialize() {
+        computerSteps = new LinkedHashSet<Integer>();
+        playerSteps = new LinkedHashSet<Integer>();
         fields = new ArrayList<ImageView>();
         emptyFields = new ArrayList<Integer>();
         emptyFields.add(0);
@@ -44,6 +46,7 @@ public class MainController {
         emptyFields.add(8);
 
         buildFields();
+
     }
 
     private void buildFields(){
@@ -62,7 +65,8 @@ public class MainController {
                     public void handle(MouseEvent event) {
                         int id = mainGridPane.getChildren().indexOf(imageView);
                         click(id);
-                        move();
+                        move(circle);
+                        statistics();
                     }
                 });
                 fields.add(imageView);
@@ -77,6 +81,7 @@ public class MainController {
     private boolean click(int id){
         int field = emptyFields.indexOf(id);
         if(field>=0){
+            playerSteps.add(id);
             emptyFields.remove(new Integer(id));
             ImageView imageView = (ImageView) mainGridPane.getChildren().get(id);
             imageView.setImage(cross);
@@ -88,15 +93,26 @@ public class MainController {
         }
     }
 
-    private void move(){
+    private void move(Image shape) {
+
         int moves = emptyFields.size();
         if(moves>0){
+
             int id = generator.nextInt(moves);
             int field = emptyFields.get(id);
+            computerSteps.add(field);
             ImageView imageView = (ImageView) mainGridPane.getChildren().get(field);
-            imageView.setImage(circle);
+            imageView.setImage(shape);
             emptyFields.remove(id);
         }
+    }
+
+    private void statistics(){
+        System.out.println("Ruchy gracza: ");
+        System.out.println(playerSteps);
+        System.out.println("Ruchy komputera: ");
+        System.out.println(computerSteps);
+
     }
 }
 
