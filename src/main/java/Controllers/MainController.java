@@ -111,7 +111,7 @@ public class MainController {
     }
 
     private void statistics() {
-        
+
         System.out.println("Ruchy gracza: ");
         System.out.println(playerSteps);
         System.out.println("Ruchy komputera: ");
