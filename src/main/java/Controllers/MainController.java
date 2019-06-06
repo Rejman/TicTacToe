@@ -1,10 +1,8 @@
 package Controllers;
 
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.ImageCursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -14,18 +12,21 @@ import java.util.*;
 
 public class MainController {
 
+    private final int SIZE_OF_BOARD = 3;
+    private final int NUMBER_OF_FIELDS = 9;
     private Random generator = new Random();
-    private final int SIZE = 3;
+
     @FXML
     private GridPane mainGridPane;
 
     private Image cross = new Image("/img/cross.png");
     private Image circle = new Image("/img/circle.png");
-    private Image empty = new Image("/img/empty.png");
+    private Image blank = new Image("/img/empty.png");
 
     private List<Integer> emptyFields;
-    private List<ImageView> fields;
+    private List<ImageView> allFields;
 
+    //history of moves
     private Set<Integer> computerSteps;
     private Set<Integer> playerSteps;
 
@@ -33,86 +34,88 @@ public class MainController {
     void initialize() {
         computerSteps = new LinkedHashSet<Integer>();
         playerSteps = new LinkedHashSet<Integer>();
-        fields = new ArrayList<ImageView>();
+        allFields = new ArrayList<ImageView>();
         emptyFields = new ArrayList<Integer>();
-        emptyFields.add(0);
-        emptyFields.add(1);
-        emptyFields.add(2);
-        emptyFields.add(3);
-        emptyFields.add(4);
-        emptyFields.add(5);
-        emptyFields.add(6);
-        emptyFields.add(7);
-        emptyFields.add(8);
-
+        // set available moves
+        for (int i = 0; i < NUMBER_OF_FIELDS; i++) {
+            emptyFields.add(i);
+        }
+        //wypełnienie pola gry obrazkami
         buildFields();
 
     }
 
-    private void buildFields(){
-        final int WIDTH = 100;
-        final int HEIGHT = 100;
+    private void buildFields() {
 
-        for(int i=0; i<SIZE; i++){
+        for (int i = 0; i < SIZE_OF_BOARD; i++) {
 
-            for(int j=0;j<SIZE; j++){
+            for (int j = 0; j < SIZE_OF_BOARD; j++) {
 
-                final ImageView imageView = new ImageView();
-                imageView.setFitWidth(WIDTH);
-                imageView.setFitWidth(HEIGHT);
-                imageView.setImage(empty);
-                imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    public void handle(MouseEvent event) {
-                        int id = mainGridPane.getChildren().indexOf(imageView);
-                        click(id);
-                        move(circle);
-                        statistics();
-                    }
-                });
-                fields.add(imageView);
-                mainGridPane.add(imageView, j, i);
+                ImageView field = new ImageView();
+
+                clearField(field);
+                addMauseAction(field);
+                allFields.add(field);
+                mainGridPane.add(field, j, i);
+
             }
         }
+        //add lines between fields
         mainGridPane.setGridLinesVisible(true);
         mainGridPane.setCursor(Cursor.HAND);
 
     }
 
-    private boolean click(int id){
-        int field = emptyFields.indexOf(id);
-        if(field>=0){
-            playerSteps.add(id);
-            emptyFields.remove(new Integer(id));
-            ImageView imageView = (ImageView) mainGridPane.getChildren().get(id);
-            imageView.setImage(cross);
-            return true;
-        }
-        else{
-            System.out.println("Fields is not empty");
-            return false;
-        }
+    private void clearField(ImageView imageView) {
+        imageView.setImage(blank);
     }
 
-    private void move(Image shape) {
+    private void addMauseAction(final ImageView imageView) {
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
 
-        int moves = emptyFields.size();
-        if(moves>0){
+                int id = allFields.indexOf(imageView);
 
-            int id = generator.nextInt(moves);
-            int field = emptyFields.get(id);
+                if (emptyFields.indexOf(id) != (-1)) {
+                    move(id, cross);
+                    randomMove(circle);
+                    statistics();
+                } else {
+                    System.out.println("Not empty");
+                }
+            }
+        });
+    }
+
+    private void move(int id, Image sign) {
+
+        playerSteps.add(id);
+        emptyFields.remove(new Integer(id));
+        ImageView imageView = (ImageView) mainGridPane.getChildren().get(id);
+        imageView.setImage(sign);
+
+    }
+
+    private void randomMove(Image sign) {
+
+        int numberOfEmptyFields = emptyFields.size();
+        if (numberOfEmptyFields > 0) {
+
+            int randomId = generator.nextInt(numberOfEmptyFields);
+            int field = emptyFields.get(randomId);
+            emptyFields.remove(randomId);
             computerSteps.add(field);
-            ImageView imageView = (ImageView) mainGridPane.getChildren().get(field);
-            imageView.setImage(shape);
-            emptyFields.remove(id);
+            ImageView imageView = allFields.get(field);
+            imageView.setImage(sign);
         }
     }
 
-    private void statistics(){
+    private void statistics() {
+
         System.out.println("Ruchy gracza: ");
         System.out.println(playerSteps);
         System.out.println("Ruchy komputera: ");
         System.out.println(computerSteps);
-
     }
 }
 
