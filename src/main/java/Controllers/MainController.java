@@ -1,5 +1,7 @@
 package Controllers;
 
+import Logic.Game;
+import Logic.Player;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -31,6 +33,8 @@ public class MainController {
     private Set<Integer> computerSteps;
     private Set<Integer> playerSteps;
 
+    private Game game;
+
     @FXML
     void initialize() {
 
@@ -44,6 +48,7 @@ public class MainController {
         }
         //wypełnienie pola gry obrazkami
         buildFields();
+        game = new Game();
 
     }
 
@@ -78,13 +83,14 @@ public class MainController {
 
                 int id = allFields.indexOf(imageView);
 
-                if (emptyFields.indexOf(id) != (-1)) {
-                    move(id, cross);
-                    randomMove(circle);
-                } else {
-                    System.out.println("Not empty");
-                }
+                game.move(id, Player.ONE);
+                addImageOnBoard(id, cross);
+                //move(id, cross);
+                id = game.randomMove(Player.TWO);
+                addImageOnBoard(id, circle);
+                //randomMove(circle);
             }
+
         });
     }
 
@@ -96,7 +102,10 @@ public class MainController {
         imageView.setImage(sign);
 
     }
-
+    public void addImageOnBoard(int id, Image sign){
+        ImageView imageView = (ImageView) gameBoard.getChildren().get(id);
+        imageView.setImage(sign);
+    }
     private void randomMove(Image sign) {
 
         int numberOfEmptyFields = emptyFields.size();
