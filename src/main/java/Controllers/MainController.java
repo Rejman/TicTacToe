@@ -3,6 +3,7 @@ package Controllers;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -14,10 +15,13 @@ public class MainController {
 
     private final int SIZE_OF_BOARD = 3;
     private final int NUMBER_OF_FIELDS = 9;
+    private final int MAX_HEIGHT_OF_LOGS_LIST = 100;
     private Random generator = new Random();
 
     @FXML
-    private GridPane mainGridPane;
+    private GridPane gameBoard;
+    @FXML
+    private ListView<String> logListView;
 
     private Image cross = new Image("/img/cross.png");
     private Image circle = new Image("/img/circle.png");
@@ -32,6 +36,8 @@ public class MainController {
 
     @FXML
     void initialize() {
+        logListView.setMaxHeight(MAX_HEIGHT_OF_LOGS_LIST);
+
         computerSteps = new LinkedHashSet<Integer>();
         playerSteps = new LinkedHashSet<Integer>();
         allFields = new ArrayList<ImageView>();
@@ -56,13 +62,13 @@ public class MainController {
                 clearField(field);
                 addMauseAction(field);
                 allFields.add(field);
-                mainGridPane.add(field, j, i);
+                gameBoard.add(field, j, i);
 
             }
         }
         //add lines between fields
-        mainGridPane.setGridLinesVisible(true);
-        mainGridPane.setCursor(Cursor.HAND);
+        gameBoard.setGridLinesVisible(true);
+        gameBoard.setCursor(Cursor.HAND);
 
     }
 
@@ -81,7 +87,7 @@ public class MainController {
                     randomMove(circle);
                     statistics();
                 } else {
-                    System.out.println("Not empty");
+                    addLog("Not empty");
                 }
             }
         });
@@ -91,7 +97,7 @@ public class MainController {
 
         playerSteps.add(id);
         emptyFields.remove(new Integer(id));
-        ImageView imageView = (ImageView) mainGridPane.getChildren().get(id);
+        ImageView imageView = (ImageView) gameBoard.getChildren().get(id);
         imageView.setImage(sign);
 
     }
@@ -112,10 +118,13 @@ public class MainController {
 
     private void statistics() {
 
-        System.out.println("Ruchy gracza: ");
-        System.out.println(playerSteps);
-        System.out.println("Ruchy komputera: ");
-        System.out.println(computerSteps);
+        addLog("Player - " + playerSteps.toString());
+        addLog("Computer - " + computerSteps.toString());
     }
+
+    private void addLog(String message){
+        logListView.getItems().add(message);
+    }
+
 }
 
