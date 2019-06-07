@@ -2,6 +2,7 @@ package Controllers;
 
 import Logic.Game;
 import Logic.Player;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -105,7 +106,21 @@ public class MainController {
 
     }
 
+    private void clearFields(){
 
+        for (ImageView image:allFields
+             ) {
+            image.setImage(blank);
+        }
+    }
+    @FXML
+    void resetGame(ActionEvent event) {
+        clearFields();
+        game.reset();
+        playerMovesLabel.setText("empty");
+        computerMovesLabel.setText("empty");
+        randomMove(Player.TWO, cross);
+    }
 
 }
 

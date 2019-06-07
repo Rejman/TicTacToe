@@ -6,10 +6,10 @@ import java.util.*;
 
 public class Game {
     public static final int NUMBER_OF_FIELDS = 9;
+
     private Random generator = new Random();
 
     private List<Integer> emptyFields;
-    private List<ImageView> allFields;
 
     private Set<Integer> player1Steps;
     private Set<Integer> player2Steps;
@@ -27,12 +27,9 @@ public class Game {
         player1Steps = new LinkedHashSet<Integer>();
         player2Steps = new LinkedHashSet<Integer>();
 
-        allFields = new ArrayList<ImageView>();
         emptyFields = new ArrayList<Integer>();
-        // set available moves
-        for (int i = 0; i < NUMBER_OF_FIELDS; i++) {
-            emptyFields.add(i);
-        }
+        setEmptyFields();
+
 
     }
     public boolean move(int position, Player player) {
@@ -48,6 +45,13 @@ public class Game {
         }
 
     }
+    private void setEmptyFields(){
+        emptyFields.clear();
+        // set available moves
+        for (int i = 0; i < NUMBER_OF_FIELDS; i++) {
+            emptyFields.add(i);
+        }
+    }
     public int randomMove(Player player){
         int numberOfEmptyFields = emptyFields.size();
         if (numberOfEmptyFields > 0) {
@@ -61,5 +65,10 @@ public class Game {
             return field;
         }
         return -1;
+    }
+    public void reset(){
+        setEmptyFields();
+        player1Steps.clear();
+        player2Steps.clear();
     }
 }
