@@ -15,8 +15,8 @@ import java.util.*;
 
 public class MainController {
 
-    private final int SIZE_OF_BOARD = 3;
-    private final int NUMBER_OF_FIELDS = 9;
+    private int sizeOfBoard;
+    private final int SIZE_OF_IMAGE = 100;
 
     @FXML
     private Label playerMovesLabel;
@@ -38,21 +38,25 @@ public class MainController {
     void initialize() {
 
         allFields = new ArrayList<ImageView>();
+
+
+        game = new Game();
+        sizeOfBoard = (int) Math.sqrt(Game.NUMBER_OF_FIELDS);
         //wypełnienie pola gry obrazkami
         buildFields();
-        game = new Game();
         randomMove(Player.TWO, cross);
 
     }
 
     private void buildFields() {
 
-        for (int i = 0; i < SIZE_OF_BOARD; i++) {
+        for (int i = 0; i < sizeOfBoard; i++) {
 
-            for (int j = 0; j < SIZE_OF_BOARD; j++) {
+            for (int j = 0; j < sizeOfBoard; j++) {
 
                 ImageView field = new ImageView();
-
+                field.setFitWidth(SIZE_OF_IMAGE);
+                field.setFitHeight(SIZE_OF_IMAGE);
                 clearField(field);
                 addMauseAction(field);
                 allFields.add(field);

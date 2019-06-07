@@ -5,7 +5,7 @@ import java.util.*;
 
 
 public class Game {
-    private final int NUMBER_OF_FIELDS = 9;
+    public static final int NUMBER_OF_FIELDS = 9;
     private Random generator = new Random();
 
     private List<Integer> emptyFields;
