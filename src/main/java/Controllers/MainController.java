@@ -1,5 +1,7 @@
 package Controllers;
 
+import Logic.Game;
+import Logic.Player;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -31,6 +33,8 @@ public class MainController {
     private Set<Integer> computerSteps;
     private Set<Integer> playerSteps;
 
+    private Game game;
+
     @FXML
     void initialize() {
 
@@ -44,6 +48,8 @@ public class MainController {
         }
         //wypełnienie pola gry obrazkami
         buildFields();
+        game = new Game();
+        randomMove(Player.TWO, cross);
 
     }
 
@@ -78,38 +84,27 @@ public class MainController {
 
                 int id = allFields.indexOf(imageView);
 
-                if (emptyFields.indexOf(id) != (-1)) {
-                    move(id, cross);
-                    randomMove(circle);
-                } else {
-                    System.out.println("Not empty");
+                boolean correct = game.move(id, Player.ONE);
+                if(correct){
+                    addImageOnBoard(id, circle);
+                    randomMove(Player.TWO, cross);
                 }
+
             }
+
         });
     }
 
-    private void move(int id, Image sign) {
-
-        playerSteps.add(id);
-        emptyFields.remove(new Integer(id));
+    private void addImageOnBoard(int id, Image sign){
         ImageView imageView = (ImageView) gameBoard.getChildren().get(id);
         imageView.setImage(sign);
-
     }
 
-    private void randomMove(Image sign) {
-
-        int numberOfEmptyFields = emptyFields.size();
-        if (numberOfEmptyFields > 0) {
-
-            int randomId = generator.nextInt(numberOfEmptyFields);
-            int field = emptyFields.get(randomId);
-            emptyFields.remove(randomId);
-            computerSteps.add(field);
-            ImageView imageView = allFields.get(field);
-            imageView.setImage(sign);
-        }
+    private void randomMove(Player player, Image sign){
+        int id = game.randomMove(player);
+        if(id!=(-1)) addImageOnBoard(id, sign);
     }
+
 
 
 }
