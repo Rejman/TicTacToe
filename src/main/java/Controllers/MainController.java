@@ -5,7 +5,7 @@ import Logic.Player;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -17,7 +17,11 @@ public class MainController {
 
     private final int SIZE_OF_BOARD = 3;
     private final int NUMBER_OF_FIELDS = 9;
-    private Random generator = new Random();
+
+    @FXML
+    private Label playerMovesLabel;
+    @FXML
+    private Label computerMovesLabel;
 
     @FXML
     private GridPane gameBoard;
@@ -26,26 +30,14 @@ public class MainController {
     private Image circle = new Image("/img/circle.png");
     private Image blank = new Image("/img/empty.png");
 
-    private List<Integer> emptyFields;
     private List<ImageView> allFields;
-
-    //history of moves
-    private Set<Integer> computerSteps;
-    private Set<Integer> playerSteps;
 
     private Game game;
 
     @FXML
     void initialize() {
 
-        computerSteps = new LinkedHashSet<Integer>();
-        playerSteps = new LinkedHashSet<Integer>();
         allFields = new ArrayList<ImageView>();
-        emptyFields = new ArrayList<Integer>();
-        // set available moves
-        for (int i = 0; i < NUMBER_OF_FIELDS; i++) {
-            emptyFields.add(i);
-        }
         //wypełnienie pola gry obrazkami
         buildFields();
         game = new Game();
@@ -86,6 +78,7 @@ public class MainController {
 
                 boolean correct = game.move(id, Player.ONE);
                 if(correct){
+                    playerMovesLabel.setText(game.getPlayer1Steps().toString());
                     addImageOnBoard(id, circle);
                     randomMove(Player.TWO, cross);
                 }
@@ -103,6 +96,9 @@ public class MainController {
     private void randomMove(Player player, Image sign){
         int id = game.randomMove(player);
         if(id!=(-1)) addImageOnBoard(id, sign);
+
+        computerMovesLabel.setText(game.getPlayer2Steps().toString());
+
     }
 
 

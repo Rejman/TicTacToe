@@ -1,8 +1,6 @@
 package Logic;
 
 import javafx.scene.image.ImageView;
-
-import javax.naming.OperationNotSupportedException;
 import java.util.*;
 
 
@@ -15,6 +13,14 @@ public class Game {
 
     private Set<Integer> player1Steps;
     private Set<Integer> player2Steps;
+
+    public Set<Integer> getPlayer1Steps() {
+        return player1Steps;
+    }
+
+    public Set<Integer> getPlayer2Steps() {
+        return player2Steps;
+    }
 
     public Game() {
 
