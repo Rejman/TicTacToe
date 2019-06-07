@@ -49,6 +49,7 @@ public class MainController {
         //wypełnienie pola gry obrazkami
         buildFields();
         game = new Game();
+        randomMove(Player.TWO, cross);
 
     }
 
@@ -85,12 +86,8 @@ public class MainController {
 
                 boolean correct = game.move(id, Player.ONE);
                 if(correct){
-                    addImageOnBoard(id, cross);
-                    //move(id, cross);
-                    id = game.randomMove(Player.TWO);
-                    if(id!=(-1)) addImageOnBoard(id, circle);
-
-                    //randomMove(circle);
+                    addImageOnBoard(id, circle);
+                    randomMove(Player.TWO, cross);
                 }
 
             }
@@ -98,31 +95,16 @@ public class MainController {
         });
     }
 
-    private void move(int id, Image sign) {
-
-        playerSteps.add(id);
-        emptyFields.remove(new Integer(id));
-        ImageView imageView = (ImageView) gameBoard.getChildren().get(id);
-        imageView.setImage(sign);
-
-    }
-    public void addImageOnBoard(int id, Image sign){
+    private void addImageOnBoard(int id, Image sign){
         ImageView imageView = (ImageView) gameBoard.getChildren().get(id);
         imageView.setImage(sign);
     }
-    private void randomMove(Image sign) {
 
-        int numberOfEmptyFields = emptyFields.size();
-        if (numberOfEmptyFields > 0) {
-
-            int randomId = generator.nextInt(numberOfEmptyFields);
-            int field = emptyFields.get(randomId);
-            emptyFields.remove(randomId);
-            computerSteps.add(field);
-            ImageView imageView = allFields.get(field);
-            imageView.setImage(sign);
-        }
+    private void randomMove(Player player, Image sign){
+        int id = game.randomMove(player);
+        if(id!=(-1)) addImageOnBoard(id, sign);
     }
+
 
 
 }
