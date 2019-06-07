@@ -83,12 +83,16 @@ public class MainController {
 
                 int id = allFields.indexOf(imageView);
 
-                game.move(id, Player.ONE);
-                addImageOnBoard(id, cross);
-                //move(id, cross);
-                id = game.randomMove(Player.TWO);
-                addImageOnBoard(id, circle);
-                //randomMove(circle);
+                boolean correct = game.move(id, Player.ONE);
+                if(correct){
+                    addImageOnBoard(id, cross);
+                    //move(id, cross);
+                    id = game.randomMove(Player.TWO);
+                    if(id!=(-1)) addImageOnBoard(id, circle);
+
+                    //randomMove(circle);
+                }
+
             }
 
         });

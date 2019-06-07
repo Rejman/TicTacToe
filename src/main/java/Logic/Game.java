@@ -29,16 +29,17 @@ public class Game {
         }
 
     }
-    public void move(int position, Player player) {
+    public boolean move(int position, Player player) {
 
         if(emptyFields.indexOf(position) != (-1)){
             emptyFields.remove(new Integer(position));
             if(player == Player.ONE) player1Steps.add(position);
             if(player == Player.TWO) player2Steps.add(position);
+            return true;
         } else {
         System.out.println("Not empty");
-    }
-
+        return false;
+        }
 
     }
     public int randomMove(Player player){
@@ -47,7 +48,7 @@ public class Game {
 
             int randomId = generator.nextInt(numberOfEmptyFields);
             int field = emptyFields.get(randomId);
-            emptyFields.remove(new Integer(randomId));
+            emptyFields.remove(randomId);
 
             if(player == Player.ONE) player1Steps.add(field);
             if(player == Player.TWO) player2Steps.add(field);
