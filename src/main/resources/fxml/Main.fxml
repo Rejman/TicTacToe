@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -41,20 +42,20 @@
                   <Insets />
                </VBox.margin>
             </GridPane>
-            <GridPane hgap="10.0">
+            <GridPane>
               <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="50.0" />
-                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints valignment="BOTTOM" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
+                  <ListView fx:id="playerListView" prefHeight="150.0" prefWidth="100.0" GridPane.rowIndex="1" />
+                  <ListView fx:id="computerListView" prefHeight="150.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="Player" />
-                  <Label text="Computer" GridPane.rowIndex="1" />
-                  <Label fx:id="playerMovesLabel" text="empty" GridPane.columnIndex="1" />
-                  <Label fx:id="computerMovesLabel" text="empty" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="Computer" GridPane.columnIndex="1" />
                </children>
             </GridPane>
          </children>

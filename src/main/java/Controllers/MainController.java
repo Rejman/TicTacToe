@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -20,9 +21,9 @@ public class MainController {
     private final int SIZE_OF_IMAGE = 100;
 
     @FXML
-    private Label playerMovesLabel;
+    private ListView<Integer> playerListView;
     @FXML
-    private Label computerMovesLabel;
+    private ListView<Integer> computerListView;
 
     @FXML
     private GridPane gameBoard;
@@ -83,7 +84,7 @@ public class MainController {
 
                 boolean correct = game.move(id, Player.ONE);
                 if(correct){
-                    playerMovesLabel.setText(game.getPlayer1Steps().toString());
+                    playerListView.getItems().add(id);
                     addImageOnBoard(id, circle);
                     randomMove(Player.TWO, cross);
                 }
@@ -102,7 +103,7 @@ public class MainController {
         int id = game.randomMove(player);
         if(id!=(-1)) addImageOnBoard(id, sign);
 
-        computerMovesLabel.setText(game.getPlayer2Steps().toString());
+        computerListView.getItems().add(id);
 
     }
 
@@ -117,8 +118,8 @@ public class MainController {
     void resetGame(ActionEvent event) {
         clearFields();
         game.reset();
-        playerMovesLabel.setText("empty");
-        computerMovesLabel.setText("empty");
+        playerListView.getItems().clear();
+        computerListView.getItems().clear();
         randomMove(Player.TWO, cross);
     }
 
