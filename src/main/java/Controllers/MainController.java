@@ -9,6 +9,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -82,7 +83,7 @@ public class MainController {
             public void handle(MouseEvent event) {
 
                 int id = allFields.indexOf(imageView);
-
+                deleteAllEffects();
                 boolean correct = game.move(id, Player.ONE);
                 if(correct){
                     playerListView.getItems().add(id);
@@ -122,6 +123,30 @@ public class MainController {
         playerListView.getItems().clear();
         computerListView.getItems().clear();
         randomMove(Player.TWO, cross);
+    }
+    @FXML
+    void showComputerMove(MouseEvent event) {
+        int id = computerListView.getSelectionModel().getSelectedItem();
+        highlightField(id);
+    }
+
+    @FXML
+    void showPlayerMove(MouseEvent event) {
+        int id = playerListView.getSelectionModel().getSelectedItem();
+        highlightField(id);
+    }
+
+    private void highlightField(int field){
+        deleteAllEffects();
+        Lighting lighting = new Lighting();
+        allFields.get(field).setEffect(lighting);
+    }
+
+    private void deleteAllEffects(){
+        for (ImageView field:allFields
+             ) {
+            field.setEffect(null);
+        }
     }
 }
 
