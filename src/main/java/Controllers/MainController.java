@@ -8,10 +8,12 @@ import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 
 import java.util.*;
 
@@ -20,6 +22,10 @@ public class MainController {
     private int sizeOfBoard;
     private final int SIZE_OF_IMAGE = 100;
 
+    @FXML
+    private GridPane historyOfMovesPane;
+    @FXML
+    private RadioMenuItem historyOfMovesCheckbox;
     @FXML
     private ListView<Integer> playerListView;
     @FXML
@@ -40,7 +46,7 @@ public class MainController {
     void initialize() {
 
         allFields = new ArrayList<ImageView>();
-
+        historyOfMovesPane.setVisible(false);
 
         game = new Game();
         sizeOfBoard = (int) Math.sqrt(Game.NUMBER_OF_FIELDS);
@@ -122,6 +128,19 @@ public class MainController {
         computerListView.getItems().clear();
         randomMove(Player.TWO, cross);
     }
-
+    void showHistoryOfMovesPanel(){
+        historyOfMovesPane.setMaxHeight(Region.USE_COMPUTED_SIZE);
+        
+        historyOfMovesPane.setVisible(true);
+    }
+    void hideHistoryOfMovesPanel(){
+        historyOfMovesPane.setMaxHeight(0);
+        historyOfMovesPane.setVisible(false);
+    }
+    @FXML
+    void setHistoryOfMoves(ActionEvent event) {
+        if(!historyOfMovesCheckbox.isSelected()) hideHistoryOfMovesPanel();
+        if(historyOfMovesCheckbox.isSelected()) showHistoryOfMovesPanel();
+    }
 }
 
