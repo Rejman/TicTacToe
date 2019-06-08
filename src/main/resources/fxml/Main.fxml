@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -24,11 +23,7 @@
                     <MenuItem mnemonicParsing="false" onAction="#resetGame" text="New game" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                     <items>
-                        <RadioMenuItem fx:id="historyOfMovesCheckbox" mnemonicParsing="false" onAction="#setHistoryOfMoves" text="history of moves" />
-                     </items>
-                </Menu>
+                <Menu mnemonicParsing="false" text="Edit" />
                   <Menu mnemonicParsing="false" text="Help" />
               </menus>
             </MenuBar>
@@ -47,7 +42,7 @@
                   <Insets />
                </VBox.margin>
             </GridPane>
-            <GridPane fx:id="historyOfMovesPane">
+            <GridPane>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" />
                 <ColumnConstraints hgrow="SOMETIMES" />

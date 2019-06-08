@@ -23,10 +23,6 @@ public class MainController {
     private final int SIZE_OF_IMAGE = 100;
 
     @FXML
-    private GridPane historyOfMovesPane;
-    @FXML
-    private RadioMenuItem historyOfMovesCheckbox;
-    @FXML
     private ListView<Integer> playerListView;
     @FXML
     private ListView<Integer> computerListView;
@@ -46,7 +42,6 @@ public class MainController {
     void initialize() {
 
         allFields = new ArrayList<ImageView>();
-        historyOfMovesPane.setVisible(false);
 
         game = new Game();
         sizeOfBoard = (int) Math.sqrt(Game.NUMBER_OF_FIELDS);
@@ -127,20 +122,6 @@ public class MainController {
         playerListView.getItems().clear();
         computerListView.getItems().clear();
         randomMove(Player.TWO, cross);
-    }
-    void showHistoryOfMovesPanel(){
-        historyOfMovesPane.setMaxHeight(Region.USE_COMPUTED_SIZE);
-        
-        historyOfMovesPane.setVisible(true);
-    }
-    void hideHistoryOfMovesPanel(){
-        historyOfMovesPane.setMaxHeight(0);
-        historyOfMovesPane.setVisible(false);
-    }
-    @FXML
-    void setHistoryOfMoves(ActionEvent event) {
-        if(!historyOfMovesCheckbox.isSelected()) hideHistoryOfMovesPanel();
-        if(historyOfMovesCheckbox.isSelected()) showHistoryOfMovesPanel();
     }
 }
 
