@@ -96,13 +96,14 @@ public class MainController {
                 int id = allFields.indexOf(imageView);
                 deleteAllEffects();
                 boolean correct = player.move(id);
+                game.getVerdict();
                 if(correct){
                     playerListView.getItems().add(id);
                     addImageOnBoard(id, player.getValue());
 
                     randomMove(computer);
                 }
-                if(game.getVerdict()!=Sign.NONE) delMauseActions();
+                game.getVerdict();
             }
 
         });
@@ -120,17 +121,6 @@ public class MainController {
             addMauseAction(field);
         }
         gameBoard.setCursor(Cursor.HAND);
-    }
-    private boolean isEnd(){
-        switch (game.getVerdict()){
-            case CIRCLE:
-                System.out.println("Circle won");
-                return true;
-            case CROSS:
-                System.out.println("Cross won");
-                return true;
-        }
-        return false;
     }
     private void addImageOnBoard(int id, Sign value){
         ImageView imageView = (ImageView) gameBoard.getChildren().get(id);

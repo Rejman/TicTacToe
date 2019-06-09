@@ -30,7 +30,10 @@ public class Judge {
             }
             if(cross>=numberOfWin) return Sign.CROSS;
             if(circle>=numberOfWin) return Sign.CIRCLE;
+
         }
+        circle = 0;
+        cross = 0;
 
         for(int i=0;i<numberOfRows;i++){
             sign = resultMatrix[i][column];
