@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
@@ -28,6 +29,11 @@ public class MainController {
 
     @FXML
     private GridPane gameBoard;
+    @FXML
+    private Label player1Label;
+
+    @FXML
+    private Label player2Label;
 
     private Image cross = new Image("/img/cross.png");
     private Image circle = new Image("/img/circle.png");
@@ -41,14 +47,12 @@ public class MainController {
     @FXML
     void initialize() {
 
-
-
-        allFields = new ArrayList<ImageView>();
-
         game = new Game();
-        this.player = new Player("Konrad",true, game);
+        this.player = new Player("You",true, game);
         this.computer = new Player("Computer",false, game);
-
+        player1Label.setText(player.getName());
+        player2Label.setText(computer.getName());
+        allFields = new ArrayList<ImageView>();
 
         sizeOfBoard = Game.numbuerOfRows;
         //wypełnienie pola gry obrazkami

@@ -50,4 +50,7 @@ public class Player {
     public void resetSteps(){
         steps.clear();
     }
+    public String getName(){
+        return this.name;
+    }
 }

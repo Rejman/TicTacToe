@@ -54,8 +54,8 @@
                <children>
                   <ListView fx:id="playerListView" onMouseClicked="#showPlayerMove" prefHeight="150.0" prefWidth="100.0" GridPane.rowIndex="1" />
                   <ListView fx:id="computerListView" onMouseClicked="#showComputerMove" prefHeight="150.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="Player" />
-                  <Label text="Computer" GridPane.columnIndex="1" />
+                  <Label fx:id="player1Label" text="Player1" />
+                  <Label fx:id="player2Label" text="Player2" GridPane.columnIndex="1" />
                </children>
             </GridPane>
          </children>
