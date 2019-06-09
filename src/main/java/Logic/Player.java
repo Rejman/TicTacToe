@@ -2,6 +2,7 @@ package Logic;
 
 import javafx.scene.image.Image;
 
+import java.util.Random;
 import java.util.*;
 
 public class Player {
@@ -9,16 +10,16 @@ public class Player {
     private Game game;
     private Set<Integer> steps;
     private Random generator = new Random();
-    private boolean value;
+    private Sign value;
 
-    public Player(String name, boolean value, Game game) {
+    public Player(String name, Sign value, Game game) {
         steps = new HashSet<Integer>();
         this.name = name;
         this.game = game;
         this.value = value;
 
     }
-    public boolean getValue(){
+    public Sign getValue(){
         return value;
     }
     public boolean move(int position) {

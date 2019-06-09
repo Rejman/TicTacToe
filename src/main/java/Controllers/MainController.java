@@ -1,8 +1,9 @@
 package Controllers;
 
 import Logic.Game;
+import Logic.Judge;
 import Logic.Player;
-import Logic.Player2;
+import Logic.Sign;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -48,8 +49,8 @@ public class MainController {
     void initialize() {
 
         game = new Game();
-        this.player = new Player("You",true, game);
-        this.computer = new Player("Computer",false, game);
+        this.player = new Player("You", Sign.CROSS, game);
+        this.computer = new Player("Computer",Sign.CIRCLE, game);
         player1Label.setText(player.getName());
         player2Label.setText(computer.getName());
         allFields = new ArrayList<ImageView>();
@@ -105,10 +106,18 @@ public class MainController {
         });
     }
 
-    private void addImageOnBoard(int id, boolean value){
+    private void addImageOnBoard(int id, Sign value){
         ImageView imageView = (ImageView) gameBoard.getChildren().get(id);
-        if(value) imageView.setImage(cross);
-        else imageView.setImage(circle);
+        switch (value){
+            case CROSS:
+                imageView.setImage(cross);
+                break;
+            case CIRCLE:
+                imageView.setImage(circle);
+                break;
+                default:
+                    imageView.setImage(blank);
+        }
     }
 
     private void randomMove(Player player){
