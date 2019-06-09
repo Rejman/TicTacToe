@@ -2,19 +2,17 @@ package Controllers;
 
 import Logic.Game;
 import Logic.Player;
+import Logic.Player2;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.RadioMenuItem;
 import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 
 import java.util.*;
 
@@ -38,17 +36,24 @@ public class MainController {
     private List<ImageView> allFields;
 
     private Game game;
-
+    private Player player;
+    private Player computer;
     @FXML
     void initialize() {
+
+
 
         allFields = new ArrayList<ImageView>();
 
         game = new Game();
-        sizeOfBoard = (int) Math.sqrt(Game.NUMBER_OF_FIELDS);
+        this.player = new Player("Konrad",true, game);
+        this.computer = new Player("Computer",false, game);
+
+
+        sizeOfBoard = Game.numbuerOfRows;
         //wypełnienie pola gry obrazkami
         buildFields();
-        randomMove(Player.TWO, cross);
+        randomMove(computer);
 
     }
 
@@ -84,11 +89,11 @@ public class MainController {
 
                 int id = allFields.indexOf(imageView);
                 deleteAllEffects();
-                boolean correct = game.move(id, Player.ONE);
+                boolean correct = player.move(id);
                 if(correct){
                     playerListView.getItems().add(id);
-                    addImageOnBoard(id, circle);
-                    randomMove(Player.TWO, cross);
+                    addImageOnBoard(id, player.getValue());
+                    randomMove(computer);
                 }
 
             }
@@ -96,14 +101,15 @@ public class MainController {
         });
     }
 
-    private void addImageOnBoard(int id, Image sign){
+    private void addImageOnBoard(int id, boolean value){
         ImageView imageView = (ImageView) gameBoard.getChildren().get(id);
-        imageView.setImage(sign);
+        if(value) imageView.setImage(cross);
+        else imageView.setImage(circle);
     }
 
-    private void randomMove(Player player, Image sign){
-        int id = game.randomMove(player);
-        if(id!=(-1)) addImageOnBoard(id, sign);
+    private void randomMove(Player player){
+        int id = player.randomMove();
+        if(id!=(-1)) addImageOnBoard(id, player.getValue());
 
         computerListView.getItems().add(id);
 
@@ -122,7 +128,10 @@ public class MainController {
         game.reset();
         playerListView.getItems().clear();
         computerListView.getItems().clear();
-        randomMove(Player.TWO, cross);
+        player.resetSteps();
+        computer.resetSteps();
+        randomMove(computer);
+
     }
     @FXML
     void showComputerMove(MouseEvent event) {
