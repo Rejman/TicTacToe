@@ -1,7 +1,6 @@
 package Controllers;
 
 import Logic.Game;
-import Logic.Judge;
 import Logic.Player;
 import Logic.Sign;
 import javafx.event.ActionEvent;
@@ -20,8 +19,8 @@ import java.util.*;
 
 public class MainController {
 
-    private int sizeOfBoard;
     private final int SIZE_OF_IMAGE = 100;
+    private int sizeOfBoard;
 
     @FXML
     private ListView<Integer> playerListView;
@@ -32,7 +31,6 @@ public class MainController {
     private GridPane gameBoard;
     @FXML
     private Label player1Label;
-
     @FXML
     private Label player2Label;
 
@@ -51,13 +49,15 @@ public class MainController {
         game = new Game();
         this.player = new Player("You", Sign.CROSS, game);
         this.computer = new Player("Computer",Sign.CIRCLE, game);
+
         player1Label.setText(player.getName());
         player2Label.setText(computer.getName());
-        allFields = new ArrayList<ImageView>();
-
         sizeOfBoard = Game.numbuerOfRows;
-        //wypełnienie pola gry obrazkami
+        allFields = new ArrayList<ImageView>();
         buildFields();
+
+
+        //computer start
         randomMove(computer);
 
     }
@@ -90,6 +90,7 @@ public class MainController {
 
     private void addMauseAction(final ImageView imageView) {
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
             public void handle(MouseEvent event) {
 
                 int id = allFields.indexOf(imageView);
@@ -98,14 +99,39 @@ public class MainController {
                 if(correct){
                     playerListView.getItems().add(id);
                     addImageOnBoard(id, player.getValue());
+
                     randomMove(computer);
                 }
-
+                if(game.getVerdict()!=Sign.NONE) delMauseActions();
             }
 
         });
     }
-
+    private void delMauseActions(){
+        for (ImageView field:allFields
+             ) {
+            field.setOnMouseClicked(null);
+        }
+        gameBoard.setCursor(Cursor.DEFAULT);
+    }
+    private void setMauseActions(){
+        for (ImageView field:allFields
+        ) {
+            addMauseAction(field);
+        }
+        gameBoard.setCursor(Cursor.HAND);
+    }
+    private boolean isEnd(){
+        switch (game.getVerdict()){
+            case CIRCLE:
+                System.out.println("Circle won");
+                return true;
+            case CROSS:
+                System.out.println("Cross won");
+                return true;
+        }
+        return false;
+    }
     private void addImageOnBoard(int id, Sign value){
         ImageView imageView = (ImageView) gameBoard.getChildren().get(id);
         switch (value){
@@ -137,6 +163,10 @@ public class MainController {
     }
     @FXML
     void resetGame(ActionEvent event) {
+        resetGame();
+
+    }
+    void resetGame(){
         clearFields();
         game.reset();
         playerListView.getItems().clear();
@@ -144,7 +174,7 @@ public class MainController {
         player.resetSteps();
         computer.resetSteps();
         randomMove(computer);
-
+        setMauseActions();
     }
     @FXML
     void showComputerMove(MouseEvent event) {

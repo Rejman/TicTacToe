@@ -6,8 +6,9 @@ import java.util.*;
 public class Game {
     public static final int NUMBER_OF_FIELDS = 9;
     public static final int numberOfWin = 3;
-    public static int numbuerOfRows;
-    public int move = 0;
+    public static int numbuerOfRows = 3;
+    private int lastMove;
+    private Sign verdict = Sign.NONE;
 
     private Sign[][] resultMatrix;
 
@@ -41,24 +42,17 @@ public class Game {
         setResultMatrix();
     }
 
-    public void addMove(int field, Sign value){
+    public void nextMove(int field, Sign value){
+        lastMove = field;
         emptyFields.remove(new Integer(field));
         int row = field/numbuerOfRows;
         int column = field%numbuerOfRows;
         resultMatrix[row][column] = value;
 
-            Sign verdict = Judge.getVerdict(field, resultMatrix);
-            switch (verdict){
-                case CROSS:
-                    System.out.println("Cross won");
-                    reset();
-                    break;
-                case CIRCLE:
-                    System.out.println("Circle won");
-                    reset();
-                    break;
-            }
-
+        this.verdict = Judge.getVerdict(lastMove, resultMatrix);
+    }
+    public Sign getVerdict(){
+        return verdict;
     }
     public List<Integer> getEmptyFields(){
         return emptyFields;

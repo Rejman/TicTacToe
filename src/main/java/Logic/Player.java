@@ -26,7 +26,7 @@ public class Player {
 
         List<Integer> emptyFields = game.getEmptyFields();
         if(emptyFields.indexOf(position) != (-1)){
-            game.addMove(position, value);
+            game.nextMove(position, value);
             steps.add(position);
             return true;
         } else {
@@ -42,8 +42,8 @@ public class Player {
 
             int randomId = generator.nextInt(numberOfEmptyFields);
             int field = emptyFields.get(randomId);
-            game.addMove(field, value);
             steps.add(field);
+            game.nextMove(field, value);
             return field;
         }
         return -1;
