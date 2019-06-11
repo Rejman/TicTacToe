@@ -1,6 +1,7 @@
 package Controllers;
 
 import Logic.Game;
+import Logic.Judge;
 import Logic.Player;
 import Logic.Sign;
 import javafx.event.ActionEvent;
@@ -58,7 +59,7 @@ public class MainController {
 
 
         //computer start
-        randomMove(computer);
+        //randomMove(computer);
 
     }
 
@@ -96,14 +97,14 @@ public class MainController {
                 int id = allFields.indexOf(imageView);
                 deleteAllEffects();
                 boolean correct = player.move(id);
-                game.getVerdict();
                 if(correct){
                     playerListView.getItems().add(id);
                     addImageOnBoard(id, player.getValue());
 
-                    randomMove(computer);
+                    //randomMove(computer);
                 }
                 game.getVerdict();
+
             }
 
         });

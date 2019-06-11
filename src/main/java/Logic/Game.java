@@ -4,8 +4,7 @@ import java.util.*;
 
 
 public class Game {
-    public static final int NUMBER_OF_FIELDS = 9;
-    public static final int numberOfWin = 3;
+    public static final int NUMBER_OF_FIELDS = 25;
     public static int numbuerOfRows;
     private int lastMove;
     private Sign verdict = Sign.NONE;
@@ -50,13 +49,15 @@ public class Game {
         resultMatrix[row][column] = value;
         this.verdict = Judge.getVerdict(lastMove, resultMatrix);
 
+
     }
     public Sign getVerdict(){
-        System.out.println("Last move "+lastMove);
-        System.out.println(this.verdict);
+
+        System.out.println(verdict);
         return verdict;
     }
-    public List<Integer> getEmptyFields(){
+    public List<Integer> getEmptyFields() {
+
         return emptyFields;
     }
 
