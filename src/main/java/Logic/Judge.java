@@ -10,7 +10,7 @@ public class Judge {
         int numberOfRows = resultMatrix.length;
         int row = lastMove/numberOfRows;
         int column = lastMove%numberOfRows;
-        System.out.println("("+row+","+column+")");
+        //System.out.println("("+row+","+column+")");
         int circles = 0;
         int crosses = 0;
         Sign sign;

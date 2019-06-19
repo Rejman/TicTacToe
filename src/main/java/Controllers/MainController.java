@@ -1,7 +1,6 @@
 package Controllers;
 
 import Logic.Game;
-import Logic.Judge;
 import Logic.Player;
 import Logic.Sign;
 import javafx.event.ActionEvent;
@@ -53,18 +52,18 @@ public class MainController {
 
         player1Label.setText(player.getName());
         player2Label.setText(computer.getName());
-        sizeOfBoard = Game.numbuerOfRows;
-        allFields = new ArrayList<ImageView>();
+
+        sizeOfBoard = Game.numberOfRows;
         buildFields();
 
-
         //computer start
-        //randomMove(computer);
+        randomMove(computer);
 
     }
 
     private void buildFields() {
 
+        allFields = new ArrayList<ImageView>();
         for (int i = 0; i < sizeOfBoard; i++) {
 
             for (int j = 0; j < sizeOfBoard; j++) {
@@ -96,14 +95,19 @@ public class MainController {
 
                 int id = allFields.indexOf(imageView);
                 deleteAllEffects();
+
                 boolean correct = player.move(id);
                 if(correct){
                     playerListView.getItems().add(id);
                     addImageOnBoard(id, player.getValue());
 
-                    //randomMove(computer);
+                    Sign verdict = game.getVerdict();
+                    System.out.println(verdict.toString());
+
+                    randomMove(computer);
                 }
-                game.getVerdict();
+                //Sign verdict = game.getVerdict();
+                //System.out.println(verdict.toString());
 
             }
 

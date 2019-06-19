@@ -1,11 +1,9 @@
 package Logic;
-
-import javafx.scene.image.Image;
-
 import java.util.Random;
 import java.util.*;
 
 public class Player {
+
     private String name;
     private Game game;
     private Set<Integer> steps;
@@ -13,15 +11,14 @@ public class Player {
     private Sign value;
 
     public Player(String name, Sign value, Game game) {
+
         steps = new HashSet<Integer>();
         this.name = name;
         this.game = game;
         this.value = value;
 
     }
-    public Sign getValue(){
-        return value;
-    }
+
     public boolean move(int position) {
 
         List<Integer> emptyFields = game.getEmptyFields();
@@ -53,5 +50,8 @@ public class Player {
     }
     public String getName(){
         return this.name;
+    }
+    public Sign getValue(){
+        return value;
     }
 }

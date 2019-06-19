@@ -1,34 +1,34 @@
 package Logic;
 
+import javafx.geometry.Pos;
+import javafx.util.Pair;
+
 import java.util.*;
 
 
 public class Game {
     public static final int NUMBER_OF_FIELDS = 25;
-    public static int numbuerOfRows;
-    private int lastMove;
-    private Sign verdict = Sign.NONE;
+    public static int numberOfRows;
+    public static int full = 3;
+    private Position lastMove;
 
-    private Sign[][] resultMatrix;
-
+    private ResultMatrix resultMatrix;
 
     private List<Integer> emptyFields;
 
     public Game() {
 
-        numbuerOfRows = (int) Math.sqrt(NUMBER_OF_FIELDS);
-
-        resultMatrix = new Sign[numbuerOfRows][numbuerOfRows];
-        setResultMatrix();
-
-        emptyFields = new ArrayList<Integer>();
+        setNumberOfRows();
+        resultMatrix = new ResultMatrix(numberOfRows);
         setEmptyFields();
 
 
     }
-
+    private void setNumberOfRows(){
+        numberOfRows = (int) Math.sqrt(NUMBER_OF_FIELDS);
+    }
     private void setEmptyFields(){
-        emptyFields.clear();
+        emptyFields = new ArrayList<Integer>();
         // set available moves
         for (int i = 0; i < NUMBER_OF_FIELDS; i++) {
             emptyFields.add(i);
@@ -37,36 +37,77 @@ public class Game {
 
     public void reset(){
         setEmptyFields();
-        setResultMatrix();
+        resultMatrix.clearMatrix();
     }
 
     public void nextMove(int field, Sign value){
 
-        lastMove = field;
+        lastMove = Position.convertToPositon(field, numberOfRows);
         emptyFields.remove(new Integer(field));
-        int row = field/numbuerOfRows;
-        int column = field%numbuerOfRows;
-        resultMatrix[row][column] = value;
-        this.verdict = Judge.getVerdict(lastMove, resultMatrix);
+        resultMatrix.values[lastMove.row][lastMove.column] = value;
 
-
-    }
-    public Sign getVerdict(){
-
-        System.out.println(verdict);
-        return verdict;
     }
     public List<Integer> getEmptyFields() {
-
         return emptyFields;
     }
 
+    public Sign getVerdict(){
 
-    private void setResultMatrix(){
-        for(int i=0;i<numbuerOfRows;i++){
-            for(int j=0;j<numbuerOfRows;j++){
-                resultMatrix[i][j] = Sign.NONE;
-            }
+        Sign winner;
+        Sign[] date = resultMatrix.findColumn(lastMove);
+        winner = checkTheMostSign(date);
+
+        if(winner==Sign.NONE){
+            date = resultMatrix.findRow(lastMove);
+            winner = checkTheMostSign(date);
         }
+        if(winner==Sign.NONE){
+            List<Sign> list = resultMatrix.findGrowingDiagonal(lastMove);
+            Sign[] temp = new Sign[list.size()];
+            for(int i=0;i<temp.length;i++){
+                temp[i] = list.get(i);
+            }
+            winner = checkTheMostSign(temp);
+        }
+        if(winner==Sign.NONE){
+            List<Sign> list = resultMatrix.findFallingDiagonal(lastMove);
+            Sign[] temp = new Sign[list.size()];
+            for(int i=0;i<temp.length;i++){
+                temp[i] = list.get(i);
+            }
+            winner = checkTheMostSign(temp);
+        }
+        return winner;
     }
+    private Sign checkTheMostSign(Sign[] date) {
+        System.out.println("Sprawdzam: ");
+        for(int i=0;i<date.length;i++){
+            System.out.print(date[i]+", ");
+        }
+        System.out.println();
+        int circle = 0;
+        int cross = 0;
+
+        for (Sign sign:date
+             ) {
+            switch (sign) {
+                case CIRCLE:
+                    circle++;
+                    cross = 0;
+                    break;
+                case CROSS:
+                    circle = 0;
+                    cross++;
+                    break;
+                default:
+                    cross = 0;
+                    circle = 0;
+            }
+            if (cross == full) return Sign.CROSS;
+            if (circle == full) return Sign.CIRCLE;
+        }
+        return Sign.NONE;
+    }
+
+
 }
