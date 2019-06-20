@@ -7,7 +7,7 @@ import java.util.*;
 
 
 public class Game {
-    public static final int NUMBER_OF_FIELDS = 25;
+    public static final int NUMBER_OF_FIELDS = 9;
     public static int numberOfRows;
     public static int full = 3;
     private Position lastMove;
@@ -21,7 +21,6 @@ public class Game {
         setNumberOfRows();
         resultMatrix = new ResultMatrix(numberOfRows);
         setEmptyFields();
-
 
     }
     private void setNumberOfRows(){

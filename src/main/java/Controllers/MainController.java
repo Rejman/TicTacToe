@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.effect.Lighting;
@@ -56,8 +57,6 @@ public class MainController {
         sizeOfBoard = Game.numberOfRows;
         buildFields();
 
-        //computer start
-        randomMove(computer);
 
     }
 
@@ -93,21 +92,21 @@ public class MainController {
 
             public void handle(MouseEvent event) {
 
+
                 int id = allFields.indexOf(imageView);
                 deleteAllEffects();
 
                 boolean correct = player.move(id);
+
                 if(correct){
                     playerListView.getItems().add(id);
+
                     addImageOnBoard(id, player.getValue());
-
-                    Sign verdict = game.getVerdict();
-                    System.out.println(verdict.toString());
-
+                    checkVerdict();
                     randomMove(computer);
+                    checkVerdict();
                 }
-                //Sign verdict = game.getVerdict();
-                //System.out.println(verdict.toString());
+
 
             }
 
@@ -168,7 +167,6 @@ public class MainController {
         computerListView.getItems().clear();
         player.resetSteps();
         computer.resetSteps();
-        randomMove(computer);
         setMauseActions();
     }
     @FXML
@@ -193,6 +191,23 @@ public class MainController {
         for (ImageView field:allFields
              ) {
             field.setEffect(null);
+        }
+    }
+
+    private void showEndGameAlert(Sign sign){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game over");
+        if(sign == Sign.NONE) alert.setHeaderText("Tie");
+        else alert.setHeaderText("Player \""+sign+"\" win.");
+        alert.setContentText("New game.");
+
+        alert.showAndWait();
+    }
+    private void checkVerdict(){
+        Sign verdict = game.getVerdict();
+        if(verdict!=Sign.NONE || game.getEmptyFields().isEmpty()){
+            showEndGameAlert(verdict);
+            resetGame();
         }
     }
 }
