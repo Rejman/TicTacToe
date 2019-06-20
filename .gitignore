@@ -27,6 +27,10 @@ hs_err_pid*
 *.iml
 target/
 
+#Launch4j
+
+launch4j.xml
+
 # Exceptions
 
 !*.jar
