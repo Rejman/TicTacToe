@@ -67,7 +67,7 @@ public class ResultMatrix {
         int row=start.row;
         int column=start.column;
 
-        while (row>=0 && column<=degree){
+        while (row>=0 && column<degree){
             diagonal.add(values[row][column]);
             row--;
             column++;
