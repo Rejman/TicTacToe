@@ -1,32 +1,48 @@
 package Logic;
 
-import javafx.geometry.Pos;
-import javafx.util.Pair;
-
 import java.util.*;
 
 
 public class Game {
     public static final int NUMBER_OF_FIELDS = 9;
+    private static int full = 3;
     public static int numberOfRows;
-    public static int full = 3;
+    public Sign verdict = null;
+
+    private int numberOfMoves;
     private Position lastMove;
+    private Player one;
+    private Player two;
 
     private ResultMatrix resultMatrix;
 
     private List<Integer> emptyFields;
 
     public Game() {
-
+        
         setNumberOfRows();
         resultMatrix = new ResultMatrix(numberOfRows);
         setEmptyFields();
 
     }
+    public Game(Player one, Player two) {
+
+        this.one = one;
+        this.two = two;
+        this.one.setGame(this);
+        this.two.setGame(this);
+        
+        setNumberOfRows();
+        resultMatrix = new ResultMatrix(numberOfRows);
+        setEmptyFields();
+
+    }
+
     private void setNumberOfRows(){
         numberOfRows = (int) Math.sqrt(NUMBER_OF_FIELDS);
     }
     private void setEmptyFields(){
+        this.numberOfMoves = 0;
         emptyFields = new ArrayList<Integer>();
         // set available moves
         for (int i = 0; i < NUMBER_OF_FIELDS; i++) {
@@ -41,9 +57,11 @@ public class Game {
 
     public void nextMove(int field, Sign value){
 
+        numberOfMoves++;
         lastMove = Position.convertToPositon(field, numberOfRows);
         emptyFields.remove(new Integer(field));
         resultMatrix.values[lastMove.row][lastMove.column] = value;
+
 
     }
     public List<Integer> getEmptyFields() {
@@ -79,11 +97,7 @@ public class Game {
         return winner;
     }
     private Sign checkTheMostSign(Sign[] date) {
-        System.out.println("Sprawdzam: ");
-        for(int i=0;i<date.length;i++){
-            System.out.print(date[i]+", ");
-        }
-        System.out.println();
+
         int circle = 0;
         int cross = 0;
 
@@ -107,6 +121,27 @@ public class Game {
         }
         return Sign.NONE;
     }
+    public Player play(Player one, Player two){
 
+        one.setGame(this);
+        two.setGame(this);
+        Sign verdict = null;
 
+        while(!emptyFields.isEmpty()){
+            one.randomMove();
+            two.randomMove();
+
+            if(this.numberOfMoves>=full*2-1){
+                verdict = getVerdict();
+                if(verdict!=Sign.NONE){
+                    break;
+                }
+            }
+        }
+
+        if(one.getValue()==verdict) return one;
+        if(two.getValue()==verdict) return two;
+        else return null;
+
+    }
 }

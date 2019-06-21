@@ -45,7 +45,7 @@ public class MainController {
     private Player player;
     private Player computer;
     @FXML
-    void initialize() {
+    void initialize() throws InterruptedException {
 
         game = new Game();
         this.player = new Player("You", Sign.CROSS, game);
@@ -57,10 +57,9 @@ public class MainController {
         sizeOfBoard = Game.numberOfRows;
         buildFields();
 
-
     }
 
-    private void buildFields() {
+    private void buildFields() throws InterruptedException {
 
         allFields = new ArrayList<ImageView>();
         for (int i = 0; i < sizeOfBoard; i++) {
@@ -74,7 +73,6 @@ public class MainController {
                 addMauseAction(field);
                 allFields.add(field);
                 gameBoard.add(field, j, i);
-
             }
         }
         //add lines between fields

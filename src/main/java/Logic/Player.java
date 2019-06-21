@@ -18,6 +18,14 @@ public class Player {
         this.value = value;
 
     }
+    public Player(String name, Sign value){
+        steps = new HashSet<Integer>();
+        this.name = name;
+        this.value = value;
+    }
+    public void setGame(Game game){
+        this.game = game;
+    }
 
     public boolean move(int position) {
 
@@ -54,4 +62,6 @@ public class Player {
     public Sign getValue(){
         return value;
     }
+
+
 }

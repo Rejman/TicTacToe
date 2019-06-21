@@ -61,7 +61,6 @@ public class ResultMatrix {
     public List findGrowingDiagonal(Position pos){
         Position start = getStartPositionDown(pos);
         List<Sign> diagonal = new LinkedList<Sign>();
-        System.out.println(start.row+", "+start.column);
         int row=start.row;
         int column=start.column;
 
@@ -70,7 +69,6 @@ public class ResultMatrix {
             row--;
             column++;
         }
-        System.out.println(row+", "+column);
         return diagonal;
     }
 
@@ -103,9 +101,8 @@ public class ResultMatrix {
 
 
         Position pos = new Position(4,0);
-        System.out.println();
         List<Sign> row = resultMatrix.findGrowingDiagonal(pos);
-        System.out.println(row);
+
 
 
     }
