@@ -1,45 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainController">
+<StackPane alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainController">
    <children>
-      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+      <VBox>
          <children>
             <MenuBar>
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" onAction="#newGame" text="New game" />
+                    <MenuItem mnemonicParsing="false" text="Close" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit" />
-                  <Menu mnemonicParsing="false" text="Help" />
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
               </menus>
             </MenuBar>
-            <GridPane fx:id="gameBoard" maxHeight="-Infinity">
-               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints maxHeight="100.0" minHeight="10.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="100.0" minHeight="10.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="100.0" minHeight="10.0" vgrow="SOMETIMES" />
-               </rowConstraints>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </GridPane>
+            <StackPane>
+               <children>
+                  <fx:include source="GameBoard.fxml" />
+               </children>
+            </StackPane>
          </children>
       </VBox>
    </children>

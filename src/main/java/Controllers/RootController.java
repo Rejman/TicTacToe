@@ -13,7 +13,7 @@ public class RootController {
     private StackPane mainStackPane;
     @FXML
     void initialize() {
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/Main.fxml"));
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/GameBoard.fxml"));
         Pane pane = null;
         try {
             pane = loader.load();
