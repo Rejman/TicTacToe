@@ -27,12 +27,9 @@ public class MainController {
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws IOException {
         loadBoardGame();
 
     }
-    @FXML
-    void newGame(ActionEvent event) {
-        //loadBoardGame();
-    }
+
 }

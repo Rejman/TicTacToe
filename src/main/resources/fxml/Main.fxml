@@ -29,7 +29,10 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <StackPane fx:id="gameStackPane" />
+            <StackPane fx:id="gameStackPane">
+               <children>
+                  <fx:include source="GameBoard.fxml" />
+               </children></StackPane>
          </children>
       </VBox>
    </children>
