@@ -20,20 +20,16 @@ import java.util.*;
 
 public class MainController {
 
-    private final int SIZE_OF_IMAGE = 100;
-    private int sizeOfBoard;
-
-    @FXML
-    private ListView<Integer> playerListView;
-    @FXML
-    private ListView<Integer> computerListView;
+    private final int SIZE_OF_IMAGE = 50;
+    private int full = 5;
+    private int numberOfRows = 10;
+    private Game game;
+    private Player human;
+    private Player ai;
+    private boolean newRound = true;
 
     @FXML
     private GridPane gameBoard;
-    @FXML
-    private Label player1Label;
-    @FXML
-    private Label player2Label;
 
     private Image cross = new Image("/img/cross.png");
     private Image circle = new Image("/img/circle.png");
@@ -41,29 +37,18 @@ public class MainController {
 
     private List<ImageView> allFields;
 
-    private Game game;
-    private Player player;
-    private Player computer;
     @FXML
     void initialize() throws InterruptedException {
+        human = new Player("You", Sign.CIRCLE);
+        ai = new Player("AI", Sign.CROSS);
 
-        game = new Game();
-        this.player = new Player("You", Sign.CROSS, game);
-        this.computer = new Player("Computer",Sign.CIRCLE, game);
-
-        player1Label.setText(player.getName());
-        player2Label.setText(computer.getName());
-
-        sizeOfBoard = Game.numberOfRows;
-        buildFields();
-
+        game = new Game(numberOfRows,full,human,ai);
+        buildFields(numberOfRows);
     }
 
-    private void buildFields() throws InterruptedException {
-
+    private void buildFields(int sizeOfBoard) {
         allFields = new ArrayList<ImageView>();
         for (int i = 0; i < sizeOfBoard; i++) {
-
             for (int j = 0; j < sizeOfBoard; j++) {
 
                 ImageView field = new ImageView();
@@ -73,9 +58,11 @@ public class MainController {
                 addMauseAction(field);
                 allFields.add(field);
                 gameBoard.add(field, j, i);
+
             }
         }
         //add lines between fields
+
         gameBoard.setGridLinesVisible(true);
         gameBoard.setCursor(Cursor.HAND);
 
@@ -89,22 +76,15 @@ public class MainController {
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             public void handle(MouseEvent event) {
-
-
                 int id = allFields.indexOf(imageView);
-                deleteAllEffects();
-
-                boolean correct = player.move(id);
-
+                boolean correct = human.move(id);
                 if(correct){
-                    playerListView.getItems().add(id);
-
-                    addImageOnBoard(id, player.getValue());
-                    checkVerdict();
-                    randomMove(computer);
-                    checkVerdict();
+                    addImageOnBoard(id,human.getValue());
+                    randomMove(ai);
                 }
-
+                if(game.isEnded()){
+                    System.out.println(game.getVerdict());
+                }
 
             }
 
@@ -138,13 +118,6 @@ public class MainController {
         }
     }
 
-    private void randomMove(Player player){
-        int id = player.randomMove();
-        if(id!=(-1)) addImageOnBoard(id, player.getValue());
-
-        computerListView.getItems().add(id);
-
-    }
 
     private void clearFields(){
 
@@ -154,43 +127,19 @@ public class MainController {
         }
     }
     @FXML
-    void resetGame(ActionEvent event) {
+    void newGame(ActionEvent event) {
         resetGame();
 
     }
     void resetGame(){
-        clearFields();
-        game.reset();
-        playerListView.getItems().clear();
-        computerListView.getItems().clear();
-        player.resetSteps();
-        computer.resetSteps();
-        setMauseActions();
-    }
-    @FXML
-    void showComputerMove(MouseEvent event) {
-        int id = computerListView.getSelectionModel().getSelectedItem();
-        highlightField(id);
+        Player one = new Player("CirclePlayer", Sign.CIRCLE);
+        Player two = new Player("CrossPlayer", Sign.CROSS);
+
+        game = new Game(3,3,one,two);
+
     }
 
-    @FXML
-    void showPlayerMove(MouseEvent event) {
-        int id = playerListView.getSelectionModel().getSelectedItem();
-        highlightField(id);
-    }
 
-    private void highlightField(int field){
-        deleteAllEffects();
-        Lighting lighting = new Lighting();
-        allFields.get(field).setEffect(lighting);
-    }
-
-    private void deleteAllEffects(){
-        for (ImageView field:allFields
-             ) {
-            field.setEffect(null);
-        }
-    }
 
     private void showEndGameAlert(Sign sign){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -201,12 +150,13 @@ public class MainController {
 
         alert.showAndWait();
     }
-    private void checkVerdict(){
-        Sign verdict = game.getVerdict();
-        if(verdict!=Sign.NONE || game.getEmptyFields().isEmpty()){
-            showEndGameAlert(verdict);
-            resetGame();
+
+    private void randomMove(Player player) {
+        int move = player.randomMove();
+        if (move >= 0) {
+            addImageOnBoard(move, player.getValue());
         }
     }
+
 }
 

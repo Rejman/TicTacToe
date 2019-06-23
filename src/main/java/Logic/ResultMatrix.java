@@ -1,11 +1,13 @@
 package Logic;
 
+import javafx.geometry.Pos;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class ResultMatrix {
     public int degree;
-    public Sign[][] values;
+    private Sign[][] values;
 
     public ResultMatrix(int degree) {
         this.degree = degree;
@@ -44,7 +46,10 @@ public class ResultMatrix {
         Position pos = Position.convertToPositon(field, degree);
         return getColumn(pos.column);
     }
-
+    public List findFallingDiagonal(int field){
+        Position pos = Position.convertToPositon(field,degree);
+        return findFallingDiagonal(pos);
+    }
     public List findFallingDiagonal(Position pos){
         Position start = getStartPositionUp(pos);
         List<Sign> diagonal = new LinkedList<Sign>();
@@ -57,6 +62,10 @@ public class ResultMatrix {
             column++;
         }
         return diagonal;
+    }
+    public List findGrowingDiagonal(int field){
+        Position pos = Position.convertToPositon(field,degree);
+        return findGrowingDiagonal(pos);
     }
     public List findGrowingDiagonal(Position pos){
         Position start = getStartPositionDown(pos);
@@ -82,6 +91,7 @@ public class ResultMatrix {
         }
         return new Position(row, column);
     }
+
     private Position getStartPositionDown(Position pos){
         int row = pos.row;
         int column = pos.column;
@@ -91,6 +101,13 @@ public class ResultMatrix {
             column--;
         }
         return new Position(row, column);
+    }
+    public void add(Position position, Sign sign){
+        values[position.row][position.column] = sign;
+    }
+    public void add(int field, Sign sign){
+        Position pos = Position.convertToPositon(field, degree);
+        add(pos,sign);
     }
 
     public static void main(String[] args) {
@@ -102,8 +119,6 @@ public class ResultMatrix {
 
         Position pos = new Position(4,0);
         List<Sign> row = resultMatrix.findGrowingDiagonal(pos);
-
-
 
     }
 

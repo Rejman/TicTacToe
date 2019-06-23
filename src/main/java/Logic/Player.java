@@ -10,14 +10,6 @@ public class Player {
     private Random generator = new Random();
     private Sign value;
 
-    public Player(String name, Sign value, Game game) {
-
-        steps = new HashSet<Integer>();
-        this.name = name;
-        this.game = game;
-        this.value = value;
-
-    }
     public Player(String name, Sign value){
         steps = new HashSet<Integer>();
         this.name = name;
@@ -27,12 +19,14 @@ public class Player {
         this.game = game;
     }
 
-    public boolean move(int position) {
+    public boolean move(int field) {
+
+        if(game.isEnded()) return false;
 
         List<Integer> emptyFields = game.getEmptyFields();
-        if(emptyFields.indexOf(position) != (-1)){
-            game.nextMove(position, value);
-            steps.add(position);
+        if(emptyFields.indexOf(field) != (-1)){
+            game.addMove(field, value);
+            steps.add(field);
             return true;
         } else {
             System.out.println("Not empty");
@@ -41,6 +35,7 @@ public class Player {
 
     }
     public int randomMove(){
+        if(game.isEnded()) return -1;
         List<Integer> emptyFields = game.getEmptyFields();
         int numberOfEmptyFields = emptyFields.size();
         if (numberOfEmptyFields > 0) {
@@ -48,7 +43,7 @@ public class Player {
             int randomId = generator.nextInt(numberOfEmptyFields);
             int field = emptyFields.get(randomId);
             steps.add(field);
-            game.nextMove(field, value);
+            game.addMove(field, value);
             return field;
         }
         return -1;

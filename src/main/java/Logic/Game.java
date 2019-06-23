@@ -4,65 +4,67 @@ import java.util.*;
 
 
 public class Game {
-    public static final int NUMBER_OF_FIELDS = 9;
-    private static int full = 3;
-    public static int numberOfRows;
-    public Sign verdict = null;
+
+    private int numberOfFields;
+    private int full;
+    private int numberOfMovesWitchoutVerdict;
+    private int numberOfRows;
 
     private int numberOfMoves;
-    private Position lastMove;
-    private Player one;
-    private Player two;
+    private int lastMove;
+    private Player playerOne;
+    private Player playerTwo;
+    private boolean isEnded;
+    private Sign verdict;
 
     private ResultMatrix resultMatrix;
 
     private List<Integer> emptyFields;
 
-    public Game() {
-        
-        setNumberOfRows();
-        resultMatrix = new ResultMatrix(numberOfRows);
+    public boolean isEnded(){
+        return isEnded;
+    }
+    public Game(int degree, int full, Player one, Player two) {
+
+        this.full = full;
+        this.numberOfMovesWitchoutVerdict = full*2-1;
+        this.numberOfRows = degree;
+        this.numberOfFields = degree*degree;
+        this.playerOne = one;
+        this.playerTwo = two;
+        this.playerOne.setGame(this);
+        this.playerTwo.setGame(this);
+        this.resultMatrix = new ResultMatrix(numberOfRows);
         setEmptyFields();
 
     }
-    public Game(Player one, Player two) {
 
-        this.one = one;
-        this.two = two;
-        this.one.setGame(this);
-        this.two.setGame(this);
-        
-        setNumberOfRows();
-        resultMatrix = new ResultMatrix(numberOfRows);
-        setEmptyFields();
-
-    }
-
-    private void setNumberOfRows(){
-        numberOfRows = (int) Math.sqrt(NUMBER_OF_FIELDS);
-    }
     private void setEmptyFields(){
         this.numberOfMoves = 0;
         emptyFields = new ArrayList<Integer>();
         // set available moves
-        for (int i = 0; i < NUMBER_OF_FIELDS; i++) {
+        for (int i = 0; i < numberOfFields; i++) {
             emptyFields.add(i);
         }
     }
 
     public void reset(){
+        isEnded = false;
         setEmptyFields();
         resultMatrix.clearMatrix();
     }
 
-    public void nextMove(int field, Sign value){
-
-        numberOfMoves++;
-        lastMove = Position.convertToPositon(field, numberOfRows);
-        emptyFields.remove(new Integer(field));
-        resultMatrix.values[lastMove.row][lastMove.column] = value;
-
-
+    public void addMove(int field, Sign sign){
+        if(!isEnded){
+            emptyFields.remove(new Integer(field));
+            numberOfMoves++;
+            resultMatrix.add(field, sign);
+            lastMove = field;
+            if(numberOfMoves>=numberOfMovesWitchoutVerdict){
+                this.verdict = getVerdict();
+                if(verdict!=Sign.NONE || emptyFields.isEmpty()) isEnded = true;
+            }
+        }
     }
     public List<Integer> getEmptyFields() {
         return emptyFields;
@@ -70,33 +72,35 @@ public class Game {
 
     public Sign getVerdict(){
 
-        Sign winner;
-        Sign[] date = resultMatrix.findColumn(lastMove);
-        winner = checkTheMostSign(date);
+        Sign winnerSign;
 
-        if(winner==Sign.NONE){
+        Sign[] date = resultMatrix.findColumn(lastMove);
+        winnerSign = checkIfWin(date);
+
+        if(winnerSign==Sign.NONE){
             date = resultMatrix.findRow(lastMove);
-            winner = checkTheMostSign(date);
+            winnerSign = checkIfWin(date);
         }
-        if(winner==Sign.NONE){
+        if(winnerSign==Sign.NONE){
             List<Sign> list = resultMatrix.findGrowingDiagonal(lastMove);
             Sign[] temp = new Sign[list.size()];
             for(int i=0;i<temp.length;i++){
                 temp[i] = list.get(i);
             }
-            winner = checkTheMostSign(temp);
+            winnerSign = checkIfWin(temp);
         }
-        if(winner==Sign.NONE){
+        if(winnerSign==Sign.NONE){
             List<Sign> list = resultMatrix.findFallingDiagonal(lastMove);
             Sign[] temp = new Sign[list.size()];
             for(int i=0;i<temp.length;i++){
                 temp[i] = list.get(i);
             }
-            winner = checkTheMostSign(temp);
+            winnerSign = checkIfWin(temp);
         }
-        return winner;
+        return winnerSign;
     }
-    private Sign checkTheMostSign(Sign[] date) {
+
+    private Sign checkIfWin(Sign[] date) {
 
         int circle = 0;
         int cross = 0;
@@ -121,27 +125,5 @@ public class Game {
         }
         return Sign.NONE;
     }
-    public Player play(Player one, Player two){
 
-        one.setGame(this);
-        two.setGame(this);
-        Sign verdict = null;
-
-        while(!emptyFields.isEmpty()){
-            one.randomMove();
-            two.randomMove();
-
-            if(this.numberOfMoves>=full*2-1){
-                verdict = getVerdict();
-                if(verdict!=Sign.NONE){
-                    break;
-                }
-            }
-        }
-
-        if(one.getValue()==verdict) return one;
-        if(two.getValue()==verdict) return two;
-        else return null;
-
-    }
 }
