@@ -15,11 +15,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 
 import java.util.*;
 
 public class GameBoardController {
 
+    @FXML
+    private StackPane mainStackPane;
+    public int test = 10;
     private final int SIZE_OF_IMAGE = 50;
     private int full = 5;
     private int numberOfRows = 10;

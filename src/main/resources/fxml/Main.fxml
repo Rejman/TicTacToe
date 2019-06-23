@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainController">
+<StackPane fx:id="mainStackPane" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainController">
    <children>
       <VBox>
          <children>
@@ -29,11 +29,7 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <StackPane>
-               <children>
-                  <fx:include source="GameBoard.fxml" />
-               </children>
-            </StackPane>
+            <StackPane fx:id="gameStackPane" />
          </children>
       </VBox>
    </children>

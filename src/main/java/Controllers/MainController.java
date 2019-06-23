@@ -1,19 +1,38 @@
 package Controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.StackPane;
+
+import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 public class MainController {
 
-    @FXML
-    private ResourceBundle resources;
 
     @FXML
-    private URL location;
+    private StackPane gameStackPane;
+    @FXML
+    private StackPane mainStackPane;
+    private GameBoardController gameBoardController;
+
+    private void loadBoardGame(){
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/GameBoard.fxml"));
+        try {
+            gameStackPane = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.gameBoardController = loader.getController();
+    }
 
     @FXML
     void initialize() {
+        loadBoardGame();
 
+    }
+    @FXML
+    void newGame(ActionEvent event) {
+        //loadBoardGame();
     }
 }
