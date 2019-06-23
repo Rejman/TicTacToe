@@ -1,10 +1,10 @@
 package Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.StackPane;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 public class MainController {
@@ -19,7 +19,7 @@ public class MainController {
     private void loadBoardGame(){
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/GameBoard.fxml"));
         try {
-            gameStackPane = loader.load();
+            this.gameStackPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,5 +31,8 @@ public class MainController {
         loadBoardGame();
 
     }
-
+    @FXML
+    void newGame(ActionEvent event) {
+        gameBoardController.resetGame();
+    }
 }
