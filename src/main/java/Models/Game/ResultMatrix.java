@@ -1,6 +1,4 @@
-package Logic;
-
-import javafx.geometry.Pos;
+package Models.Game;
 
 import java.util.LinkedList;
 import java.util.List;
