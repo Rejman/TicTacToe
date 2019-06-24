@@ -5,7 +5,6 @@ import Models.Game.Verdict;
 import Models.Player.Computer;
 import Models.Player.Human;
 import javafx.scene.Cursor;
-import javafx.scene.image.ImageView;
 
 public class HumanVsComputer extends GameBoard {
 
@@ -19,26 +18,26 @@ public class HumanVsComputer extends GameBoard {
 
         if(computerFirst){
             int field = computer.randomMove();
-            ImageView temp = (ImageView) gridPane.getChildren().get(field);
-            addImageOnBoard(temp, computer.getValue());
+            Field temp = (Field) gridPane.getChildren().get(field);
+            addSignToField(temp, computer.getValue());
         }
     }
 
-    protected void click(ImageView imageView) {
+    protected void click(Field field) {
 
-        int numberOfField = allFields.indexOf(imageView);
+        int numberOfField = allFields.indexOf(field);
 
         if (game.isFree(numberOfField)) {
             if (game.getVerdict() == Verdict.NOBODY) {
 
                 human.move(numberOfField);
-                addImageOnBoard(imageView, human.getValue());
+                addSignToField(field, human.getValue());
 
             }
             if (game.getVerdict() == Verdict.NOBODY) {
-                int field = computer.randomMove();
-                ImageView temp = (ImageView) gridPane.getChildren().get(field);
-                addImageOnBoard(temp, computer.getValue());
+                int id = computer.randomMove();
+                Field temp = (Field) gridPane.getChildren().get(id);
+                addSignToField(temp, computer.getValue());
             }
             if (game.getVerdict() != Verdict.NOBODY) {
                 System.out.println(game.getVerdict());

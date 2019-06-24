@@ -36,7 +36,7 @@ public class MainController {
     }
     @FXML
     void newGame(ActionEvent event) {
-        Game game = new Game(12,5);
+        Game game = new Game(10,3);
         playerOne = new Human("Person1", Sign.CIRCLE, game);
         playerTwo = new Computer("Person2", Sign.CROSS, game);
 

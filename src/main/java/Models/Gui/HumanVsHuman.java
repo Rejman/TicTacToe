@@ -2,11 +2,8 @@ package Models.Gui;
 
 import Models.Game.Game;
 import Models.Game.Verdict;
-import Models.Player.Computer;
 import Models.Player.Human;
-import Models.Player.Player;
 import javafx.scene.Cursor;
-import javafx.scene.image.ImageView;
 
 public class HumanVsHuman extends GameBoard {
 
@@ -22,15 +19,15 @@ public class HumanVsHuman extends GameBoard {
         this.player = playerOne;
     }
 
-    protected void click(ImageView imageView) {
+    protected void click(Field field) {
 
-        int numberOfField = allFields.indexOf(imageView);
+        int numberOfField = allFields.indexOf(field);
 
         if (game.isFree(numberOfField)) {
             if (game.getVerdict() == Verdict.NOBODY) {
 
                 player.move(numberOfField);
-                addImageOnBoard(imageView, player.getValue());
+                addSignToField(field, player.getValue());
                 changeBeginer();
 
             }
