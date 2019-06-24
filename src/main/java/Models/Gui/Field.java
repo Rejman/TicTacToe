@@ -5,6 +5,7 @@ package Models.Gui;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class Field extends Canvas {
     private static double size = 100;
@@ -31,7 +32,6 @@ public class Field extends Canvas {
         graphicsContext.clearRect(0,0, size, size);
     }
     public void drawCircle(Color color){
-
         graphicsContext.setStroke(color);
         double width = size - margin*2;
         graphicsContext.strokeOval(margin,margin,width,width);
