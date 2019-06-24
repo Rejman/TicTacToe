@@ -1,4 +1,4 @@
-package Models.Game;
+package Models.Gui;
 
 
 
@@ -32,14 +32,14 @@ public class Field extends Canvas {
     }
     public void drawCircle(Color color){
 
-        graphicsContext.setStroke(Color.BLACK);
+        graphicsContext.setStroke(color);
         double width = size - margin*2;
         graphicsContext.strokeOval(margin,margin,width,width);
     }
     private static double convertPercentToNumber(double percent){
         return (percent*size)/100;
     }
-    private void drawCross(Color color){
+    public void drawCross(Color color){
 
         graphicsContext.setStroke(color);
         double y = size-margin;
