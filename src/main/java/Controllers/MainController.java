@@ -3,11 +3,10 @@ package Controllers;
 import Models.Game.Game;
 import Models.Game.Sign;
 import Models.Gui.GameBoard;
-import Models.Gui.HumanVsComputerBoard;
+import Models.Gui.HumanVsComputer;
 import Models.Gui.HumanVsHuman;
 import Models.Player.Computer;
 import Models.Player.Human;
-import Models.Player.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
@@ -24,7 +23,7 @@ public class MainController {
     private StackPane settingsPane;
 
     private Human playerOne;
-    private Human playerTwo;
+    private Computer playerTwo;
 
 
     public void setMainStage(Stage stage){
@@ -38,10 +37,11 @@ public class MainController {
     @FXML
     void newGame(ActionEvent event) {
         Game game = new Game(12,5);
-        playerOne = new Human("You", Sign.CIRCLE, game);
-        playerTwo = new Human("AI", Sign.CROSS, game);
+        playerOne = new Human("Person1", Sign.CIRCLE, game);
+        playerTwo = new Computer("Person2", Sign.CROSS, game);
 
-        GameBoard gameBoard = new HumanVsHuman(game, playerOne, playerTwo);
+        HumanVsComputer gameBoard = new HumanVsComputer(game, playerOne, playerTwo, false);
+
         gameStackPane.getChildren().add(gameBoard);
         mainStage.setTitle("test");
         mainStage.sizeToScene();

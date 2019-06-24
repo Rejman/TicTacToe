@@ -7,15 +7,21 @@ import Models.Player.Human;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
 
-public class HumanVsComputerBoard extends GameBoard {
+public class HumanVsComputer extends GameBoard {
 
     private Human human;
     private Computer computer;
 
-    public HumanVsComputerBoard(Game game, Human player, Computer computer) {
+    public HumanVsComputer(Game game, Human player, Computer computer, boolean computerFirst) {
         super(game);
         this.human = player;
         this.computer = computer;
+
+        if(computerFirst){
+            int field = computer.randomMove();
+            ImageView temp = (ImageView) gridPane.getChildren().get(field);
+            addImageOnBoard(temp, computer.getValue());
+        }
     }
 
     protected void click(ImageView imageView) {

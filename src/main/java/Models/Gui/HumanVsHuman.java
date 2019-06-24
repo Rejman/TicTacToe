@@ -22,29 +22,32 @@ public class HumanVsHuman extends GameBoard {
         this.player = playerOne;
     }
 
-    protected void click(ImageView imageView){
+    protected void click(ImageView imageView) {
 
         int numberOfField = allFields.indexOf(imageView);
 
-        if(game.isFree(numberOfField)){
-            if(game.getVerdict()== Verdict.NOBODY){
+        if (game.isFree(numberOfField)) {
+            if (game.getVerdict() == Verdict.NOBODY) {
 
                 player.move(numberOfField);
-                addImageOnBoard(imageView,player.getValue());
-                if(playerOne.equals(player)){
-                    player=playerTwo;
-                }else{
-                    player=playerOne;
-                }
+                addImageOnBoard(imageView, player.getValue());
+                changeBeginer();
 
             }
 
-            if(game.getVerdict()!=Verdict.NOBODY){
+            if (game.getVerdict() != Verdict.NOBODY) {
                 System.out.println(game.getVerdict());
                 gridPane.setCursor(Cursor.DEFAULT);
             }
         }
 
+    }
 
+    public void changeBeginer() {
+        if (playerOne.equals(player)) {
+            player = playerTwo;
+        } else {
+            player = playerOne;
+        }
     }
 }
