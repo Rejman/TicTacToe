@@ -22,6 +22,7 @@ public abstract class GameBoard extends StackPane {
     protected GridPane gridPane = new GridPane();
     protected List<Field> allFields;
     protected Game game;
+    private Field lastChangedField = new Field();
 
     private Image cross = new Image("/img/cross.png");
     private Image circle = new Image("/img/circle.png");
@@ -71,16 +72,23 @@ public abstract class GameBoard extends StackPane {
     protected abstract void click(Field field);
 
     protected void addSignToField(Field field, Sign value) {
+
         switch (value) {
             case CROSS:
-                field.drawCross(Color.LIGHTGREEN);
+                field.drawCross(Color.GREEN);
+                lastChangedField.clear();
+                lastChangedField.drawCircle(Color.LIGHTBLUE);
                 break;
             case CIRCLE:
-                field.drawCircle(Color.LIGHTBLUE);
+                field.drawCircle(Color.BLUE);
+                lastChangedField.clear();
+                lastChangedField.drawCross(Color.LIGHTGREEN);
                 break;
         }
+
+        lastChangedField = field;
     }
-    
+
 
 }
 
