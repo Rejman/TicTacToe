@@ -1,54 +1,76 @@
 package Controllers;
 
-import Models.Game.Game;
-import Models.Game.Sign;
-import Models.Gui.GameBoard;
-import Models.Gui.HumanVsComputer;
-import Models.Gui.HumanVsHuman;
-import Models.Player.Computer;
-import Models.Player.Human;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.Stack;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class MainController {
 
-
-    Stage mainStage;
-    @FXML
-    private StackPane gameStackPane;
-    @FXML
-    private StackPane mainStackPane;
-    private StackPane settingsPane;
-
-    private Human playerOne;
-    private Computer playerTwo;
-
-
+    private Stage mainStage;
     public void setMainStage(Stage stage){
         this.mainStage = stage;
-        settingsPane = gameStackPane;
     }
+    @FXML
+    private StackPane mainStackPane;
+
+    @FXML
+    private CheckMenuItem histroyOfMatchesCheckMenuItem;
+
+    @FXML
+    private CheckMenuItem MovementsCheckMenuItem;
+
+    @FXML
+    private StackPane stackPane;
+
+    @FXML
+    void about(ActionEvent event) {
+
+    }
+
+    @FXML
+    void exit(ActionEvent event) {
+
+    }
+
+    @FXML
+    void newGame(ActionEvent event) throws IOException {
+
+        loadNewView("GamePanel");
+    }
+
+    @FXML
+    void newSymulation(ActionEvent event) throws IOException {
+        loadNewView("SymulationPanel");
+    }
+
     @FXML
     void initialize() {
-
+        stackPane.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/GamePanel.fxml"));
+        try {
+            stackPane.getChildren().add((Node) loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    @FXML
-    void newGame(ActionEvent event) {
-        Game game = new Game(10,3);
-        playerOne = new Human("Person1", Sign.CIRCLE, game);
-        playerTwo = new Computer("Person2", Sign.CROSS, game);
 
-        HumanVsComputer gameBoard = new HumanVsComputer(game, playerOne, playerTwo, false);
-
-        gameStackPane.getChildren().add(gameBoard);
-        mainStage.setTitle("test");
+    private void loadNewView(String name){
+        stackPane.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/"+name+".fxml"));
+        try {
+            stackPane.getChildren().add((Node) loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         mainStage.sizeToScene();
-
-    }
-    @FXML
-    void settings(ActionEvent event) {
-        gameStackPane = settingsPane;
     }
 }
