@@ -12,6 +12,7 @@ public class HumanVsComputer extends GameBoard {
     private Computer computer;
 
     public HumanVsComputer(Game game, Human player, Computer computer, boolean computerFirst) {
+
         super(game);
         this.human = player;
         this.computer = computer;
@@ -41,6 +42,7 @@ public class HumanVsComputer extends GameBoard {
             }
             if (game.getVerdict() != Verdict.NOBODY) {
                 System.out.println(game.getVerdict());
+                this.verdictLabel.setText(game.getVerdict()+" WON");
                 gridPane.setCursor(Cursor.DEFAULT);
             }
         }

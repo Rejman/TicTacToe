@@ -66,8 +66,10 @@ public class GamePanelController {
         else computer = new Computer("random", Sign.CIRCLE, newGame);
 
         HumanVsComputer gameBoard = new HumanVsComputer(newGame, human, computer, computerFirst);
+        gameBoard.setVerdictLabel(verdictLabel);
         borderStackPane.getChildren().clear();
         borderStackPane.getChildren().add(gameBoard);
+
 
 
     }
