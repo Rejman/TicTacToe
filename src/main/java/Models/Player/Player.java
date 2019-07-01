@@ -29,7 +29,9 @@ public abstract class Player {
         this.name = name;
         this.value = value;
     }
-
+    public void setGame(Game game){
+        this.game = game;
+    }
 
 
     /**
@@ -51,6 +53,10 @@ public abstract class Player {
      */
     public Sign getValue(){
         return value;
+    }
+
+    public String toString(){
+        return name;
     }
 
 

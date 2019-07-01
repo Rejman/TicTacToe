@@ -51,7 +51,7 @@
                               </GridPane>
                            </content>
                         </TitledPane>
-                        <TitledPane collapsible="false" disable="true" text="Custom settings" underline="true">
+                        <TitledPane fx:id="customSettingsPanel" expanded="false" text="Custom settings" underline="true">
                            <content>
                               <GridPane hgap="10.0" vgap="10.0">
                                  <columnConstraints>
