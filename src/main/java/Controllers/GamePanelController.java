@@ -2,6 +2,7 @@ package Controllers;
 
 import Models.Game.Game;
 import Models.Game.Sign;
+import Models.Game.Verdict;
 import Models.Gui.*;
 import Models.Player.Computer;
 import Models.Player.Human;
@@ -22,6 +23,8 @@ public class GamePanelController {
 
 
     @FXML
+    private Button playButton;
+    @FXML
     private TitledPane customSettingsPanel;
     @FXML
     private ChoiceBox<GameType> gameTypeChoiceBox;
@@ -41,10 +44,13 @@ public class GamePanelController {
     @FXML
     private Spinner<Integer> winningNumberOfSignsSpinner;
 
-    private Game game;
+    @FXML
+    private Label verdictLabel;
 
     @FXML
     void play(ActionEvent event) {
+        playButton.setText("RESET");
+
         int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
         int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
