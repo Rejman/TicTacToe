@@ -23,9 +23,6 @@ public abstract class GameBoard extends StackPane {
     protected List<Field> allFields;
     protected Game game;
 
-    private Image cross = new Image("/img/cross.png");
-    private Image circle = new Image("/img/circle.png");
-    private Image blank = new Image("/img/empty.png");
 
     public GameBoard(Game game) {
 
@@ -53,9 +50,6 @@ public abstract class GameBoard extends StackPane {
         }
     }
 
-    private void clearField(ImageView imageView) {
-        imageView.setImage(blank);
-    }
 
     private void addMauseAction(final Field field) {
         field.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -82,7 +76,7 @@ public abstract class GameBoard extends StackPane {
 
                 break;
         }
-        
+
     }
 
 

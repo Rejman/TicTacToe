@@ -1,45 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
 <StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.GamePanelController">
    <children>
       <BorderPane prefHeight="200.0" prefWidth="200.0">
          <center>
-            <StackPane fx:id="borderStackPane" minHeight="600.0" minWidth="600.0" prefHeight="600.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
-         </center>
-         <bottom>
-            <Label text="BOTTOM" BorderPane.alignment="CENTER" />
-         </bottom>
-         <right>
-            <Label text="RIGHT" BorderPane.alignment="CENTER" />
-         </right>
-         <left>
-            <Label text="LEFT" BorderPane.alignment="CENTER" />
-         </left>
-         <top>
-            <GridPane BorderPane.alignment="CENTER">
-              <columnConstraints>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
+            <StackPane fx:id="borderStackPane" minHeight="600.0" minWidth="600.0" prefHeight="600.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label text="Player One" />
-                  <Label text="Player Two" GridPane.columnIndex="2" />
-                  <Label text="Verdict" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-               </children>
-            </GridPane>
-         </top>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label text="Game settings" />
+                        <HBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <Label text="chose your opunity" />
+                              <ChoiceBox prefWidth="150.0" />
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="buttonHBox" alignment="CENTER" spacing="10.0">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children></StackPane>
+         </center>
       </BorderPane>
    </children>
 </StackPane>

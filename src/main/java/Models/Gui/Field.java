@@ -4,6 +4,7 @@ package Models.Gui;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Lighting;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -47,4 +48,12 @@ public class Field extends Canvas {
         graphicsContext.strokeLine(margin,margin,y,y);
 
     }
+    public void addLigtingEffect(){
+        Lighting lighting = new Lighting();
+        this.setEffect(lighting);
+    }
+    public void clearEffect(){
+        this.setEffect(null);
+    }
+
 }
