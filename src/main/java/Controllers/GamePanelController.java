@@ -10,8 +10,8 @@ import Models.Player.Computer;
 import Models.Player.Human;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -19,9 +19,29 @@ import javafx.scene.paint.Color;
 public class GamePanelController {
 
 
-    @FXML
-    private HBox buttonHBox;
 
+    @FXML
+    private ChoiceBox<?> gameTypeChoiceBox;
+
+    @FXML
+    private ChoiceBox<?> opponentChoiceBox;
+
+    @FXML
+    private ChoiceBox<?> signChoiceBox;
+
+    @FXML
+    private CheckBox iWantStartCheckBox;
+
+    @FXML
+    private Spinner<?> sizeOfGameBoardSpinner;
+
+    @FXML
+    private Spinner<?> winningNumberOfSignsSpinner;
+
+    @FXML
+    void play(ActionEvent event) {
+
+    }
     @FXML
     private StackPane stackPane;
     @FXML
@@ -35,8 +55,7 @@ public class GamePanelController {
         circle.addLigtingEffect();
         cross.addLigtingEffect();
 
-        buttonHBox.getChildren().add(cross);
-        buttonHBox.getChildren().add(circle);
+
         borderStackPane.setMinWidth(GameBoard.SIZE);
         borderStackPane.setMinHeight(GameBoard.SIZE);
         start();
