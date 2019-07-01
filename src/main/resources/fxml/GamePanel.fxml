@@ -82,7 +82,7 @@
          <bottom>
             <HBox alignment="CENTER_RIGHT" spacing="10.0">
                <children>
-                  <Label fx:id="verdictLabel" text="winner">
+                  <Label fx:id="verdictLabel">
                      <font>
                         <Font size="28.0" />
                      </font>
