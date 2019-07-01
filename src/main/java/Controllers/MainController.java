@@ -1,214 +1,76 @@
 package Controllers;
 
-import Logic.Game;
-import Logic.Player;
-import Logic.Sign;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.scene.Cursor;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.effect.Lighting;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.Stack;
 
-import java.util.*;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 public class MainController {
 
-    private final int SIZE_OF_IMAGE = 100;
-    private int sizeOfBoard;
+    private Stage mainStage;
+    public void setMainStage(Stage stage){
+        this.mainStage = stage;
+    }
+    @FXML
+    private StackPane mainStackPane;
 
     @FXML
-    private ListView<Integer> playerListView;
-    @FXML
-    private ListView<Integer> computerListView;
+    private CheckMenuItem histroyOfMatchesCheckMenuItem;
 
     @FXML
-    private GridPane gameBoard;
+    private CheckMenuItem MovementsCheckMenuItem;
+
     @FXML
-    private Label player1Label;
+    private StackPane stackPane;
+
     @FXML
-    private Label player2Label;
+    void about(ActionEvent event) {
 
-    private Image cross = new Image("/img/cross.png");
-    private Image circle = new Image("/img/circle.png");
-    private Image blank = new Image("/img/empty.png");
+    }
 
-    private List<ImageView> allFields;
+    @FXML
+    void exit(ActionEvent event) {
 
-    private Game game;
-    private Player player;
-    private Player computer;
+    }
+
+    @FXML
+    void newGame(ActionEvent event) throws IOException {
+
+        loadNewView("GamePanel");
+    }
+
+    @FXML
+    void newSymulation(ActionEvent event) throws IOException {
+        loadNewView("SymulationPanel");
+    }
+
     @FXML
     void initialize() {
-
-        game = new Game();
-        this.player = new Player("You", Sign.CROSS, game);
-        this.computer = new Player("Computer",Sign.CIRCLE, game);
-
-        player1Label.setText(player.getName());
-        player2Label.setText(computer.getName());
-
-        sizeOfBoard = Game.numberOfRows;
-        buildFields();
-
-
-    }
-
-    private void buildFields() {
-
-        allFields = new ArrayList<ImageView>();
-        for (int i = 0; i < sizeOfBoard; i++) {
-
-            for (int j = 0; j < sizeOfBoard; j++) {
-
-                ImageView field = new ImageView();
-                field.setFitWidth(SIZE_OF_IMAGE);
-                field.setFitHeight(SIZE_OF_IMAGE);
-                clearField(field);
-                addMauseAction(field);
-                allFields.add(field);
-                gameBoard.add(field, j, i);
-
-            }
-        }
-        //add lines between fields
-        gameBoard.setGridLinesVisible(true);
-        gameBoard.setCursor(Cursor.HAND);
-
-    }
-
-    private void clearField(ImageView imageView) {
-        imageView.setImage(blank);
-    }
-
-    private void addMauseAction(final ImageView imageView) {
-        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-            public void handle(MouseEvent event) {
-
-
-                int id = allFields.indexOf(imageView);
-                deleteAllEffects();
-
-                boolean correct = player.move(id);
-
-                if(correct){
-                    playerListView.getItems().add(id);
-
-                    addImageOnBoard(id, player.getValue());
-                    checkVerdict();
-                    randomMove(computer);
-                    checkVerdict();
-                }
-
-
-            }
-
-        });
-    }
-    private void delMauseActions(){
-        for (ImageView field:allFields
-             ) {
-            field.setOnMouseClicked(null);
-        }
-        gameBoard.setCursor(Cursor.DEFAULT);
-    }
-    private void setMauseActions(){
-        for (ImageView field:allFields
-        ) {
-            addMauseAction(field);
-        }
-        gameBoard.setCursor(Cursor.HAND);
-    }
-    private void addImageOnBoard(int id, Sign value){
-        ImageView imageView = (ImageView) gameBoard.getChildren().get(id);
-        switch (value){
-            case CROSS:
-                imageView.setImage(cross);
-                break;
-            case CIRCLE:
-                imageView.setImage(circle);
-                break;
-                default:
-                    imageView.setImage(blank);
+        stackPane.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/GamePanel.fxml"));
+        try {
+            stackPane.getChildren().add((Node) loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private void randomMove(Player player){
-        int id = player.randomMove();
-        if(id!=(-1)) addImageOnBoard(id, player.getValue());
-
-        computerListView.getItems().add(id);
-
-    }
-
-    private void clearFields(){
-
-        for (ImageView image:allFields
-             ) {
-            image.setImage(blank);
+    private void loadNewView(String name){
+        stackPane.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/"+name+".fxml"));
+        try {
+            stackPane.getChildren().add((Node) loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
-    @FXML
-    void resetGame(ActionEvent event) {
-        resetGame();
-
-    }
-    void resetGame(){
-        clearFields();
-        game.reset();
-        playerListView.getItems().clear();
-        computerListView.getItems().clear();
-        player.resetSteps();
-        computer.resetSteps();
-        setMauseActions();
-    }
-    @FXML
-    void showComputerMove(MouseEvent event) {
-        int id = computerListView.getSelectionModel().getSelectedItem();
-        highlightField(id);
-    }
-
-    @FXML
-    void showPlayerMove(MouseEvent event) {
-        int id = playerListView.getSelectionModel().getSelectedItem();
-        highlightField(id);
-    }
-
-    private void highlightField(int field){
-        deleteAllEffects();
-        Lighting lighting = new Lighting();
-        allFields.get(field).setEffect(lighting);
-    }
-
-    private void deleteAllEffects(){
-        for (ImageView field:allFields
-             ) {
-            field.setEffect(null);
-        }
-    }
-
-    private void showEndGameAlert(Sign sign){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Game over");
-        if(sign == Sign.NONE) alert.setHeaderText("Tie");
-        else alert.setHeaderText("Player \""+sign+"\" win.");
-        alert.setContentText("New game.");
-
-        alert.showAndWait();
-    }
-    private void checkVerdict(){
-        Sign verdict = game.getVerdict();
-        if(verdict!=Sign.NONE || game.getEmptyFields().isEmpty()){
-            showEndGameAlert(verdict);
-            resetGame();
-        }
+        mainStage.sizeToScene();
     }
 }
-

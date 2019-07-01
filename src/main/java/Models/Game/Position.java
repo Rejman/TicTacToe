@@ -1,6 +1,4 @@
-package Logic;
-
-import javafx.geometry.Pos;
+package Models.Game;
 
 public class Position {
     public int column;
