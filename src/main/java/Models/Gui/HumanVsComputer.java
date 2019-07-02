@@ -1,9 +1,11 @@
 package Models.Gui;
 
 import Models.Game.Game;
+import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import Models.Player.Human;
+import com.sun.prism.paint.Color;
 import javafx.scene.Cursor;
 
 public class HumanVsComputer extends GameBoard {
@@ -42,9 +44,26 @@ public class HumanVsComputer extends GameBoard {
             }
             if (game.getVerdict() != Verdict.NOBODY) {
                 System.out.println(game.getVerdict());
-                this.verdictLabel.setText(game.getVerdict()+" WON");
+
+                modifyVerdictLabel();
                 gridPane.setCursor(Cursor.DEFAULT);
             }
         }
+    }
+    private void modifyVerdictLabel(){
+        Verdict verdict = game.getVerdict();
+        Sign sign = Sign.NONE;
+
+        if(verdict==Verdict.CROSS) sign = Sign.CROSS;
+        if(verdict==Verdict.CIRCLE) sign = Sign.CIRCLE;
+
+        if(human.getValue()==sign){
+            this.verdictLabel.setText(human.getName()+" WON");
+
+        }
+        if(computer.getValue()==sign) this.verdictLabel.setText(computer.getName()+" WON");
+        if(verdict==Verdict.TIE) this.verdictLabel.setText("TIE");
+
+
     }
 }
