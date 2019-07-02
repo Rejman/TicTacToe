@@ -62,7 +62,7 @@ public class GamePanelController {
 
         Human human = new Human("You", sign, newGame);
         Computer computer;
-        if(sign==Sign.CIRCLE) computer = new Computer("random", Sign.CROSS, newGame);
+        if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
         else computer = new Computer("random", Sign.CIRCLE, newGame);
 
         HumanVsComputer gameBoard = new HumanVsComputer(newGame, human, computer, computerFirst);
