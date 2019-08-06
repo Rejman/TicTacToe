@@ -130,7 +130,7 @@ public class Game {
         }
         winner = checkLine(temp);
 
-        if( winner==Verdict.NOBODY && emptyFields.isEmpty()) return Verdict.TIE;
+        if( winner==Verdict.NOBODY && emptyFields.isEmpty()) return Verdict.DRAW;
 
         return winner;
     }

@@ -62,7 +62,7 @@ public class HumanVsComputer extends GameBoard {
 
         }
         if(computer.getValue()==sign) this.verdictLabel.setText(computer.getName()+" WON");
-        if(verdict==Verdict.TIE) this.verdictLabel.setText("TIE");
+        if(verdict==Verdict.DRAW) this.verdictLabel.setText("DRAW");
 
 
     }
