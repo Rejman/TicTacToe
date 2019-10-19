@@ -1,5 +1,7 @@
 package Models.Game;
 
+import javafx.geometry.Pos;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,14 @@ public class Game {
         this.resultMatrix = new ResultMatrix(size);
         setEmptyFields();
 
+    }
+
+    public ResultMatrix getResultMatrix() {
+        return resultMatrix;
+    }
+
+    public void setResultMatrix(ResultMatrix resultMatrix) {
+        this.resultMatrix = resultMatrix;
     }
 
     /**

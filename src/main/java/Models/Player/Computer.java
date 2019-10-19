@@ -1,8 +1,6 @@
 package Models.Player;
 
-import Models.Game.Game;
-import Models.Game.Sign;
-import Models.Game.Verdict;
+import Models.Game.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +12,6 @@ public class Computer extends Player {
     private Random generator = new Random();
     //REINFORCEMENT_LEARNING_VARIABLES
     private double lr = 0.2;
-    private double exp_rate = 0.3;
     private double decay_gamma = 0.9;
     private ArrayList<String> states;
     private HashMap<String, Double> policy;
@@ -78,6 +75,40 @@ public class Computer extends Player {
             return field;
         }
         return -1;
+    }
+
+    public int move(double exp_rate){
+        int action = 0;
+        Random generator = new Random();
+        if(generator.nextDouble()<=exp_rate){
+            return randomMove();
+        }else{
+
+            double value_max = -1000;
+            List<Integer> emptyFields = game.getEmptyFields();
+            for (Integer field:emptyFields
+            ) {
+
+                ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
+                nextResultMatrix.add(field,this.value);
+                String nextResultMatrixHash = nextResultMatrix.getHash();
+                double value=0.0;
+                if(policy.get(nextResultMatrixHash) == null){
+                    value = 0.0;
+                }else{
+                    value = policy.get(nextResultMatrixHash);
+                }
+
+                if(value>=value_max){
+                    value_max = value;
+                    action = field;
+                }
+            }
+            game.addMove(action, value);
+            steps.add(action);
+
+        }
+        return action;
     }
 
 }
