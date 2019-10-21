@@ -71,7 +71,6 @@ public class Computer extends Player {
             int randomId = generator.nextInt(numberOfEmptyFields);
             int field = emptyFields.get(randomId);
             game.addMove(field, value);
-            steps.add(field);
             return field;
         }
         return -1;
@@ -105,7 +104,6 @@ public class Computer extends Player {
                 }
             }
             game.addMove(action, value);
-            steps.add(action);
 
         }
         return action;

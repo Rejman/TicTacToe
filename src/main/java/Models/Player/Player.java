@@ -12,8 +12,6 @@ public abstract class Player {
     private String name;
     //reference to game object
     protected Game game;
-    //steps which was made by the player
-    protected Set<Integer> steps;
 
     //sign represents the player
     protected Sign value;
@@ -25,20 +23,11 @@ public abstract class Player {
      */
     public Player(String name, Sign value, Game game){
         this.game = game;
-        this.steps = new HashSet<Integer>();
         this.name = name;
         this.value = value;
     }
     public void setGame(Game game){
         this.game = game;
-    }
-
-
-    /**
-     * player forgets all movements
-     */
-    public void resetSteps(){
-        steps.clear();
     }
 
     /**

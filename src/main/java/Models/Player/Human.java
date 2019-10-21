@@ -19,7 +19,6 @@ public class Human extends Player {
     public void move(int field) {
 
         game.addMove(field, value);
-        steps.add(field);
 
     }
 }
