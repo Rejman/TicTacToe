@@ -11,34 +11,43 @@ public class Symulation {
     private int circle = 0;
     private int draw = 0;
 
+    private Game game;
+
     private int rounds = 0;
 
     public static void main(String[] args) {
 
-        Symulation symulation1 = new Symulation();
+        Game ticTacToe = new Game(3,3);
+        Symulation symulation1 = new Symulation(ticTacToe);
         symulation1.play(400);
         symulation1.showStatistics();
 
 
     }
 
+    public Symulation(Game game) {
+        this.game = game;
+    }
+
     public void play(int rounds){
         this.rounds = rounds;
-        for(int i=0;i<rounds;i++){
-            Game ticTacToe = new Game(3,3);
 
-            Computer player1 = new Computer("p1", Sign.CROSS, ticTacToe);
-            Computer player2 = new Computer("p2", Sign.CIRCLE, ticTacToe);
+        Computer player1 = new Computer("p1", Sign.CROSS, game);
+        Computer player2 = new Computer("p2", Sign.CIRCLE, game);
+        for(int i=0;i<rounds;i++){
+
 
             Verdict verdict = Verdict.NOBODY;
             while(verdict==Verdict.NOBODY){
                 player1.randomMove();
                 player2.randomMove();
-                verdict = ticTacToe.getVerdict();
+                verdict = game.getVerdict();
             }
             if(verdict == Verdict.CROSS) cross++;
             if(verdict == Verdict.CIRCLE) circle++;
             if(verdict == Verdict.DRAW) draw++;
+
+            game.reset();
         }
 
 
