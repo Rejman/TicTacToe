@@ -36,7 +36,7 @@ public class Computer extends Player {
     }
 
     public void setPolicy(HashMap<String, Double> policy) {
-        policy = (HashMap<String, Double>) policy;
+        this.policy = (HashMap<String, Double>) policy;
     }
 
     public HashMap<String, Double> getPolicy() {
@@ -49,8 +49,8 @@ public class Computer extends Player {
             if (policy.get(state) == null) {
                 policy.put(state, 0.0);
             }
-            double value = policy.get(state);
-            value += lr * (decay_gamma * reward - value);
+            double value = this.lr *(this.decay_gamma*reward - policy.get(state));
+            value += policy.get(state);
             policy.put(state, value);
             reward = value;
         }
@@ -77,14 +77,18 @@ public class Computer extends Player {
     }
 
     public int move(double exp_rate){
+        ArrayList<Integer> emptyFields = game.getEmptyFields();
         int action = 0;
         Random generator = new Random();
         if(generator.nextDouble()<=exp_rate){
-            return randomMove();
+            int randomId = generator.nextInt(emptyFields.size());
+            int field = emptyFields.get(randomId);
+
+            action =  field;
         }else{
 
-            double value_max = -1000;
-            List<Integer> emptyFields = game.getEmptyFields();
+            double value_max = -999;
+
             for (Integer field:emptyFields
             ) {
 
@@ -93,19 +97,23 @@ public class Computer extends Player {
                 String nextResultMatrixHash = nextResultMatrix.getHash();
                 double value=0.0;
                 if(policy.get(nextResultMatrixHash) == null){
+
                     value = 0.0;
                 }else{
+
                     value = policy.get(nextResultMatrixHash);
                 }
 
                 if(value>=value_max){
+
                     value_max = value;
                     action = field;
                 }
             }
-            game.addMove(action, value);
+
 
         }
+        game.addMove(action, value);
         return action;
     }
 

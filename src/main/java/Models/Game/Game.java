@@ -28,7 +28,7 @@ public class Game {
     private ResultMatrix resultMatrix;
     //it keeps only empty fields (witch Sign.NONE)
     //defines which movements can be used yet
-    private List<Integer> emptyFields;
+    private ArrayList<Integer> emptyFields;
 
 
 
@@ -102,7 +102,7 @@ public class Game {
     /**
      * @return Return all available movements
      */
-    public List<Integer> getEmptyFields() {
+    public ArrayList<Integer> getEmptyFields() {
         return emptyFields;
     }
 

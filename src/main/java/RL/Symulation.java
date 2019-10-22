@@ -6,6 +6,7 @@ import Models.Game.Verdict;
 import Models.Player.Computer;
 import Models.Player.Player;
 
+import java.io.*;
 import java.util.HashMap;
 
 public class Symulation {
@@ -17,8 +18,8 @@ public class Symulation {
     private Computer playerOne;
     private Computer playerTwo;
 
-    public HashMap<String, Double> firstPlayerPolicy = null;
-    public HashMap<String, Double> secondPlayerPolicy = null;
+    private HashMap<String, Double> firstPlayerPolicy = null;
+    private HashMap<String, Double> secondPlayerPolicy = null;
 
     private Game game;
 
@@ -28,20 +29,46 @@ public class Symulation {
 
         Game ticTacToe = new Game(3,3);
         Symulation symulation1 = new Symulation(ticTacToe);
-        symulation1.train(50000);
+        symulation1.train(500000);
         symulation1.showStatistics();
-        HashMap<String, Double> firstPlayer = symulation1.firstPlayerPolicy;
+        HashMap<String, Double> firstPlayer = symulation1.getFirstPlayerPolicy();
 
         Computer randomPlayer = new Computer("Random", Sign.CIRCLE, ticTacToe);
         Computer smartPlayer = new Computer("Random", Sign.CROSS, ticTacToe);
+        //smartPlayer.setPolicy(deserialize("file.ser"));
         smartPlayer.setPolicy(firstPlayer);
         Symulation symulation2 = new Symulation(ticTacToe, smartPlayer, randomPlayer);
-        symulation2.play(100);
+        symulation2.play(50000);
         symulation2.showStatistics();
-
+        System.out.println(symulation1.firstPlayerPolicy.toString());
+        symulation1.serialize();
 
     }
+    public void serialize(){
+        String filename = "test.ser";
 
+        // Serialization
+        try
+        {
+            //Saving of object in a file
+            FileOutputStream file = new FileOutputStream(filename);
+            ObjectOutputStream out = new ObjectOutputStream(file);
+
+            // Method for serialization of object
+            out.writeObject(firstPlayerPolicy);
+
+            out.close();
+            file.close();
+
+            System.out.println("Object has been serialized");
+
+        }
+
+        catch(IOException ex)
+        {
+            System.out.println("IOException is caught");
+        }
+    }
     public Symulation(Game game) {
         this.game = game;
         playerOne = new Computer("cross player", Sign.CROSS, this.game);
@@ -57,6 +84,13 @@ public class Symulation {
 
     }
 
+    public HashMap<String, Double> getFirstPlayerPolicy() {
+        return (HashMap<String, Double>) firstPlayerPolicy.clone();
+    }
+
+    public HashMap<String, Double> getSecondPlayerPolicy() {
+        return (HashMap<String, Double>) secondPlayerPolicy.clone();
+    }
 
     public void play(int rounds){
         this.rounds = rounds;
@@ -66,8 +100,8 @@ public class Symulation {
 
             Verdict verdict = Verdict.NOBODY;
             while(verdict==Verdict.NOBODY){
-                playerOne.move(1);
-                playerTwo.move(1);
+                playerOne.move(0);
+                playerTwo.move(0);
                 verdict = game.getVerdict();
             }
             if(verdict == Verdict.CROSS) cross++;
@@ -143,5 +177,35 @@ public class Symulation {
         System.out.println("\tcirle won "+circle+" times\t("+(circle*100)/rounds+"%)");
         System.out.println("\tcross won "+cross+" times\t("+(cross*100)/rounds+"%)");
         System.out.println("\tdraw was "+draw+" times\t("+(draw*100)/rounds+"%)");
+    }
+    public static HashMap<String, Double> deserialize(String filename){
+        HashMap<String, Double> policy;
+        // Deserialization
+        try
+        {
+            // Reading the object from a file
+            FileInputStream file = new FileInputStream(filename);
+            ObjectInputStream in = new ObjectInputStream(file);
+
+            // Method for deserialization of object
+            policy = (HashMap<String, Double>) in.readObject();
+
+            in.close();
+            file.close();
+
+            System.out.println("Object has been deserialized ");
+            return policy;
+        }
+
+        catch(IOException ex)
+        {
+            System.out.println("IOException is caught");
+        }
+
+        catch(ClassNotFoundException ex)
+        {
+            System.out.println("ClassNotFoundException is caught");
+        }
+        return null;
     }
 }

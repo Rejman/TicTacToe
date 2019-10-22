@@ -11,7 +11,17 @@ public class ResultMatrix implements Cloneable{
         String result = "";
         for(int i=0;i<degree;i++){
             for(int j=0;j<degree;j++){
-                result+=values[i][j];
+                switch (values[i][j]){
+                    case CIRCLE:
+                        result+="O";
+                        break;
+                    case CROSS:
+                        result+="X";
+                        break;
+                    case NONE:
+                        result+="-";
+                }
+
             }
         }
         return result;

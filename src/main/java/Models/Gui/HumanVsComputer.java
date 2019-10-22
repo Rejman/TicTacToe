@@ -5,8 +5,11 @@ import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import Models.Player.Human;
+import RL.Symulation;
 import com.sun.prism.paint.Color;
 import javafx.scene.Cursor;
+
+import java.util.HashMap;
 
 public class HumanVsComputer extends GameBoard {
 
@@ -18,11 +21,23 @@ public class HumanVsComputer extends GameBoard {
         super(game);
         this.human = player;
         this.computer = computer;
+        //computer.setPolicy(Symulation.deserialize("file.ser"));
+        //HashMap<String, Double> test = Symulation.deserialize("test.ser");
+        //System.out.println(test.toString());
+        //RL
+
+        Symulation symulation = new Symulation(game);
+        symulation.train(500000);
+        this.computer.setPolicy(symulation.getFirstPlayerPolicy());
+        //symulation.showStatistics();
+        //System.out.println(symulation.getFirstPlayerPolicy().toString());
+        //computer.setPolicy(symulation.getFirstPlayerPolicy());
+        //
 
         if(computerFirst){
-            int field = computer.move(0);
+            int field = this.computer.move(0);
             Field temp = (Field) gridPane.getChildren().get(field);
-            addSignToField(temp, computer.getValue());
+            addSignToField(temp, this.computer.getValue());
         }
     }
 
