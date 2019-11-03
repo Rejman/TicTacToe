@@ -80,7 +80,9 @@ public class Computer extends Player {
         ArrayList<Integer> emptyFields = game.getEmptyFields();
         int action = 0;
         Random generator = new Random();
+        //Random generatorInt = new Random();
         if(generator.nextDouble()<=exp_rate){
+            if(emptyFields.isEmpty()) return 0;
             int randomId = generator.nextInt(emptyFields.size());
             int field = emptyFields.get(randomId);
 
