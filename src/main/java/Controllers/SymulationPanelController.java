@@ -56,7 +56,7 @@ public class SymulationPanelController {
         SpinnerValueFactory sizeSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
         SpinnerValueFactory numberSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
         SpinnerValueFactory expRateSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,100);
-        SpinnerValueFactory roundsSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99999999);
+        SpinnerValueFactory roundsSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99999999,50000,1000);
 
         sizeOfGameBoardSpinner.setValueFactory(sizeSVF);
         winningNumberOfSignsSpinner.setValueFactory(numberSVF);
@@ -66,7 +66,7 @@ public class SymulationPanelController {
         expRateSVF.setValue(30);
         sizeSVF.setValue(3);
         numberSVF.setValue(3);
-        roundsSVF.setValue(5000);
+        //roundsSVF.setValue(5000);
 
 
     }
