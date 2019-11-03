@@ -23,8 +23,8 @@ public class HumanVsComputer extends GameBoard {
         this.human = player;
         this.computer = computer;
 
-        HashMap<String, Double> policy = Serialize.loadPolicy("policy/new.policy");
-        computer.setPolicy(policy);
+        //HashMap<String, Double> policy = Serialize.loadPolicy("policy/new.policy");
+        //computer.setPolicy(policy);
 
         if(computerFirst){
             int field = this.computer.move(0);

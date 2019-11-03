@@ -39,8 +39,8 @@ public class SymulationPanelController {
         String rounds = roundsSpinner.getValue().toString();
 
         symulation = new Symulation(Integer.parseInt(size), Integer.parseInt(number));
-
-        symulation.train(Integer.parseInt(rounds),Integer.parseInt(expRate)/100);
+        //System.out.println(Double.parseDouble(expRate)/100);
+        symulation.train(Integer.parseInt(rounds),Double.parseDouble(expRate)/100);
         runSaveAlert("filename", symulation.getFirstPlayerPolicy());
 
 
@@ -56,7 +56,7 @@ public class SymulationPanelController {
         SpinnerValueFactory sizeSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
         SpinnerValueFactory numberSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
         SpinnerValueFactory expRateSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,100);
-        SpinnerValueFactory roundsSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99999999,50000,1000);
+        SpinnerValueFactory roundsSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99999999,500000,10000);
 
         sizeOfGameBoardSpinner.setValueFactory(sizeSVF);
         winningNumberOfSignsSpinner.setValueFactory(numberSVF);

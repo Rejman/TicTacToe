@@ -26,7 +26,7 @@ public class Symulation {
 
         Symulation symulation1 = new Symulation(3,3);
 
-        symulation1.train(50000,0.3);
+        symulation1.train(500000,0.3);
         //symulation1.resetStatistics();
         symulation1.play(200,0);
         //symulation1.play(200,0);
