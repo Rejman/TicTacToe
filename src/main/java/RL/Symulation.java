@@ -78,7 +78,7 @@ public class Symulation {
         resetStatistics();
         this.rounds = rounds;
         for(int i=0;i<rounds;i++){
-
+            if(rounds%10000==0) System.out.println((i*100)/rounds+" %");
             Verdict verdict;
             while(true){
 
