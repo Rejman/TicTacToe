@@ -5,8 +5,12 @@ import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import Models.Player.Human;
+import RL.Serialize;
+import RL.Symulation;
 import com.sun.prism.paint.Color;
 import javafx.scene.Cursor;
+
+import java.util.HashMap;
 
 public class HumanVsComputer extends GameBoard {
 
@@ -19,10 +23,13 @@ public class HumanVsComputer extends GameBoard {
         this.human = player;
         this.computer = computer;
 
+        HashMap<String, Double> policy = Serialize.loadPolicy("FirstPlayerCross");
+        computer.setPolicy(policy);
+
         if(computerFirst){
-            int field = computer.randomMove();
+            int field = this.computer.move(0);
             Field temp = (Field) gridPane.getChildren().get(field);
-            addSignToField(temp, computer.getValue());
+            addSignToField(temp, this.computer.getValue());
         }
     }
 
@@ -38,7 +45,7 @@ public class HumanVsComputer extends GameBoard {
 
             }
             if (game.getVerdict() == Verdict.NOBODY) {
-                int id = computer.randomMove();
+                int id = computer.move(0);
                 Field temp = (Field) gridPane.getChildren().get(id);
                 addSignToField(temp, computer.getValue());
             }

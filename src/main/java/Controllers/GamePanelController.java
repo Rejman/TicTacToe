@@ -11,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 
+import java.io.File;
+
 import static Models.Gui.GameType.*;
 
 public class GamePanelController {
@@ -20,7 +22,6 @@ public class GamePanelController {
     private final int GOMOKU_FULL = 5;
     private final int TICTACTOE_VALUE = 3;
     private boolean lock = false;
-
 
     @FXML
     private Button playButton;
@@ -158,8 +159,18 @@ public class GamePanelController {
 
         borderStackPane.setMinWidth(GameBoard.SIZE);
         borderStackPane.setMinHeight(GameBoard.SIZE);
+        listFilesForFolder(new File("policy"));
 
     }
 
 
+    public void listFilesForFolder(final File folder) {
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                listFilesForFolder(fileEntry);
+            } else {
+                System.out.println(fileEntry.getName());
+            }
+        }
+    }
 }

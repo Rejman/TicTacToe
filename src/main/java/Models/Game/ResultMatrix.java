@@ -3,9 +3,61 @@ package Models.Game;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ResultMatrix {
+public class ResultMatrix implements Cloneable{
     public int degree;
     private Sign[][] values;
+
+    public String getHash(){
+        String result = "";
+        for(int i=0;i<degree;i++){
+            for(int j=0;j<degree;j++){
+                switch (values[i][j]){
+                    case CIRCLE:
+                        result+="O";
+                        break;
+                    case CROSS:
+                        result+="X";
+                        break;
+                    case NONE:
+                        result+="-";
+                }
+
+            }
+        }
+        return result;
+    }
+    public ResultMatrix clone(){
+        ResultMatrix clone = new ResultMatrix(this.degree);
+        Sign[][] copyOfValue = getCopyValues();
+        clone.setValues(copyOfValue);
+
+        return clone;
+    }
+    private Sign[][] getCopyValues(){
+        Sign[][] copy = new Sign[degree][degree];
+        for(int i=0;i<degree;i++){
+            for(int j=0;j<degree;j++){
+                copy[i][j] = values[i][j];
+            }
+        }
+        return copy;
+    }
+
+    public int getDegree() {
+        return degree;
+    }
+
+    public Sign[][] getValues() {
+        return values;
+    }
+
+    public void setDegree(int degree) {
+        this.degree = degree;
+    }
+
+    public void setValues(Sign[][] values) {
+        this.values = values;
+    }
 
     public ResultMatrix(int degree) {
         this.degree = degree;
