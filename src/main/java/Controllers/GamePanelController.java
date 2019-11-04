@@ -66,7 +66,9 @@ public class GamePanelController {
         if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
         else computer = new Computer("random", Sign.CIRCLE, newGame);
         //System.out.println(buildPathToFile(policyName));
-        computer.setPolicy(Serialize.loadPolicy(buildPathToFile(policyName)));
+
+        computer.setPolicy(Serialize.loadPolicy(buildPathToFile(policyName, computer.getValue())));
+
 
         HumanVsComputer gameBoard = new HumanVsComputer(newGame, human, computer, computerFirst);
         gameBoard.setVerdictLabel(verdictLabel);
@@ -168,8 +170,12 @@ public class GamePanelController {
 
     }
 
-    private String buildPathToFile(String filename){
-        return "policy/"+filename+".policy";
+    private String buildPathToFile(String filename, Sign sign){
+        String end = "";
+        if(sign == Sign.CIRCLE)  end = ".circle";
+        if(sign == Sign.CROSS)  end = ".cross";
+
+        return "policy/"+filename+end;
     }
 
     public ArrayList<String> listFilesForFolder(final File folder) {
@@ -179,7 +185,7 @@ public class GamePanelController {
                 listFilesForFolder(fileEntry);
             } else {
                 String name = fileEntry.getName();
-                int id = name.indexOf(".policy");
+                int id = name.indexOf(".cross");
                 if(id>=0){
                     list.add(name.substring(0,id));
                 }

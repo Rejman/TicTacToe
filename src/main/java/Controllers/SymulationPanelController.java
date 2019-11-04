@@ -41,7 +41,7 @@ public class SymulationPanelController {
         symulation = new Symulation(Integer.parseInt(size), Integer.parseInt(number));
         //System.out.println(Double.parseDouble(expRate)/100);
         symulation.train(Integer.parseInt(rounds),Double.parseDouble(expRate)/100);
-        runSaveAlert("filename", symulation.getFirstPlayerPolicy());
+        runSaveAlert("filename", symulation.getFirstPlayerPolicy(), symulation.getSecondPlayerPolicy());
 
 
     }
@@ -70,7 +70,7 @@ public class SymulationPanelController {
 
 
     }
-    private void runSaveAlert(String filename, HashMap<String,Double> policy){
+    private void runSaveAlert(String filename, HashMap<String,Double> policyCross, HashMap<String,Double> policyCircle){
         TextInputDialog dialog = new TextInputDialog(filename);
         dialog.setTitle("Save trained policy");
         dialog.setHeaderText("Save trained policy");
@@ -79,8 +79,9 @@ public class SymulationPanelController {
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()){
-            String path = "policy/"+result.get()+".policy";
-            Serialize.savePolicy(path, policy);
+            String path = "policy/"+result.get();
+            Serialize.savePolicy(path+".circle", policyCircle);
+            Serialize.savePolicy(path+".cross", policyCross);
         }
 
     }
