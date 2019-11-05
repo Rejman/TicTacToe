@@ -64,7 +64,7 @@ public class GamePanelController {
         Human human = new Human("You", sign, newGame);
         Computer computer;
         if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
-        else computer = new Computer("random", Sign.CIRCLE, newGame);
+        else computer = new Computer("computer", Sign.CIRCLE, newGame);
         //System.out.println(buildPathToFile(policyName));
 
         computer.setPolicy(Serialize.loadPolicy(buildPathToFile(policyName, computer.getValue())));
