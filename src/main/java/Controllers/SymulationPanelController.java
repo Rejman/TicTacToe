@@ -1,5 +1,6 @@
 package Controllers;
 import IO.Serialize;
+import RL.Policy;
 import RL.Symulation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -70,7 +71,7 @@ public class SymulationPanelController {
 
 
     }
-    private void runSaveAlert(String filename, HashMap<String,Double> policyCross, HashMap<String,Double> policyCircle){
+    private void runSaveAlert(String filename, Policy policyCross, Policy policyCircle){
         TextInputDialog dialog = new TextInputDialog(filename);
         dialog.setTitle("Save trained policy");
         dialog.setHeaderText("Save trained policy");

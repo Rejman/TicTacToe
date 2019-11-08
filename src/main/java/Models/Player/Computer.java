@@ -1,6 +1,7 @@
 package Models.Player;
 
 import Models.Game.*;
+import RL.Policy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public class Computer extends Player {
     private Random generator = new Random();
     //REINFORCEMENT_LEARNING_VARIABLES
     private ArrayList<String> states;
-    private HashMap<String, Double> policy;
+    private Policy policy;
 
     /**
      * @param name
@@ -22,7 +23,7 @@ public class Computer extends Player {
     public Computer(String name, Sign value, Game game) {
         super(name, value, game);
         states = new ArrayList<String>();
-        policy = new HashMap<String, Double>();
+        policy = new Policy(this.value,0,0);
     }
 
     public ArrayList<String> getStates() {
@@ -37,12 +38,13 @@ public class Computer extends Player {
         states.clear();
     }
 
-    public void setPolicy(HashMap<String, Double> policy) {
-        this.policy = (HashMap<String, Double>) policy;
+    public void setPolicy(Policy policy) {
+        this.policy = policy;
     }
 
-    public HashMap<String, Double> getPolicy() {
-        return (HashMap<String, Double>) policy;
+
+    public Policy getPolicy() {
+        return this.policy;
     }
 
     /**
@@ -82,17 +84,18 @@ public class Computer extends Player {
 
             for (Integer field:emptyFields
             ) {
+                HashMap<String,Double> temp = policy.getDictionary();
 
                 ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
                 nextResultMatrix.add(field,this.value);
                 String nextResultMatrixHash = nextResultMatrix.getHash();
                 double value=0.0;
-                if(policy.get(nextResultMatrixHash) == null){
+                if(temp.get(nextResultMatrixHash) == null){
 
                     value = 0.0;
                 }else{
 
-                    value = policy.get(nextResultMatrixHash);
+                    value = temp.get(nextResultMatrixHash);
                 }
 
                 if(value>=value_max){

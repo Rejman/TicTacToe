@@ -1,12 +1,14 @@
 package IO;
 
+import RL.Policy;
+
 import java.io.*;
 import java.util.HashMap;
 
 public abstract class Serialize {
 
-    public static HashMap<String, Double> loadPolicy(String filename){
-        HashMap<String, Double> policy;
+    public static Policy loadPolicy(String filename){
+        Policy policy;
         // Deserialization
         try
         {
@@ -14,7 +16,7 @@ public abstract class Serialize {
             FileInputStream file = new FileInputStream(filename);
             ObjectInputStream in = new ObjectInputStream(file);
             // Method for deserialization of object
-            policy = (HashMap<String, Double>) in.readObject();
+            policy = (Policy) in.readObject();
 
             in.close();
             file.close();
@@ -33,7 +35,7 @@ public abstract class Serialize {
         return null;
     }
 
-    public static void savePolicy(String filename, HashMap<String, Double> policy){
+    public static void savePolicy(String filename, Policy policy){
         // Serialization
         try
         {
