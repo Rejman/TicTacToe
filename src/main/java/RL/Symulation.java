@@ -4,7 +4,7 @@ import Models.Game.Game;
 import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
-import OI.Serialize;
+import IO.Serialize;
 
 import java.util.ArrayList;
 import java.util.HashMap;
