@@ -5,12 +5,7 @@ import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import Models.Player.Human;
-import RL.Serialize;
-import RL.Symulation;
-import com.sun.prism.paint.Color;
 import javafx.scene.Cursor;
-
-import java.util.HashMap;
 
 public class HumanVsComputer extends GameBoard {
 

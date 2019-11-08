@@ -11,7 +11,6 @@ public class Computer extends Player {
     //object that chooses random movement
     private Random generator = new Random();
     //REINFORCEMENT_LEARNING_VARIABLES
-    private double decay_gamma = 0.9;
     private ArrayList<String> states;
     private HashMap<String, Double> policy;
 
@@ -44,19 +43,6 @@ public class Computer extends Player {
 
     public HashMap<String, Double> getPolicy() {
         return (HashMap<String, Double>) policy;
-    }
-
-    public void setReward(double reward) {
-        for (int i = states.size() - 1; i >= 0; i--) {
-            String state = states.get(i);
-            if (policy.get(state) == null) {
-                policy.put(state, 0.0);
-            }
-            double value =0.2*(this.decay_gamma*reward - policy.get(state));
-            value += policy.get(state);
-            policy.put(state, value);
-            reward = value;
-        }
     }
 
     /**

@@ -5,14 +5,13 @@ import Models.Game.Sign;
 import Models.Gui.*;
 import Models.Player.Computer;
 import Models.Player.Human;
-import RL.Serialize;
+import OI.Serialize;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import static Models.Gui.GameType.*;
