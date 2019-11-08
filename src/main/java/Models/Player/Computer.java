@@ -26,6 +26,10 @@ public class Computer extends Player {
         policy = new HashMap<String, Double>();
     }
 
+    public ArrayList<String> getStates() {
+        return states;
+    }
+
     public void addState(String state) {
         states.add(state);
     }

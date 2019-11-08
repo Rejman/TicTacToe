@@ -6,6 +6,7 @@ import Models.Game.Verdict;
 import Models.Player.Computer;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Symulation {
@@ -114,19 +115,35 @@ public class Symulation {
 
         switch (verdict){
             case CROSS:
-                this.crossPlayer.setReward(1);
-                this.circlePlayer.setReward(0);
+                setReward(1,crossPlayer);
+                setReward(0,circlePlayer);
                 break;
             case CIRCLE:
-                this.crossPlayer.setReward(0);
-                this.circlePlayer.setReward(1);
+                setReward(0,crossPlayer);
+                setReward(1,circlePlayer);
                 break;
             default:
-                this.crossPlayer.setReward(0.1);
-                this.circlePlayer.setReward(0.5);
+                setReward(0.1,crossPlayer);
+                setReward(0.5,circlePlayer);
                 break;
         }
 
+    }
+    public void setReward(double reward, Computer computer) {
+        double decayGamma = 0.9;
+        double lr = 0.2;
+        ArrayList<String> states = computer.getStates();
+        HashMap<String,Double> policy = computer.getPolicy();
+        for (int i = states.size() - 1; i >= 0; i--) {
+            String state = states.get(i);
+            if (policy.get(state) == null) {
+                policy.put(state, 0.0);
+            }
+            double value =lr*(decayGamma*reward - policy.get(state));
+            value += policy.get(state);
+            policy.put(state, value);
+            reward = value;
+        }
     }
     public void showStatistics(){
 
