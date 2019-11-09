@@ -6,6 +6,7 @@ import Models.Gui.*;
 import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
+import RL.Policy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -13,6 +14,7 @@ import javafx.scene.layout.StackPane;
 
 import java.io.File;
 import java.io.Serializable;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 import static Models.Gui.GameType.*;
@@ -24,7 +26,11 @@ public class GamePanelController {
     private final int GOMOKU_FULL = 5;
     private final int TICTACTOE_VALUE = 3;
     private boolean lock = false;
+    @FXML
+    private Button infoButton;
 
+    @FXML
+    private Button deleteButton;
     @FXML
     private Button playButton;
     @FXML
@@ -184,5 +190,26 @@ public class GamePanelController {
             }
         }
         return list;
+    }
+    @FXML
+    void deletePolicy(ActionEvent event) {
+
+    }
+
+    @FXML
+    void infoPolicy(ActionEvent event) {
+        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+        Policy crossPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CROSS));
+        System.out.println(crossPolicy.getSign().toString());
+        System.out.println(crossPolicy.getRounds());
+        System.out.println(crossPolicy.getExpRate());
+        String message = "rounds: "+crossPolicy.getRounds()+"\n";
+        message+="expRate: "+crossPolicy.getExpRate();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Policy details");
+        alert.setHeaderText("Information of \""+policyName+"\" policy");
+        alert.setContentText(message);
+
+        alert.showAndWait();
     }
 }

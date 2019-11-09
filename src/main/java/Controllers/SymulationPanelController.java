@@ -5,9 +5,6 @@ import RL.Symulation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
-import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Optional;
 
 public class SymulationPanelController {
