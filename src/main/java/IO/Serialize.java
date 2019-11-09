@@ -1,9 +1,8 @@
 package IO;
-
+import Models.Game.Sign;
 import RL.Policy;
-
 import java.io.*;
-import java.util.HashMap;
+
 
 public abstract class Serialize {
 
@@ -37,6 +36,7 @@ public abstract class Serialize {
 
     public static void savePolicy(String filename, Policy policy){
         // Serialization
+        filename = pathToFile(filename, policy.getSign());
         try
         {
             //Saving of object in a file
@@ -53,5 +53,9 @@ public abstract class Serialize {
         {
             System.out.println("IOException is caught");
         }
+    }
+    public static String pathToFile(String filename, Sign sign){
+        String path = "policy/";
+        return path+filename+"."+sign.toString();
     }
 }

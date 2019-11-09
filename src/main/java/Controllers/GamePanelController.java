@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static Models.Gui.GameType.*;
@@ -66,7 +67,7 @@ public class GamePanelController {
         else computer = new Computer("computer", Sign.CIRCLE, newGame);
         //System.out.println(buildPathToFile(policyName));
 
-        computer.setPolicy(Serialize.loadPolicy(buildPathToFile(policyName, computer.getValue())));
+        computer.setPolicy(Serialize.loadPolicy(Serialize.pathToFile(policyName,computer.getValue())));
 
 
         HumanVsComputer gameBoard = new HumanVsComputer(newGame, human, computer, computerFirst);
@@ -169,14 +170,6 @@ public class GamePanelController {
 
     }
 
-    private String buildPathToFile(String filename, Sign sign){
-        String end = "";
-        if(sign == Sign.CIRCLE)  end = ".circle";
-        if(sign == Sign.CROSS)  end = ".cross";
-
-        return "policy/"+filename+end;
-    }
-
     public ArrayList<String> listFilesForFolder(final File folder) {
         ArrayList<String> list = new ArrayList<>();
         for (final File fileEntry : folder.listFiles()) {
@@ -184,7 +177,7 @@ public class GamePanelController {
                 listFilesForFolder(fileEntry);
             } else {
                 String name = fileEntry.getName();
-                int id = name.indexOf(".cross");
+                int id = name.indexOf(".CROSS");
                 if(id>=0){
                     list.add(name.substring(0,id));
                 }

@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -80,9 +81,8 @@ public class SymulationPanelController {
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()){
-            String path = "policy/"+result.get();
-            Serialize.savePolicy(path+".circle", policyCircle);
-            Serialize.savePolicy(path+".cross", policyCross);
+            Serialize.savePolicy(result.get(), policyCircle);
+            Serialize.savePolicy(result.get(), policyCross);
         }
 
     }

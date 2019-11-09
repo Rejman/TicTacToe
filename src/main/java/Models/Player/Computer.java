@@ -84,18 +84,18 @@ public class Computer extends Player {
 
             for (Integer field:emptyFields
             ) {
-                HashMap<String,Double> temp = policy.getDictionary();
+                HashMap<String,Double> dictionary = policy.getDictionary();
 
                 ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
                 nextResultMatrix.add(field,this.value);
                 String nextResultMatrixHash = nextResultMatrix.getHash();
                 double value=0.0;
-                if(temp.get(nextResultMatrixHash) == null){
+                if(dictionary.get(nextResultMatrixHash) == null){
 
                     value = 0.0;
                 }else{
 
-                    value = temp.get(nextResultMatrixHash);
+                    value = dictionary.get(nextResultMatrixHash);
                 }
 
                 if(value>=value_max){

@@ -35,24 +35,6 @@ public class Symulation {
     public Policy getSecondPlayerPolicy() {
         return  circlePlayer.getPolicy();
     }
-    private void play(int rounds, double exp_rate) {
-        resetStatistics();
-        this.rounds = rounds;
-        for (int i = 0; i < rounds; i++) {
-            Verdict verdict = Verdict.NOBODY;
-            while (verdict == Verdict.NOBODY) {
-                crossPlayer.move(exp_rate);
-                circlePlayer.move(exp_rate);
-                verdict = game.getVerdict();
-            }
-            if (verdict == Verdict.CROSS) cross++;
-            if (verdict == Verdict.CIRCLE) circle++;
-            if (verdict == Verdict.DRAW) draw++;
-
-            game.reset();
-        }
-        showStatistics();
-    }
     private void resetStatistics() {
         rounds = 0;
         cross = 0;
@@ -65,6 +47,7 @@ public class Symulation {
         circlePlayer.setPolicy(new Policy(Sign.CIRCLE,rounds,exp_rate));
         resetStatistics();
         this.rounds = rounds;
+
         for (int i = 0; i < rounds; i++) {
             if (rounds % 10000 == 0) System.out.println((i * 100) / rounds + " %");
             Verdict verdict;
@@ -119,18 +102,21 @@ public class Symulation {
     }
 
     public void setReward(double reward, Computer computer) {
+
         double decayGamma = 0.9;
         double lr = 0.2;
+
         ArrayList<String> states = computer.getStates();
-        Policy policy = computer.getPolicy();
+        HashMap<String,Double> dictionary = computer.getPolicy().getDictionary();
+
         for (int i = states.size() - 1; i >= 0; i--) {
             String state = states.get(i);
-            if (policy.getDictionary().get(state) == null) {
-                policy.getDictionary().put(state, 0.0);
+            if (dictionary.get(state) == null) {
+                dictionary.put(state, 0.0);
             }
-            double value = lr * (decayGamma * reward - policy.getDictionary().get(state));
-            value += policy.getDictionary().get(state);
-            policy.getDictionary().put(state, value);
+            double value = lr * (decayGamma * reward - dictionary.get(state));
+            value += dictionary.get(state);
+            dictionary.put(state, value);
             reward = value;
         }
     }
@@ -141,9 +127,6 @@ public class Symulation {
         System.out.println("\tcirle won " + circle + " times\t(" + (circle * 100) / rounds + "%)");
         System.out.println("\tcross won " + cross + " times\t(" + (cross * 100) / rounds + "%)");
         System.out.println("\tdraw was " + draw + " times\t(" + (draw * 100) / rounds + "%)");
-    }
-    public void test(HashMap<String,Double> policy){
-
     }
 
 }
