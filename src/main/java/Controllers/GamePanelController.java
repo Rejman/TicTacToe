@@ -199,27 +199,10 @@ public class GamePanelController {
     @FXML
     void deletePolicy(ActionEvent event) {
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
-        try
-        {
-            Files.deleteIfExists(Paths.get(Serialize.pathToFile(policyName,Sign.CROSS)));
-            Files.deleteIfExists(Paths.get(Serialize.pathToFile(policyName,Sign.CIRCLE)));
 
-            policyChoiceBox.getItems().remove(policyName);
-        }
-        catch(NoSuchFileException e)
-        {
-            System.out.println("No such file/directory exists");
-        }
-        catch(DirectoryNotEmptyException e)
-        {
-            System.out.println("Directory is not empty.");
-        }
-        catch(IOException e)
-        {
-            System.out.println("Invalid permissions.");
-        }
+        boolean deleted = Serialize.deletePolicy(policyName);
+        if(deleted==true) policyChoiceBox.getItems().remove(policyName);
 
-        System.out.println("Deletion successful.");
     }
 
     @FXML

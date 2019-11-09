@@ -2,6 +2,10 @@ package IO;
 import Models.Game.Sign;
 import RL.Policy;
 import java.io.*;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 
 
 public abstract class Serialize {
@@ -53,6 +57,29 @@ public abstract class Serialize {
         {
             System.out.println("IOException is caught");
         }
+    }
+    public static boolean deletePolicy(String policyName){
+        //String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+        try
+        {
+            Files.deleteIfExists(Paths.get(Serialize.pathToFile(policyName,Sign.CROSS)));
+            Files.deleteIfExists(Paths.get(Serialize.pathToFile(policyName,Sign.CIRCLE)));
+            //policyChoiceBox.getItems().remove(policyName);
+        }
+        catch(NoSuchFileException e)
+        {
+            System.out.println("No such file/directory exists");
+        }
+        catch(DirectoryNotEmptyException e)
+        {
+            System.out.println("Directory is not empty.");
+        }
+        catch(IOException e)
+        {
+            System.out.println("Invalid permissions.");
+        }
+        System.out.println("Deletion successful.");
+        return true;
     }
     public static String pathToFile(String filename, Sign sign){
         String path = "policy/";
