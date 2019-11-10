@@ -5,12 +5,7 @@ import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import Models.Player.Human;
-import RL.Serialize;
-import RL.Symulation;
-import com.sun.prism.paint.Color;
 import javafx.scene.Cursor;
-
-import java.util.HashMap;
 
 public class HumanVsComputer extends GameBoard {
 
@@ -22,9 +17,6 @@ public class HumanVsComputer extends GameBoard {
         super(game);
         this.human = player;
         this.computer = computer;
-
-        //HashMap<String, Double> policy = Serialize.loadPolicy("policy/new.policy");
-        //computer.setPolicy(policy);
 
         if(computerFirst){
             int field = this.computer.move(0);

@@ -5,14 +5,21 @@ import Models.Game.Sign;
 import Models.Gui.*;
 import Models.Player.Computer;
 import Models.Player.Human;
-import RL.Serialize;
+import IO.Serialize;
+import RL.Policy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 import static Models.Gui.GameType.*;
@@ -24,7 +31,11 @@ public class GamePanelController {
     private final int GOMOKU_FULL = 5;
     private final int TICTACTOE_VALUE = 3;
     private boolean lock = false;
+    @FXML
+    private Button infoButton;
 
+    @FXML
+    private Button deleteButton;
     @FXML
     private Button playButton;
     @FXML
@@ -67,7 +78,7 @@ public class GamePanelController {
         else computer = new Computer("computer", Sign.CIRCLE, newGame);
         //System.out.println(buildPathToFile(policyName));
 
-        computer.setPolicy(Serialize.loadPolicy(buildPathToFile(policyName, computer.getValue())));
+        computer.setPolicy(Serialize.loadPolicy(Serialize.pathToFile(policyName,computer.getValue())));
 
 
         HumanVsComputer gameBoard = new HumanVsComputer(newGame, human, computer, computerFirst);
@@ -170,14 +181,6 @@ public class GamePanelController {
 
     }
 
-    private String buildPathToFile(String filename, Sign sign){
-        String end = "";
-        if(sign == Sign.CIRCLE)  end = ".circle";
-        if(sign == Sign.CROSS)  end = ".cross";
-
-        return "policy/"+filename+end;
-    }
-
     public ArrayList<String> listFilesForFolder(final File folder) {
         ArrayList<String> list = new ArrayList<>();
         for (final File fileEntry : folder.listFiles()) {
@@ -185,12 +188,37 @@ public class GamePanelController {
                 listFilesForFolder(fileEntry);
             } else {
                 String name = fileEntry.getName();
-                int id = name.indexOf(".cross");
+                int id = name.indexOf(".CROSS");
                 if(id>=0){
                     list.add(name.substring(0,id));
                 }
             }
         }
         return list;
+    }
+    @FXML
+    void deletePolicy(ActionEvent event) {
+        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+
+        boolean deleted = Serialize.deletePolicy(policyName);
+        if(deleted==true) policyChoiceBox.getItems().remove(policyName);
+
+    }
+
+    @FXML
+    void infoPolicy(ActionEvent event) {
+        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+        Policy crossPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CROSS));
+        System.out.println(crossPolicy.getSign().toString());
+        System.out.println(crossPolicy.getRounds());
+        System.out.println(crossPolicy.getExpRate());
+        String message = "rounds: "+crossPolicy.getRounds()+"\n";
+        message+="expRate: "+crossPolicy.getExpRate();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Policy details");
+        alert.setHeaderText("Information of \""+policyName+"\" policy");
+        alert.setContentText(message);
+
+        alert.showAndWait();
     }
 }

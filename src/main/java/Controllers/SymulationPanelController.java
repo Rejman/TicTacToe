@@ -1,11 +1,10 @@
 package Controllers;
-import RL.Serialize;
+import IO.Serialize;
+import RL.Policy;
 import RL.Symulation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
-import java.util.HashMap;
 import java.util.Optional;
 
 public class SymulationPanelController {
@@ -70,7 +69,7 @@ public class SymulationPanelController {
 
 
     }
-    private void runSaveAlert(String filename, HashMap<String,Double> policyCross, HashMap<String,Double> policyCircle){
+    private void runSaveAlert(String filename, Policy policyCross, Policy policyCircle){
         TextInputDialog dialog = new TextInputDialog(filename);
         dialog.setTitle("Save trained policy");
         dialog.setHeaderText("Save trained policy");
@@ -79,9 +78,8 @@ public class SymulationPanelController {
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()){
-            String path = "policy/"+result.get();
-            Serialize.savePolicy(path+".circle", policyCircle);
-            Serialize.savePolicy(path+".cross", policyCross);
+            Serialize.savePolicy(result.get(), policyCircle);
+            Serialize.savePolicy(result.get(), policyCross);
         }
 
     }
