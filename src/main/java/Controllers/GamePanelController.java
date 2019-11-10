@@ -2,16 +2,25 @@ package Controllers;
 
 import Models.Game.Game;
 import Models.Game.Sign;
-import Models.Game.Verdict;
 import Models.Gui.*;
 import Models.Player.Computer;
 import Models.Player.Human;
+import IO.Serialize;
+import RL.Policy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
+import java.sql.SQLOutput;
+import java.util.ArrayList;
 
 import static Models.Gui.GameType.*;
 
@@ -22,7 +31,11 @@ public class GamePanelController {
     private final int GOMOKU_FULL = 5;
     private final int TICTACTOE_VALUE = 3;
     private boolean lock = false;
+    @FXML
+    private Button infoButton;
 
+    @FXML
+    private Button deleteButton;
     @FXML
     private Button playButton;
     @FXML
@@ -31,13 +44,10 @@ public class GamePanelController {
     private ChoiceBox<GameType> gameTypeChoiceBox;
 
     @FXML
-    private ChoiceBox<String> opponentChoiceBox;
+    private ChoiceBox<String> policyChoiceBox;
 
     @FXML
     private ChoiceBox<Sign> signChoiceBox;
-
-    @FXML
-    private CheckBox iWantStartCheckBox;
 
     @FXML
     private Spinner<Integer> sizeOfGameBoardSpinner;
@@ -55,8 +65,9 @@ public class GamePanelController {
         int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
         int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
+        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
         boolean computerFirst;
-        if(iWantStartCheckBox.isSelected()) computerFirst = false;
+        if(sign==Sign.CROSS) computerFirst = false;
         else computerFirst = true;
 
         Game newGame = new Game(size, full);
@@ -64,14 +75,16 @@ public class GamePanelController {
         Human human = new Human("You", sign, newGame);
         Computer computer;
         if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
-        else computer = new Computer("random", Sign.CIRCLE, newGame);
+        else computer = new Computer("computer", Sign.CIRCLE, newGame);
+        //System.out.println(buildPathToFile(policyName));
+
+        computer.setPolicy(Serialize.loadPolicy(Serialize.pathToFile(policyName,computer.getValue())));
+
 
         HumanVsComputer gameBoard = new HumanVsComputer(newGame, human, computer, computerFirst);
         gameBoard.setVerdictLabel(verdictLabel);
         borderStackPane.getChildren().clear();
         borderStackPane.getChildren().add(gameBoard);
-
-
 
     }
     @FXML
@@ -110,9 +123,14 @@ public class GamePanelController {
 
                 });
     }
-    private void buildOpponentChoiceBox(){
-        opponentChoiceBox.getItems().add("Random moves");
-        opponentChoiceBox.getSelectionModel().select(0);
+    private void buildPolicyChoiceBox(){
+
+
+        ArrayList<String> list = listFilesForFolder(new File("policy"));
+        for(int i=0;i<list.size();i++){
+            policyChoiceBox.getItems().add(list.get(i));
+        }
+        policyChoiceBox.getSelectionModel().select(0);
     }
     private void buildSpinners(){
         SpinnerValueFactory sizeSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
@@ -147,7 +165,7 @@ public class GamePanelController {
     @FXML
     void initialize() {
         buildGameTypeChoiceBox();
-        buildOpponentChoiceBox();
+        buildPolicyChoiceBox();
         buildSignChoiceBox();
         buildSpinners();
 
@@ -163,14 +181,44 @@ public class GamePanelController {
 
     }
 
-
-    public void listFilesForFolder(final File folder) {
+    public ArrayList<String> listFilesForFolder(final File folder) {
+        ArrayList<String> list = new ArrayList<>();
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry);
             } else {
-                System.out.println(fileEntry.getName());
+                String name = fileEntry.getName();
+                int id = name.indexOf(".CROSS");
+                if(id>=0){
+                    list.add(name.substring(0,id));
+                }
             }
         }
+        return list;
+    }
+    @FXML
+    void deletePolicy(ActionEvent event) {
+        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+
+        boolean deleted = Serialize.deletePolicy(policyName);
+        if(deleted==true) policyChoiceBox.getItems().remove(policyName);
+
+    }
+
+    @FXML
+    void infoPolicy(ActionEvent event) {
+        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+        Policy crossPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CROSS));
+        System.out.println(crossPolicy.getSign().toString());
+        System.out.println(crossPolicy.getRounds());
+        System.out.println(crossPolicy.getExpRate());
+        String message = "rounds: "+crossPolicy.getRounds()+"\n";
+        message+="expRate: "+crossPolicy.getExpRate();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Policy details");
+        alert.setHeaderText("Information of \""+policyName+"\" policy");
+        alert.setContentText(message);
+
+        alert.showAndWait();
     }
 }

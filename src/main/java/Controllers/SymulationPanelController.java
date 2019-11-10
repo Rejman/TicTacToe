@@ -1,11 +1,10 @@
 package Controllers;
-import RL.Serialize;
+import IO.Serialize;
+import RL.Policy;
 import RL.Symulation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
-import java.util.HashMap;
 import java.util.Optional;
 
 public class SymulationPanelController {
@@ -39,9 +38,9 @@ public class SymulationPanelController {
         String rounds = roundsSpinner.getValue().toString();
 
         symulation = new Symulation(Integer.parseInt(size), Integer.parseInt(number));
-
-        symulation.train(Integer.parseInt(rounds),Integer.parseInt(expRate)/100);
-        runSaveAlert("filename", symulation.getFirstPlayerPolicy());
+        //System.out.println(Double.parseDouble(expRate)/100);
+        symulation.train(Integer.parseInt(rounds),Double.parseDouble(expRate)/100);
+        runSaveAlert("filename", symulation.getFirstPlayerPolicy(), symulation.getSecondPlayerPolicy());
 
 
     }
@@ -56,7 +55,7 @@ public class SymulationPanelController {
         SpinnerValueFactory sizeSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
         SpinnerValueFactory numberSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
         SpinnerValueFactory expRateSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,100);
-        SpinnerValueFactory roundsSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99999999);
+        SpinnerValueFactory roundsSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99999999,500000,10000);
 
         sizeOfGameBoardSpinner.setValueFactory(sizeSVF);
         winningNumberOfSignsSpinner.setValueFactory(numberSVF);
@@ -66,11 +65,11 @@ public class SymulationPanelController {
         expRateSVF.setValue(30);
         sizeSVF.setValue(3);
         numberSVF.setValue(3);
-        roundsSVF.setValue(5000);
+        //roundsSVF.setValue(5000);
 
 
     }
-    private void runSaveAlert(String filename, HashMap<String,Double> policy){
+    private void runSaveAlert(String filename, Policy policyCross, Policy policyCircle){
         TextInputDialog dialog = new TextInputDialog(filename);
         dialog.setTitle("Save trained policy");
         dialog.setHeaderText("Save trained policy");
@@ -79,8 +78,8 @@ public class SymulationPanelController {
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()){
-            String path = "policy/"+result.get()+".policy";
-            Serialize.savePolicy(path, policy);
+            Serialize.savePolicy(result.get(), policyCircle);
+            Serialize.savePolicy(result.get(), policyCross);
         }
 
     }

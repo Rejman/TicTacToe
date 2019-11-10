@@ -1,6 +1,7 @@
 package Models.Player;
 
 import Models.Game.*;
+import RL.Policy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,10 +12,8 @@ public class Computer extends Player {
     //object that chooses random movement
     private Random generator = new Random();
     //REINFORCEMENT_LEARNING_VARIABLES
-    private double lr = 0.2;
-    private double decay_gamma = 0.9;
     private ArrayList<String> states;
-    private HashMap<String, Double> policy;
+    private Policy policy;
 
     /**
      * @param name
@@ -24,7 +23,11 @@ public class Computer extends Player {
     public Computer(String name, Sign value, Game game) {
         super(name, value, game);
         states = new ArrayList<String>();
-        policy = new HashMap<String, Double>();
+        policy = new Policy(this.value,0,0);
+    }
+
+    public ArrayList<String> getStates() {
+        return states;
     }
 
     public void addState(String state) {
@@ -35,25 +38,13 @@ public class Computer extends Player {
         states.clear();
     }
 
-    public void setPolicy(HashMap<String, Double> policy) {
-        this.policy = (HashMap<String, Double>) policy;
+    public void setPolicy(Policy policy) {
+        this.policy = policy;
     }
 
-    public HashMap<String, Double> getPolicy() {
-        return (HashMap<String, Double>) policy;
-    }
 
-    public void setReward(double reward) {
-        for (int i = states.size() - 1; i >= 0; i--) {
-            String state = states.get(i);
-            if (policy.get(state) == null) {
-                policy.put(state, 0.0);
-            }
-            double value = this.lr *(this.decay_gamma*reward - policy.get(state));
-            value += policy.get(state);
-            policy.put(state, value);
-            reward = value;
-        }
+    public Policy getPolicy() {
+        return this.policy;
     }
 
     /**
@@ -93,17 +84,18 @@ public class Computer extends Player {
 
             for (Integer field:emptyFields
             ) {
+                HashMap<String,Double> dictionary = policy.getDictionary();
 
                 ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
                 nextResultMatrix.add(field,this.value);
                 String nextResultMatrixHash = nextResultMatrix.getHash();
                 double value=0.0;
-                if(policy.get(nextResultMatrixHash) == null){
+                if(dictionary.get(nextResultMatrixHash) == null){
 
                     value = 0.0;
                 }else{
 
-                    value = policy.get(nextResultMatrixHash);
+                    value = dictionary.get(nextResultMatrixHash);
                 }
 
                 if(value>=value_max){
