@@ -1,4 +1,4 @@
-package RL;
+package RL.Policy;
 
 import Models.Game.Sign;
 

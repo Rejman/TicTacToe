@@ -1,6 +1,6 @@
 package IO;
 import Models.Game.Sign;
-import RL.Policy;
+import RL.Policy.Policy;
 import java.io.*;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;

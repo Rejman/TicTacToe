@@ -1,7 +1,7 @@
 package Models.Player;
 
 import Models.Game.*;
-import RL.Policy;
+import RL.Policy.Policy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

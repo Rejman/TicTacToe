@@ -1,6 +1,6 @@
 package Controllers;
 import IO.Serialize;
-import RL.Policy;
+import RL.Policy.Policy;
 import RL.Symulation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
