@@ -88,14 +88,16 @@ public class Computer extends Player {
 
             Leaf newLeaf = new Leaf(nextResultMatrixHash);
             leaves.put(newLeaf,0.0);
+            theBestLeaf = newLeaf;
             action =  field;
         }else{
 
             double value_max = -999;
-
+            System.out.println(policy.getCurrentLeaf().getLeaves());
+            HashMap<Leaf,Double> leaves = policy.getCurrentLeaf().getLeaves();
             for (Integer field:emptyFields
             ) {
-                HashMap<Leaf,Double> leaves = policy.getCurrentLeaf().getLeaves();
+
 
                 ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
                 nextResultMatrix.add(field,this.value);

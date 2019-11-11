@@ -1,5 +1,8 @@
 package RL.Policy.Tree;
 
+import Models.Game.Sign;
+import RL.Policy.Policy;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,6 +15,8 @@ public class Leaf {
     public Leaf(String state) {
         this.state = state;
         this.leaves = new HashMap<Leaf,Double>();
+        //test
+        //leaves.put(new Leaf("d"),0.0);
     }
 
     public HashMap<Leaf, Double> getLeaves() {
@@ -60,7 +65,7 @@ public class Leaf {
 
         System.out.println(root);
 
-        HashMap<Leaf,Double> children = root.getLeaves();
+        /*HashMap<Leaf,Double> children = root.getLeaves();
         children.put(new Leaf("O--X-----"), 0.3);
         children.put(new Leaf("-O-X-----"), 0.3);
         children.put(new Leaf("--OX-----"), 0.3);
@@ -72,7 +77,12 @@ public class Leaf {
 
         System.out.println(children);
 
-        System.out.println(children.get(new Leaf("test")));
+        System.out.println(children.get(new Leaf("test")));*/
+
+        Policy policy = new Policy(Sign.CROSS,0,0.0);
+        //policy.setTree(root);
+
+        System.out.println(policy.getCurrentLeaf().getLeaves());
 
 
     }

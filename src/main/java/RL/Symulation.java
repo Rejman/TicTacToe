@@ -42,7 +42,27 @@ public class Symulation {
         circle = 0;
         draw = 0;
     }
+    public void play(int rounds, double exp_rate){
+        resetStatistics();
+        this.rounds = rounds;
 
+        for(int i=0;i<rounds;i++){
+
+
+            Verdict verdict = Verdict.NOBODY;
+            while(verdict==Verdict.NOBODY){
+                crossPlayer.move(exp_rate);
+                circlePlayer.move(exp_rate);
+                verdict = game.getVerdict();
+            }
+            if(verdict == Verdict.CROSS) cross++;
+            if(verdict == Verdict.CIRCLE) circle++;
+            if(verdict == Verdict.DRAW) draw++;
+
+            game.reset();
+        }
+        showStatistics();
+    }
     public void train(int rounds, double exp_rate) {
         crossPlayer.setPolicy(new Policy(Sign.CROSS,rounds,exp_rate));
         circlePlayer.setPolicy(new Policy(Sign.CIRCLE,rounds,exp_rate));
@@ -102,6 +122,11 @@ public class Symulation {
 
     }
 
+    public static void main(String[] args) {
+        Symulation symulation = new Symulation(3,3);
+        symulation.train(10000,0.3);
+        symulation.play(10,0.0);
+    }
     public void setReward(double reward, Computer computer) {
 
         double decayGamma = 0.9;

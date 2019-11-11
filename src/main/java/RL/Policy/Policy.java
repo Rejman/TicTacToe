@@ -38,6 +38,7 @@ public class Policy implements Serializable {
 
     public void setTree(Leaf tree) {
         this.tree = tree;
+        this.currentLeaf = this.tree;
     }
 
     public Sign getSign() {
