@@ -5,6 +5,7 @@ import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import RL.Policy.Policy;
+import RL.Policy.Tree.Leaf;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,16 +108,18 @@ public class Symulation {
         double lr = 0.2;
 
         ArrayList<String> states = computer.getStates();
-        HashMap<String,Double> dictionary = computer.getPolicy().getDictionary();
+        HashMap<Leaf, Double> leaves = computer.getPolicy().getCurrentLeaf().getLeaves();
 
         for (int i = states.size() - 1; i >= 0; i--) {
             String state = states.get(i);
-            if (dictionary.get(state) == null) {
-                dictionary.put(state, 0.0);
+            Leaf leaf = new Leaf(state);
+
+            if (leaves.get(leaf) == null) {
+                leaves.put(leaf, 0.0);
             }
-            double value = lr * (decayGamma * reward - dictionary.get(state));
-            value += dictionary.get(state);
-            dictionary.put(state, value);
+            double value = lr * (decayGamma * reward - leaves.get(leaf));
+            value += leaves.get(leaf);
+            leaves.put(leaf, value);
             reward = value;
         }
     }
