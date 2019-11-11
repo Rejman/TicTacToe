@@ -7,10 +7,10 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 public class Policy implements Serializable {
+
     private Sign sign;
     private int rounds;
     private double expRate;
-    private HashMap<String, Double> dictionary;
     private Leaf tree;
 
     private Leaf currentLeaf;
@@ -27,7 +27,6 @@ public class Policy implements Serializable {
         this.sign = sign;
         this.rounds = rounds;
         this.expRate = expRate;
-        this.dictionary = new HashMap<String, Double>();
         this.tree = new Leaf("root");
         this.currentLeaf = tree;
     }
@@ -65,11 +64,5 @@ public class Policy implements Serializable {
         this.expRate = expRate;
     }
 
-    public HashMap<String, Double> getDictionary() {
-        return dictionary;
-    }
 
-    public void setDictionary(HashMap<String, Double> dictionary) {
-        this.dictionary = dictionary;
-    }
 }

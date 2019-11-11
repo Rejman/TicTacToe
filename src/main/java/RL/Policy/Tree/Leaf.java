@@ -3,12 +3,13 @@ package RL.Policy.Tree;
 import Models.Game.Sign;
 import RL.Policy.Policy;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class Leaf {
+public class Leaf implements Serializable {
     private String state;
     private HashMap<Leaf,Double> leaves;
 
