@@ -27,7 +27,7 @@ public class Policy implements Serializable {
         this.sign = sign;
         this.rounds = rounds;
         this.expRate = expRate;
-        this.tree = new Leaf("root", 0.0);
+        this.tree = new Leaf("---------", 0.0);
         this.currentLeaf = tree;
     }
 

@@ -129,17 +129,30 @@ public class Symulation {
     }
     public void setReward(double reward, Computer computer) {
 
-        /*double decayGamma = 0.9;
+        double decayGamma = 0.9;
         double lr = 0.2;
 
         ArrayList<String> states = computer.getStates();
         //resetowanie drzewa do pozycji początkowej
 
-        HashMap<Leaf, Double> leaves = computer.getPolicy().getTree().getLeaves();
+        Leaf level = computer.getPolicy().getTree();
+        ArrayList<Leaf> moves = computer.getMoves();
+        for(int i=0;i<moves.size();i++ ){
+            Leaf leaf = moves.get(i);
+            if(level.getChild(leaf)==null){
+                leaf.setValue(0.0);
+                level.addChild(leaf);
+            }
+            double value = lr * (decayGamma * reward - leaf.getValue());
+            value += leaf.getValue();
 
-        for (int i = states.size() - 1; i >= 0; i--) {
+            leaf.setValue(value);
+            reward = value;
+            level = leaf.getChild(leaf);
+        }
+/*        for (int i = states.size() - 1; i >= 0; i--) {
             String state = states.get(i);
-            Leaf leaf = new Leaf(state);
+
 
             //tu jest dodawanie losowych wyborów
             if (leaves.get(leaf) == null) {
@@ -155,8 +168,8 @@ public class Symulation {
 
         }
         //System.out.println(leaves);
-        System.out.println(computer.getPolicy().getCurrentLeaf().getLeaves());*/
-        //computer.getPolicy().getCurrentLeaf().setLeaves(leaves);
+        System.out.println(computer.getPolicy().getCurrentLeaf().getLeaves());
+        //computer.getPolicy().getCurrentLeaf().setLeaves(leaves);*/
     }
 
     public void showStatistics() {

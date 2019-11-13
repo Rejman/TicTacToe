@@ -13,6 +13,7 @@ public class Computer extends Player {
     private ArrayList<String> states;
     private Policy policy;
     private Leaf lastMove;
+    private ArrayList<Leaf> moves;
 
     /**
      * @param name
@@ -24,6 +25,7 @@ public class Computer extends Player {
         states = new ArrayList<String>();
         policy = new Policy(this.value,0,0);
         lastMove = policy.getTree();
+        moves = new ArrayList<>();
     }
 
     public ArrayList<String> getStates() {
@@ -31,12 +33,18 @@ public class Computer extends Player {
     }
 
     public void addState(String state) {
+        this.moves.add(lastMove);
         states.add(state);
+    }
+
+    public ArrayList<Leaf> getMoves() {
+        return moves;
     }
 
     public void resetStates() {
         states.clear();
-        policy.setCurrentLeaf(policy.getTree());
+        lastMove = policy.getTree();
+        moves.clear();
     }
 
     public void setPolicy(Policy policy) {
@@ -70,8 +78,9 @@ public class Computer extends Player {
 
     public int move(double exp_rate){
 
+        Leaf nextMove = new Leaf("",0.0);
 
-        /*ArrayList<Integer> emptyFields = game.getEmptyFields();
+        ArrayList<Integer> emptyFields = game.getEmptyFields();
         int action = 0;
         Random generator = new Random();
 
@@ -80,42 +89,34 @@ public class Computer extends Player {
             int randomId = generator.nextInt(emptyFields.size());
             int field = emptyFields.get(randomId);
 
-            HashMap<Leaf,Double> leaves = lastMove.getLeaves();
-
             ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
             nextResultMatrix.add(field,this.value);
             String nextResultMatrixHash = nextResultMatrix.getHash();
-            //
-
-            //
-            Leaf newLeaf = new Leaf(nextResultMatrixHash);
-            //leaves.put(newLeaf,0.0);
-            theBestLeaf = newLeaf;
-
+            //!
+            nextMove = lastMove.getChild(nextResultMatrixHash);
             action =  field;
         }else{
 
             double value_max = -999;
-            HashMap<Leaf,Double> leaves = policy.getCurrentLeaf().getLeaves();
+
             for (Integer field:emptyFields
             ) {
-
-
                 ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
                 nextResultMatrix.add(field,this.value);
                 String nextResultMatrixHash = nextResultMatrix.getHash();
                 double value=0.0;
-                Leaf leaf = new Leaf(nextResultMatrixHash);
-                if(leaves.get(leaf) == null){
-
-                    value = 0.0;
-                }else{
-
-                    value = leaves.get(leaf);
+                if(!lastMove.getChildren().isEmpty()){
+                    if(lastMove.getChild(nextResultMatrixHash) == null){
+                        value = 0.0;
+                    }else{
+                        value = lastMove.getValue();
+                    }
                 }
 
+
                 if(value>=value_max){
-                    theBestLeaf = leaf;
+                    //!
+                    nextMove = lastMove.getChild(nextResultMatrixHash);
                     value_max = value;
                     action = field;
                 }
@@ -123,15 +124,10 @@ public class Computer extends Player {
 
 
         }
-        theBestLeaf.setLevel(9-emptyFields.size());
-        lastLeaf = theBestLeaf;
-        this.policy.setCurrentLeaf(theBestLeaf);
-
-        //!!!!!!
-        System.out.println(theBestLeaf.toBoardString());
+        //lastMove = nextMove;
+        System.out.println(lastMove.toBoardString());
         game.addMove(action, value);
-        return action;*/
-        return 0;
+        return action;
     }
 
 }

@@ -19,6 +19,11 @@ public class Leaf implements Serializable {
         if(id>=0) return children.get(id);
         return null;
     }
+    public Leaf getChild(String state){
+        int id = children.indexOf(new Leaf(state,0.0));
+        if(id>=0) return children.get(id);
+        return null;
+    }
     public void addChild(Leaf leaf){
         int id = children.indexOf(leaf);
         if(id>=0){
