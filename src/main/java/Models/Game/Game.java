@@ -1,5 +1,7 @@
 package Models.Game;
 
+import javafx.geometry.Pos;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class Game {
     private ResultMatrix resultMatrix;
     //it keeps only empty fields (witch Sign.NONE)
     //defines which movements can be used yet
-    private List<Integer> emptyFields;
+    private ArrayList<Integer> emptyFields;
 
 
 
@@ -39,6 +41,14 @@ public class Game {
         this.resultMatrix = new ResultMatrix(size);
         setEmptyFields();
 
+    }
+
+    public ResultMatrix getResultMatrix() {
+        return resultMatrix;
+    }
+
+    public void setResultMatrix(ResultMatrix resultMatrix) {
+        this.resultMatrix = resultMatrix;
     }
 
     /**
@@ -92,7 +102,7 @@ public class Game {
     /**
      * @return Return all available movements
      */
-    public List<Integer> getEmptyFields() {
+    public ArrayList<Integer> getEmptyFields() {
         return emptyFields;
     }
 
@@ -130,7 +140,7 @@ public class Game {
         }
         winner = checkLine(temp);
 
-        if( winner==Verdict.NOBODY && emptyFields.isEmpty()) return Verdict.TIE;
+        if( winner==Verdict.NOBODY && emptyFields.isEmpty()) return Verdict.DRAW;
 
         return winner;
     }

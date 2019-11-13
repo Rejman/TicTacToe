@@ -5,7 +5,6 @@ import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import Models.Player.Human;
-import com.sun.prism.paint.Color;
 import javafx.scene.Cursor;
 
 public class HumanVsComputer extends GameBoard {
@@ -20,9 +19,9 @@ public class HumanVsComputer extends GameBoard {
         this.computer = computer;
 
         if(computerFirst){
-            int field = computer.randomMove();
+            int field = this.computer.move(0);
             Field temp = (Field) gridPane.getChildren().get(field);
-            addSignToField(temp, computer.getValue());
+            addSignToField(temp, this.computer.getValue());
         }
     }
 
@@ -38,7 +37,7 @@ public class HumanVsComputer extends GameBoard {
 
             }
             if (game.getVerdict() == Verdict.NOBODY) {
-                int id = computer.randomMove();
+                int id = computer.move(0);
                 Field temp = (Field) gridPane.getChildren().get(id);
                 addSignToField(temp, computer.getValue());
             }
@@ -62,7 +61,7 @@ public class HumanVsComputer extends GameBoard {
 
         }
         if(computer.getValue()==sign) this.verdictLabel.setText(computer.getName()+" WON");
-        if(verdict==Verdict.TIE) this.verdictLabel.setText("TIE");
+        if(verdict==Verdict.DRAW) this.verdictLabel.setText("DRAW");
 
 
     }
