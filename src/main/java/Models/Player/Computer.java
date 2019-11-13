@@ -2,6 +2,7 @@ package Models.Player;
 
 import Models.Game.*;
 import RL.Policy.Policy;
+import RL.Policy.Tree.Leaf;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class Computer extends Player {
 
     public void resetStates() {
         states.clear();
+        policy.setCurrentLeaf(policy.getTree());
     }
 
     public void setPolicy(Policy policy) {
@@ -68,6 +70,11 @@ public class Computer extends Player {
     }
 
     public int move(double exp_rate){
+        Leaf theBestLeaf = null;
+
+        System.out.println(policy.getCurrentLeaf().getLeaves());
+
+
         ArrayList<Integer> emptyFields = game.getEmptyFields();
         int action = 0;
         Random generator = new Random();
@@ -77,29 +84,39 @@ public class Computer extends Player {
             int randomId = generator.nextInt(emptyFields.size());
             int field = emptyFields.get(randomId);
 
+            HashMap<Leaf,Double> leaves = policy.getCurrentLeaf().getLeaves();
+
+            ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
+            nextResultMatrix.add(field,this.value);
+            String nextResultMatrixHash = nextResultMatrix.getHash();
+
+            Leaf newLeaf = new Leaf(nextResultMatrixHash);
+            //leaves.put(newLeaf,0.0);
+            theBestLeaf = newLeaf;
             action =  field;
         }else{
 
             double value_max = -999;
-
+            HashMap<Leaf,Double> leaves = policy.getCurrentLeaf().getLeaves();
             for (Integer field:emptyFields
             ) {
-                HashMap<String,Double> dictionary = policy.getDictionary();
+
 
                 ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
                 nextResultMatrix.add(field,this.value);
                 String nextResultMatrixHash = nextResultMatrix.getHash();
                 double value=0.0;
-                if(dictionary.get(nextResultMatrixHash) == null){
+                Leaf leaf = new Leaf(nextResultMatrixHash);
+                if(leaves.get(leaf) == null){
 
                     value = 0.0;
                 }else{
 
-                    value = dictionary.get(nextResultMatrixHash);
+                    value = leaves.get(leaf);
                 }
 
                 if(value>=value_max){
-
+                    theBestLeaf = leaf;
                     value_max = value;
                     action = field;
                 }
@@ -107,6 +124,9 @@ public class Computer extends Player {
 
 
         }
+        this.policy.setCurrentLeaf(theBestLeaf);
+        //!!!!!!
+        System.out.println(theBestLeaf.toBoardString());
         game.addMove(action, value);
         return action;
     }

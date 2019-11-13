@@ -5,6 +5,7 @@ import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import RL.Policy.Policy;
+import RL.Policy.Tree.Leaf;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,27 @@ public class Symulation {
         circle = 0;
         draw = 0;
     }
+    public void play(int rounds, double exp_rate){
+        resetStatistics();
+        this.rounds = rounds;
 
+        for(int i=0;i<rounds;i++){
+
+
+            Verdict verdict = Verdict.NOBODY;
+            while(verdict==Verdict.NOBODY){
+                crossPlayer.move(exp_rate);
+                circlePlayer.move(exp_rate);
+                verdict = game.getVerdict();
+            }
+            if(verdict == Verdict.CROSS) cross++;
+            if(verdict == Verdict.CIRCLE) circle++;
+            if(verdict == Verdict.DRAW) draw++;
+
+            game.reset();
+        }
+        showStatistics();
+    }
     public void train(int rounds, double exp_rate) {
         crossPlayer.setPolicy(new Policy(Sign.CROSS,rounds,exp_rate));
         circlePlayer.setPolicy(new Policy(Sign.CIRCLE,rounds,exp_rate));
@@ -101,24 +122,34 @@ public class Symulation {
 
     }
 
+    public static void main(String[] args) {
+        Symulation symulation = new Symulation(3,3);
+        symulation.train(10000,0.3);
+        symulation.play(10,0.0);
+    }
     public void setReward(double reward, Computer computer) {
 
         double decayGamma = 0.9;
         double lr = 0.2;
 
         ArrayList<String> states = computer.getStates();
-        HashMap<String,Double> dictionary = computer.getPolicy().getDictionary();
+        HashMap<Leaf, Double> leaves = computer.getPolicy().getCurrentLeaf().getLeaves();
 
         for (int i = states.size() - 1; i >= 0; i--) {
             String state = states.get(i);
-            if (dictionary.get(state) == null) {
-                dictionary.put(state, 0.0);
+            Leaf leaf = new Leaf(state);
+
+            if (leaves.get(leaf) == null) {
+                leaves.put(leaf, 0.0);
             }
-            double value = lr * (decayGamma * reward - dictionary.get(state));
-            value += dictionary.get(state);
-            dictionary.put(state, value);
+            double value = lr * (decayGamma * reward - leaves.get(leaf));
+            value += leaves.get(leaf);
+            leaves.put(leaf, value);
             reward = value;
         }
+        //System.out.println(leaves);
+        System.out.println(computer.getPolicy().getCurrentLeaf().getLeaves());
+        //computer.getPolicy().getCurrentLeaf().setLeaves(leaves);
     }
 
     public void showStatistics() {

@@ -7,6 +7,7 @@ import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
 import RL.Policy.Policy;
+import RL.Policy.Tree.Leaf;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -207,6 +208,10 @@ public class GamePanelController {
         System.out.println(crossPolicy.getExpRate());
         String message = "rounds: "+crossPolicy.getRounds()+"\n";
         message+="expRate: "+crossPolicy.getExpRate();
+
+        message+="\n"+crossPolicy.getCurrentLeaf().getLeaves();
+
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Policy details");
         alert.setHeaderText("Information of \""+policyName+"\" policy");
