@@ -4,14 +4,20 @@ import Models.Game.Sign;
 import RL.Policy.Policy;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class Leaf implements Serializable {
     private String state;
+    private int level;
     private HashMap<Leaf,Double> leaves;
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
 
     public Leaf(String state) {
         this.state = state;
@@ -19,7 +25,11 @@ public class Leaf implements Serializable {
         //test
         //leaves.put(new Leaf("d"),0.0);
     }
-
+    public Leaf(String state, int level) {
+        this.state = state;
+        this.leaves = new HashMap<Leaf,Double>();
+        this.level = level;
+    }
     public HashMap<Leaf, Double> getLeaves() {
         return leaves;
     }
@@ -68,33 +78,51 @@ public class Leaf implements Serializable {
         //System.out.println("\t"+leaves);
         return baord;
     }
+    public void showTree(){
+        //System.out.println();
+        for(int i=0;i<level;i++) System.out.print("\t");
+        //System.out.println(level+" "+state+" -> ("+leaves.size()+")"+leaves);
+        System.out.println("("+level+")"+state);
+        Set keys = this.leaves.keySet();
 
+        if(keys.size()>0){
+
+            for (Object key:keys
+            ) {
+                Leaf leaf = (Leaf) key;
+                leaf.showTree();
+
+            }
+        }
+
+    }
     public static void main(String[] args) {
         System.out.println("tree test");
 
-        Leaf root = new Leaf("---X-----");
+        Leaf root = new Leaf("---------", 0);
 
-        System.out.println(root);
+        //System.out.println(root);
 
-        /*HashMap<Leaf,Double> children = root.getLeaves();
-        children.put(new Leaf("O--X-----"), 0.3);
-        children.put(new Leaf("-O-X-----"), 0.3);
-        children.put(new Leaf("--OX-----"), 0.3);
-        children.put(new Leaf("---XO----"), 0.3);
-        children.put(new Leaf("---X-O---"), 0.3);
-        children.put(new Leaf("---X--O--"), 0.3);
-        children.put(new Leaf("test"), 0.4);
+        HashMap<Leaf,Double> children = root.getLeaves();
+        children.put(new Leaf("O--X-----",1), 0.3);
+        children.put(new Leaf("-O-X-----",1), 0.3);
+        children.put(new Leaf("--OX-----",1), 0.3);
+        children.put(new Leaf("---XO----",1), 0.3);
+        children.put(new Leaf("---X-O---",1), 0.3);
+        children.put(new Leaf("---X--O--",1), 0.3);
+        children.put(new Leaf("---------",1), 0.4);
 
+        Set<Leaf> keys = children.keySet();
 
-        System.out.println(children);
-
-        System.out.println(children.get(new Leaf("test")));*/
-
-        Policy policy = new Policy(Sign.CROSS,0,0.0);
-        //policy.setTree(root);
-
-        System.out.println(policy.getCurrentLeaf().getLeaves());
-
+        ArrayList<Leaf> testLeaves = new ArrayList<>();
+        for (Leaf key: keys
+             ) {
+            testLeaves.add(key);
+        }
+        Leaf cos = testLeaves.get(0);
+        cos.getLeaves().put(new Leaf("XXX---X--", 2),0.3);
+        root.showTree();
 
     }
+
 }

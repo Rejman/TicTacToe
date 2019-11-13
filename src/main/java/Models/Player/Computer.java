@@ -15,6 +15,7 @@ public class Computer extends Player {
     //REINFORCEMENT_LEARNING_VARIABLES
     private ArrayList<String> states;
     private Policy policy;
+    private Leaf lastLeaf;
 
     /**
      * @param name
@@ -25,6 +26,7 @@ public class Computer extends Player {
         super(name, value, game);
         states = new ArrayList<String>();
         policy = new Policy(this.value,0,0);
+        lastLeaf = policy.getTree();
     }
 
     public ArrayList<String> getStates() {
@@ -72,19 +74,19 @@ public class Computer extends Player {
     public int move(double exp_rate){
         Leaf theBestLeaf = null;
 
-        System.out.println(policy.getCurrentLeaf().getLeaves());
+        //System.out.println(policy.getCurrentLeaf().getLeaves());
 
 
         ArrayList<Integer> emptyFields = game.getEmptyFields();
         int action = 0;
         Random generator = new Random();
-        //Random generatorInt = new Random();
+
         if(generator.nextDouble()<=exp_rate){
             if(emptyFields.isEmpty()) return 0;
             int randomId = generator.nextInt(emptyFields.size());
             int field = emptyFields.get(randomId);
 
-            HashMap<Leaf,Double> leaves = policy.getCurrentLeaf().getLeaves();
+            HashMap<Leaf,Double> leaves = lastLeaf.getLeaves();
 
             ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
             nextResultMatrix.add(field,this.value);
@@ -93,6 +95,7 @@ public class Computer extends Player {
             Leaf newLeaf = new Leaf(nextResultMatrixHash);
             //leaves.put(newLeaf,0.0);
             theBestLeaf = newLeaf;
+
             action =  field;
         }else{
 
@@ -124,7 +127,10 @@ public class Computer extends Player {
 
 
         }
+        theBestLeaf.setLevel(9-emptyFields.size());
+        lastLeaf = theBestLeaf;
         this.policy.setCurrentLeaf(theBestLeaf);
+
         //!!!!!!
         System.out.println(theBestLeaf.toBoardString());
         game.addMove(action, value);

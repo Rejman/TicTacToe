@@ -203,7 +203,7 @@ public class GamePanelController {
     void infoPolicy(ActionEvent event) {
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
         Policy crossPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CROSS));
-        System.out.println(crossPolicy.getSign().toString());
+        //System.out.println(crossPolicy.getSign().toString());
         System.out.println(crossPolicy.getRounds());
         System.out.println(crossPolicy.getExpRate());
         String message = "rounds: "+crossPolicy.getRounds()+"\n";
@@ -211,6 +211,7 @@ public class GamePanelController {
 
         message+="\n"+crossPolicy.getCurrentLeaf().getLeaves();
 
+        crossPolicy.getTree().showTree();
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Policy details");

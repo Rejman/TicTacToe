@@ -100,7 +100,7 @@ public class Symulation {
             crossPlayer.resetStates();
             circlePlayer.resetStates();
         }
-
+        crossPlayer.getPolicy().getTree().showTree();
     }
 
     public void giveReward(Verdict verdict) {
@@ -133,19 +133,26 @@ public class Symulation {
         double lr = 0.2;
 
         ArrayList<String> states = computer.getStates();
-        HashMap<Leaf, Double> leaves = computer.getPolicy().getCurrentLeaf().getLeaves();
+        //resetowanie drzewa do pozycji początkowej
+
+        HashMap<Leaf, Double> leaves = computer.getPolicy().getTree().getLeaves();
 
         for (int i = states.size() - 1; i >= 0; i--) {
             String state = states.get(i);
             Leaf leaf = new Leaf(state);
 
+            //tu jest dodawanie losowych wyborów
             if (leaves.get(leaf) == null) {
                 leaves.put(leaf, 0.0);
+
             }
             double value = lr * (decayGamma * reward - leaves.get(leaf));
             value += leaves.get(leaf);
             leaves.put(leaf, value);
             reward = value;
+            computer.getPolicy().setCurrentLeaf(leaf);
+            leaves = leaf.getLeaves();
+
         }
         //System.out.println(leaves);
         System.out.println(computer.getPolicy().getCurrentLeaf().getLeaves());
