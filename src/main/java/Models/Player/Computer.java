@@ -4,10 +4,7 @@ import Models.Game.*;
 import RL.Policy.Policy;
 import RL.Policy.Tree.Leaf;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Computer extends Player {
     //object that chooses random movement
@@ -15,7 +12,7 @@ public class Computer extends Player {
     //REINFORCEMENT_LEARNING_VARIABLES
     private ArrayList<String> states;
     private Policy policy;
-    private Leaf lastLeaf;
+    private Leaf lastMove;
 
     /**
      * @param name
@@ -26,7 +23,7 @@ public class Computer extends Player {
         super(name, value, game);
         states = new ArrayList<String>();
         policy = new Policy(this.value,0,0);
-        lastLeaf = policy.getTree();
+        lastMove = policy.getTree();
     }
 
     public ArrayList<String> getStates() {
@@ -56,7 +53,7 @@ public class Computer extends Player {
      *
      * @return field that was chosen
      */
-    public int randomMove() {
+/*    public int randomMove() {
         if (game.getVerdict() != Verdict.NOBODY) return -1;
 
         List<Integer> emptyFields = game.getEmptyFields();
@@ -69,15 +66,12 @@ public class Computer extends Player {
             return field;
         }
         return -1;
-    }
+    }*/
 
     public int move(double exp_rate){
-        Leaf theBestLeaf = null;
-
-        //System.out.println(policy.getCurrentLeaf().getLeaves());
 
 
-        ArrayList<Integer> emptyFields = game.getEmptyFields();
+        /*ArrayList<Integer> emptyFields = game.getEmptyFields();
         int action = 0;
         Random generator = new Random();
 
@@ -86,12 +80,14 @@ public class Computer extends Player {
             int randomId = generator.nextInt(emptyFields.size());
             int field = emptyFields.get(randomId);
 
-            HashMap<Leaf,Double> leaves = lastLeaf.getLeaves();
+            HashMap<Leaf,Double> leaves = lastMove.getLeaves();
 
             ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
             nextResultMatrix.add(field,this.value);
             String nextResultMatrixHash = nextResultMatrix.getHash();
+            //
 
+            //
             Leaf newLeaf = new Leaf(nextResultMatrixHash);
             //leaves.put(newLeaf,0.0);
             theBestLeaf = newLeaf;
@@ -134,7 +130,8 @@ public class Computer extends Player {
         //!!!!!!
         System.out.println(theBestLeaf.toBoardString());
         game.addMove(action, value);
-        return action;
+        return action;*/
+        return 0;
     }
 
 }

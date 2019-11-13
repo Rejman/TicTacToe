@@ -129,7 +129,7 @@ public class Symulation {
     }
     public void setReward(double reward, Computer computer) {
 
-        double decayGamma = 0.9;
+        /*double decayGamma = 0.9;
         double lr = 0.2;
 
         ArrayList<String> states = computer.getStates();
@@ -155,7 +155,7 @@ public class Symulation {
 
         }
         //System.out.println(leaves);
-        System.out.println(computer.getPolicy().getCurrentLeaf().getLeaves());
+        System.out.println(computer.getPolicy().getCurrentLeaf().getLeaves());*/
         //computer.getPolicy().getCurrentLeaf().setLeaves(leaves);
     }
 

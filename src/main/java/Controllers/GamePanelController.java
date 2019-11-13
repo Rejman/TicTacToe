@@ -209,7 +209,7 @@ public class GamePanelController {
         String message = "rounds: "+crossPolicy.getRounds()+"\n";
         message+="expRate: "+crossPolicy.getExpRate();
 
-        message+="\n"+crossPolicy.getCurrentLeaf().getLeaves();
+        //message+="\n"+crossPolicy.getCurrentLeaf().getLeaves();
 
         crossPolicy.getTree().showTree();
 
