@@ -58,6 +58,16 @@ public class Leaf implements Serializable {
     public String toString() {
         return state;
     }
+    public String toBoardString(){
+        String baord = "";
+        baord+=state.substring(0,3)+"\n";
+        baord+=state.substring(3,6)+"\n";
+        baord+=state.substring(6,9)+"\n";
+        baord+="------------------------";
+
+        //System.out.println("\t"+leaves);
+        return baord;
+    }
 
     public static void main(String[] args) {
         System.out.println("tree test");

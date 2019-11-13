@@ -147,6 +147,9 @@ public class Symulation {
             leaves.put(leaf, value);
             reward = value;
         }
+        //System.out.println(leaves);
+        System.out.println(computer.getPolicy().getCurrentLeaf().getLeaves());
+        //computer.getPolicy().getCurrentLeaf().setLeaves(leaves);
     }
 
     public void showStatistics() {
