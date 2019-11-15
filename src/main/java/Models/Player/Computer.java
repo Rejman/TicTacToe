@@ -93,7 +93,9 @@ public class Computer extends Player {
             nextResultMatrix.add(field,this.value);
             String nextResultMatrixHash = nextResultMatrix.getHash();
             //!
+            if(lastMove.getChild(new Leaf(nextResultMatrixHash,0.0))==null) lastMove.addChild(new Leaf(nextResultMatrixHash,0.0));
             nextMove = lastMove.getChild(nextResultMatrixHash);
+
             action =  field;
         }else{
 
@@ -116,6 +118,9 @@ public class Computer extends Player {
 
                 if(value>=value_max){
                     //!
+                    //lastMove.addChild(new Leaf(nextResultMatrixHash,0.0));
+
+                    if(lastMove.getChild(new Leaf(nextResultMatrixHash,0.0))==null) lastMove.addChild(new Leaf(nextResultMatrixHash,0.0));
                     nextMove = lastMove.getChild(nextResultMatrixHash);
                     value_max = value;
                     action = field;
@@ -124,8 +129,9 @@ public class Computer extends Player {
 
 
         }
-        //lastMove = nextMove;
-        System.out.println(lastMove.toBoardString());
+        lastMove = nextMove;
+        System.out.println(lastMove);
+        //System.out.println(lastMove.toBoardString());
         game.addMove(action, value);
         return action;
     }

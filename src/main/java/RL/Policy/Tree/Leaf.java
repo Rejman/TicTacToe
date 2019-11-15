@@ -27,9 +27,10 @@ public class Leaf implements Serializable {
     public void addChild(Leaf leaf){
         int id = children.indexOf(leaf);
         if(id>=0){
-            System.out.println("set");
+            System.out.println("nadpisanie liscia nową oceną");
             children.set(id,leaf);
         }else{
+            System.out.println("dodanie nowego liścia bo go nie było");
             children.add(leaf);
         }
     }
