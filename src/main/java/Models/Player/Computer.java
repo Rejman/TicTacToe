@@ -33,7 +33,6 @@ public class Computer extends Player {
     }
 
     public void addState(String state) {
-        this.moves.add(lastMove);
         states.add(state);
     }
 
@@ -44,11 +43,15 @@ public class Computer extends Player {
     public void resetStates() {
         states.clear();
         lastMove = policy.getTree();
+
+    }
+    public void resetMoves(){
         moves.clear();
     }
 
     public void setPolicy(Policy policy) {
         this.policy = policy;
+        lastMove = policy.getTree();
     }
 
 
@@ -83,6 +86,11 @@ public class Computer extends Player {
         ArrayList<Integer> emptyFields = game.getEmptyFields();
         int action = 0;
         Random generator = new Random();
+        System.out.println("Dostępne ruchy: ");
+        for (Leaf leaf:lastMove.getChildren()
+             ) {
+            System.out.println(leaf.getState()+" "+leaf.getValue());
+        }
 
         if(generator.nextDouble()<=exp_rate){
             if(emptyFields.isEmpty()) return 0;
@@ -93,8 +101,13 @@ public class Computer extends Player {
             nextResultMatrix.add(field,this.value);
             String nextResultMatrixHash = nextResultMatrix.getHash();
             //!
-            if(lastMove.getChild(new Leaf(nextResultMatrixHash,0.0))==null) lastMove.addChild(new Leaf(nextResultMatrixHash,0.0));
-            nextMove = lastMove.getChild(nextResultMatrixHash);
+            Leaf newLeaf = new Leaf(nextResultMatrixHash, 0.0);
+            if(lastMove.getChild(newLeaf)==null){
+                //gdy wylosowany ruch jest wylosowany po raz pierwszy
+                lastMove.addChild(newLeaf);
+            }
+            nextMove = lastMove.getChild(newLeaf);
+
 
             action =  field;
         }else{
@@ -107,21 +120,25 @@ public class Computer extends Player {
                 nextResultMatrix.add(field,this.value);
                 String nextResultMatrixHash = nextResultMatrix.getHash();
                 double value=0.0;
+                Leaf move = new Leaf(nextResultMatrixHash,0.0);
                 if(!lastMove.getChildren().isEmpty()){
-                    if(lastMove.getChild(nextResultMatrixHash) == null){
+                    if(lastMove.getChild(move) == null){
                         value = 0.0;
                     }else{
                         value = lastMove.getValue();
                     }
                 }
 
-
+                //!!!
                 if(value>=value_max){
                     //!
-                    //lastMove.addChild(new Leaf(nextResultMatrixHash,0.0));
+                    Leaf newLeaf = new Leaf(nextResultMatrixHash, 0.0);
+                    if(lastMove.getChild(newLeaf)==null){
+                        //gdy wybrany ruch jest wybrany po raz pierwszy
+                        lastMove.addChild(newLeaf);
+                    }
+                    nextMove = lastMove.getChild(newLeaf);
 
-                    if(lastMove.getChild(new Leaf(nextResultMatrixHash,0.0))==null) lastMove.addChild(new Leaf(nextResultMatrixHash,0.0));
-                    nextMove = lastMove.getChild(nextResultMatrixHash);
                     value_max = value;
                     action = field;
                 }
@@ -130,8 +147,13 @@ public class Computer extends Player {
 
         }
         lastMove = nextMove;
-        System.out.println(lastMove);
-        //System.out.println(lastMove.toBoardString());
+        //dodanie ostatiego ruchu do swojej pamięci
+        this.moves.add(lastMove);
+
+        System.out.println("Najlepszy ruch: ");
+        lastMove.showTreeTheBestWay(lastMove.getLevel()+1);
+        System.out.println("Last move:"+this.value);
+        System.out.println(lastMove.toBoardString());
         game.addMove(action, value);
         return action;
     }

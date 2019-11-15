@@ -211,7 +211,7 @@ public class GamePanelController {
 
         message+="\n"+crossPolicy.getCurrentLeaf().getChildren();
 
-        crossPolicy.getTree().showTree();
+        crossPolicy.getTree().showTree(5);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Policy details");

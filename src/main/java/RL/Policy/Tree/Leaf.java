@@ -16,6 +16,10 @@ public class Leaf implements Serializable {
     }
     public Leaf getChild(Leaf leaf){
         int id = children.indexOf(leaf);
+        boolean isExist = children.contains(leaf);
+        if(isExist){
+
+        }
         if(id>=0) return children.get(id);
         return null;
     }
@@ -27,10 +31,10 @@ public class Leaf implements Serializable {
     public void addChild(Leaf leaf){
         int id = children.indexOf(leaf);
         if(id>=0){
-            System.out.println("nadpisanie liscia nową oceną");
+            //System.out.println("nadpisanie liscia nową oceną");
             children.set(id,leaf);
         }else{
-            System.out.println("dodanie nowego liścia bo go nie było");
+            //System.out.println("dodanie nowego liścia bo go nie było");
             children.add(leaf);
         }
     }
@@ -83,7 +87,7 @@ public class Leaf implements Serializable {
 
     @Override
     public String toString() {
-        return state;
+        return "["+state+"]";
     }
     public String toBoardString(){
         String baord = "";
@@ -93,18 +97,45 @@ public class Leaf implements Serializable {
         baord+="------------------------";
         return baord;
     }
-    public void showTree(){
+    public void showTree(int limit){
         //System.out.println();
+
         int level = getLevel();
-        for(int i=0;i<level;i++) System.out.print("\t");
-        //System.out.println(level+" "+state+" -> ("+leaves.size()+")"+leaves);
-        System.out.println("("+level+")"+state+" = "+value);
-        if(!children.isEmpty()){
-            for (Leaf leaf:children
-            ) {
-                leaf.showTree();
+        if(level<=limit){
+            for(int i=0;i<level;i++) System.out.print("\t");
+            //System.out.println(level+" "+state+" -> ("+leaves.size()+")"+leaves);
+            System.out.println("("+level+")"+state+" = "+value);
+            if(!children.isEmpty()){
+                for (Leaf leaf:children
+                ) {
+                    leaf.showTree(limit);
+                }
             }
         }
+    }
+    public void showTreeTheBestWay(int limit){
+        //System.out.println();
+        Leaf theBest = null;
+        double max = 0.0;
+        int level = getLevel();
+        if(level<limit){
+            //for(int i=0;i<level;i++) System.out.print("\t");
+            //System.out.println(level+" "+state+" -> ("+leaves.size()+")"+leaves);
+
+            System.out.println("("+level+")"+state+" = "+value);
+            if(!children.isEmpty()){
+                for (Leaf leaf:children
+                ) {
+                    if(leaf.getValue()>max){
+                        max = leaf.getValue();
+                        theBest = leaf;
+                    }
+                    //leaf.showTreeTheBestWay(maxLevel);
+                }
+                theBest.showTreeTheBestWay(limit);
+            }
+        }
+
 
 
     }
@@ -120,8 +151,12 @@ public class Leaf implements Serializable {
 
         Leaf child = root.getChild(new Leaf("--X------",0.8));
         child.addChild(new Leaf("-OX------", 0.5));
-        root.showTree();
+        //root.showTree(0);
+        Leaf test = root.getChild(new Leaf("-X-------", 10.2));
 
+        test.setState("XXXXXXXXX");
+
+        root.showTree(55);
 
     }
 

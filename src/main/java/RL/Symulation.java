@@ -1,5 +1,6 @@
 package RL;
 
+import IO.Serialize;
 import Models.Game.Game;
 import Models.Game.Sign;
 import Models.Game.Verdict;
@@ -7,6 +8,7 @@ import Models.Player.Computer;
 import RL.Policy.Policy;
 import RL.Policy.Tree.Leaf;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Symulation {
@@ -104,7 +106,7 @@ public class Symulation {
             crossPlayer.resetStates();
             circlePlayer.resetStates();
         }
-        crossPlayer.getPolicy().getTree().showTree();
+        //crossPlayer.getPolicy().getTree().showTree();
     }
 
     public void giveReward(Verdict verdict) {
@@ -130,7 +132,13 @@ public class Symulation {
         Symulation symulation = new Symulation(3, 3);
         symulation.train(10000, 0.3);
         symulation.play(10, 0.0);
-        symulation.getFirstPlayerPolicy().getTree().showTree();
+        symulation.getFirstPlayerPolicy().getTree().showTree(10);
+        Policy cross = new Policy(Sign.CROSS,10000,0.3);
+        Policy circle = new Policy(Sign.CIRCLE,10000,0.3);
+        cross.setTree(symulation.getFirstPlayerPolicy().getTree());
+        circle.setTree(symulation.getSecondPlayerPolicy().getTree());
+        Serialize.savePolicy("bySymulation",cross);
+        Serialize.savePolicy("bySymulation",circle);
     }
 
     public void setReward(double reward, Computer computer) {
@@ -144,23 +152,27 @@ public class Symulation {
         Leaf level = computer.getPolicy().getTree();
         ArrayList<Leaf> moves = computer.getMoves();
         for (int i = 0; i < moves.size(); i++) {
-            Leaf leaf = moves.get(i);
-            System.out.println("move nr"+(i+1)+"-> "+leaf);
-            System.out.println("level -> "+level);
-            if (level.getChild(leaf) == null) {
-                leaf.setValue(0.0);
+            Leaf move = moves.get(i);
+            Leaf leaf = level.getChild(move);
 
-                level.addChild(leaf);
-            }
-            double value = lr * (decayGamma * reward - leaf.getValue());
-            value += leaf.getValue();
+            System.out.println("move nr"+(i+1)+"-> "+move);
+            System.out.println("level -> "+level);
+            /*if (level.getChild(move) == null) {
+                move.setValue(0.0);
+
+                level.addChild(move);
+            }*/
+            double value = lr * (decayGamma * reward - move.getValue());
+            value += move.getValue();
 
             leaf.setValue(value);
             reward = value;
 
-            level.addChild(leaf);
-            level = level.getChild(leaf);
+            //level.addChild(move);
+            level = leaf;
         }
+        computer.resetMoves();
+
 
     }
 
