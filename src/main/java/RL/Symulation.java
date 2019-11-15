@@ -8,7 +8,6 @@ import RL.Policy.Policy;
 import RL.Policy.Tree.Leaf;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Symulation {
 
@@ -150,26 +149,7 @@ public class Symulation {
             reward = value;
             level = leaf.getChild(leaf);
         }
-/*        for (int i = states.size() - 1; i >= 0; i--) {
-            String state = states.get(i);
 
-
-            //tu jest dodawanie losowych wyborów
-            if (leaves.get(leaf) == null) {
-                leaves.put(leaf, 0.0);
-
-            }
-            double value = lr * (decayGamma * reward - leaves.get(leaf));
-            value += leaves.get(leaf);
-            leaves.put(leaf, value);
-            reward = value;
-            computer.getPolicy().setCurrentLeaf(leaf);
-            leaves = leaf.getLeaves();
-
-        }
-        //System.out.println(leaves);
-        System.out.println(computer.getPolicy().getCurrentLeaf().getLeaves());
-        //computer.getPolicy().getCurrentLeaf().setLeaves(leaves);*/
     }
 
     public void showStatistics() {

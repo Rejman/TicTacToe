@@ -4,7 +4,6 @@ import Models.Game.Sign;
 import RL.Policy.Tree.Leaf;
 
 import java.io.Serializable;
-import java.util.HashMap;
 
 public class Policy implements Serializable {
 
