@@ -125,7 +125,7 @@ public class Computer extends Player {
                     if(lastMove.getChild(move) == null){
                         value = 0.0;
                     }else{
-                        value = lastMove.getValue();
+                        value = lastMove.getChild(move).getValue();
                     }
                 }
 

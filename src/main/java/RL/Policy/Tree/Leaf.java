@@ -132,7 +132,7 @@ public class Leaf implements Serializable {
                     }
                     //leaf.showTreeTheBestWay(maxLevel);
                 }
-                theBest.showTreeTheBestWay(limit);
+                //theBest.showTreeTheBestWay(limit);
             }
         }
 
