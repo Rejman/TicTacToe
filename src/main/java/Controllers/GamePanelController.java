@@ -7,6 +7,8 @@ import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
 import RL.Policy.Policy;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -170,6 +172,7 @@ public class GamePanelController {
 
         borderStackPane.setMinWidth(GameBoard.SIZE);
         borderStackPane.setMinHeight(GameBoard.SIZE);
+        borderStackPane.setMinHeight(GameBoard.SIZE);
         listFilesForFolder(new File("policy"));
 
     }
@@ -197,6 +200,8 @@ public class GamePanelController {
         if(deleted==true) policyChoiceBox.getItems().remove(policyName);
 
     }
+
+
 
     @FXML
     void infoPolicy(ActionEvent event) {

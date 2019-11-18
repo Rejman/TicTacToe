@@ -37,10 +37,16 @@ public class SymulationPanelController {
         String expRate = expRateSpinner.getValue().toString();
         String rounds = roundsSpinner.getValue().toString();
 
-        symulation = new Symulation(Integer.parseInt(size), Integer.parseInt(number));
+        symulation = new Symulation(Integer.parseInt(size), Integer.parseInt(number), Double.parseDouble(expRate)/100, Integer.parseInt(rounds));
         //System.out.println(Double.parseDouble(expRate)/100);
-        symulation.train(Integer.parseInt(rounds),Double.parseDouble(expRate)/100);
-        runSaveAlert("filename", symulation.getFirstPlayerPolicy(), symulation.getSecondPlayerPolicy());
+        //symulation.train(,);
+        //runSaveAlert("filename", symulation.getFirstPlayerPolicy(), symulation.getSecondPlayerPolicy());
+
+
+        Thread thread = new Thread(symulation);
+
+        thread.setDaemon(true);
+        thread.start();
 
 
     }
@@ -69,7 +75,7 @@ public class SymulationPanelController {
 
 
     }
-    private void runSaveAlert(String filename, Policy policyCross, Policy policyCircle){
+    public static void runSaveAlert(String filename, Policy policyCross, Policy policyCircle){
         TextInputDialog dialog = new TextInputDialog(filename);
         dialog.setTitle("Save trained policy");
         dialog.setHeaderText("Save trained policy");

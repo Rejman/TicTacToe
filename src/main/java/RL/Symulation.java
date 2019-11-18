@@ -1,18 +1,23 @@
 package RL;
 
+import Controllers.SymulationPanelController;
 import Models.Game.Game;
 import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import RL.Policy.Policy;
 import RL.Policy.Tree.Leaf;
+import javafx.concurrent.Task;
 
 import java.util.ArrayList;
 
-public class Symulation {
+public class Symulation extends Task<Void> {
 
     private double DECAYGAMMA = 0.9;
     private double LR = 0.2;
+
+    private double expRate;
+    private int rounds;
 
     private int cross = 0;
     private int circle = 0;
@@ -24,12 +29,12 @@ public class Symulation {
 
     private Game game;
 
-    private int rounds = 0;
-
-    public Symulation(int size, int full) {
+    public Symulation(int size, int full, double expRate, int rounds) {
         this.game = new Game(size, full);
         crossPlayer = new Computer("firstPlayer", Sign.CROSS, this.game);
         circlePlayer = new Computer("secondPlayer", Sign.CIRCLE, this.game);
+        this.expRate = expRate;
+        this.rounds = rounds;
 
     }
 
@@ -42,7 +47,6 @@ public class Symulation {
     }
 
     private void resetStatistics() {
-        rounds = 0;
         cross = 0;
         circle = 0;
         draw = 0;
@@ -75,18 +79,18 @@ public class Symulation {
         showStatistics();
     }
 
-    public void train(int rounds, double exp_rate) {
-        crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, exp_rate));
-        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, exp_rate));
+    public void train() {
+        crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
+        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
         resetStatistics();
-        this.rounds = rounds;
+
 
         for (int i = 0; i < rounds; i++) {
             if (rounds % 100000 == 0) System.out.println((i * 100) / rounds + " %");
             Verdict verdict;
             while (true) {
 
-                crossPlayer.move(exp_rate);
+                crossPlayer.move(expRate);
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
@@ -94,7 +98,7 @@ public class Symulation {
                     break;
                 }
 
-                circlePlayer.move(exp_rate);
+                circlePlayer.move(expRate);
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
@@ -158,11 +162,27 @@ public class Symulation {
 
     public static void main(String[] args) {
 
-        Symulation symulation = new Symulation(3, 3);
-        symulation.train(50000, 0.3);
+        Symulation symulation = new Symulation(3, 3, 0.3,100000);
+        symulation.train();
         symulation.test(10, 0.0);
 
     }
 
 
+    @Override
+    protected Void call() throws Exception {
+        this.train();
+        return null;
+    }
+
+    @Override
+    protected void failed() {
+        System.out.println("Failed");
+    }
+
+    @Override
+    protected void succeeded() {
+        System.out.println("Koniec");
+        SymulationPanelController.runSaveAlert("filename", this.getFirstPlayerPolicy(), this.getSecondPlayerPolicy());
+    }
 }
