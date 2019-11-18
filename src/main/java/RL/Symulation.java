@@ -1,6 +1,5 @@
 package RL;
 
-import IO.Serialize;
 import Models.Game.Game;
 import Models.Game.Sign;
 import Models.Game.Verdict;
@@ -11,6 +10,9 @@ import RL.Policy.Tree.Leaf;
 import java.util.ArrayList;
 
 public class Symulation {
+
+    private double DECAYGAMMA = 0.9;
+    private double LR = 0.2;
 
     private int cross = 0;
     private int circle = 0;
@@ -46,12 +48,11 @@ public class Symulation {
         draw = 0;
     }
 
-    public void play(int rounds, double exp_rate) {
+    public void test(int rounds, double exp_rate) {
         resetStatistics();
         this.rounds = rounds;
 
         for (int i = 0; i < rounds; i++) {
-
 
             Verdict verdict = Verdict.NOBODY;
             while (verdict == Verdict.NOBODY) {
@@ -59,10 +60,16 @@ public class Symulation {
                 circlePlayer.move(exp_rate);
                 verdict = game.getVerdict();
             }
-            if (verdict == Verdict.CROSS) cross++;
-            if (verdict == Verdict.CIRCLE) circle++;
-            if (verdict == Verdict.DRAW) draw++;
-
+            switch (verdict) {
+                case CIRCLE:
+                    cross++;
+                    break;
+                case CROSS:
+                    circle++;
+                    break;
+                case DRAW:
+                    draw++;
+            }
             game.reset();
         }
         showStatistics();
@@ -75,12 +82,11 @@ public class Symulation {
         this.rounds = rounds;
 
         for (int i = 0; i < rounds; i++) {
-            if (rounds % 10000 == 0) System.out.println((i * 100) / rounds + " %");
+            if (rounds % 100000 == 0) System.out.println((i * 100) / rounds + " %");
             Verdict verdict;
             while (true) {
 
                 crossPlayer.move(exp_rate);
-                //crossPlayer.addState(game.getResultMatrix().getHash());
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
@@ -89,7 +95,6 @@ public class Symulation {
                 }
 
                 circlePlayer.move(exp_rate);
-                //circlePlayer.addState(game.getResultMatrix().getHash());
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
@@ -104,10 +109,7 @@ public class Symulation {
             game.reset();
             crossPlayer.resetMoves();
             circlePlayer.resetMoves();
-            //crossPlayer.resetStates();
-            //circlePlayer.resetStates();
         }
-        //crossPlayer.getPolicy().getTree().showTree();
     }
 
     public void giveReward(Verdict verdict) {
@@ -129,55 +131,21 @@ public class Symulation {
 
     }
 
-    public static void main(String[] args) {
-        Symulation symulation = new Symulation(3, 3);
-        symulation.train(10000, 0.3);
-        symulation.play(10, 0.0);
-        symulation.getFirstPlayerPolicy().getTree().showTree(10);
-        Policy cross = new Policy(Sign.CROSS,10000,0.3);
-        Policy circle = new Policy(Sign.CIRCLE,10000,0.3);
-        cross.setTree(symulation.getFirstPlayerPolicy().getTree());
-        circle.setTree(symulation.getSecondPlayerPolicy().getTree());
-        Serialize.savePolicy("bySymulation",cross);
-        Serialize.savePolicy("bySymulation",circle);
-    }
-
     public void setReward(double reward, Computer computer) {
 
-        double decayGamma = 0.9;
-        double lr = 0.2;
-
         ArrayList<Leaf> moves = computer.getMoves();
-        moves.add(0,computer.getPolicy().getTree());
-        //ArrayList<String> states = computer.getStates();
-        //resetowanie drzewa do pozycji początkowej
 
-        //Leaf level = moves.get(moves.size()-2);
-
-
-        for (int i = moves.size()-1; i >0; i--) {
-
+        for (int i = moves.size() - 1; i > 0; i--) {
             Leaf move = moves.get(i);
-            Leaf parent = moves.get(i-1);
-            System.out.println(move);
-            Leaf leaf = parent.getChild(move);
-            //if(leaf==null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            //System.out.println("move nr"+(i+1)+"-> "+move);
-            //System.out.println("level -> "+level);
+            Leaf parent = moves.get(i - 1);
 
-            double value = lr * (decayGamma * reward - move.getValue());
-            value += move.getValue();
+            double newValue = LR * (DECAYGAMMA * reward - move.getValue()) + move.getValue();
 
-            leaf.setValue(value);
-            reward = value;
+            move.setValue(newValue);
+            reward = newValue;
 
             parent.addChild(move);
-            //level = move;
         }
-        System.out.println("end");
-        //computer.resetMoves();
-
-
     }
 
     public void showStatistics() {
@@ -188,6 +156,13 @@ public class Symulation {
         System.out.println("\tdraw was " + draw + " times\t(" + (draw * 100) / rounds + "%)");
     }
 
+    public static void main(String[] args) {
+
+        Symulation symulation = new Symulation(3, 3);
+        symulation.train(50000, 0.3);
+        symulation.test(10, 0.0);
+
+    }
 
 
 }

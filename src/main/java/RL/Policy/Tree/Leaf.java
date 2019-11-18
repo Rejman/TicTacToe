@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Leaf implements Serializable {
+
     private String state;
     private double value;
     private ArrayList<Leaf> children;
@@ -12,7 +13,6 @@ public class Leaf implements Serializable {
         this.state = state;
         this.value = value;
         this.children = new ArrayList<>();
-
     }
 
     public Leaf(String state) {
@@ -20,19 +20,10 @@ public class Leaf implements Serializable {
     }
 
     public Leaf getChild(Leaf leaf) {
-        int id = children.indexOf(leaf);
+
         boolean isExist = children.contains(leaf);
         if (isExist) {
-            return children.get(id);
-        }
-        return null;
-    }
-    public Leaf getChild(String state) {
-        Leaf newLeaf = new Leaf(state);
-        int id = children.indexOf(newLeaf);
-        boolean isExist = children.contains(newLeaf);
-        if (isExist) {
-            return children.get(id);
+            return children.get(children.indexOf(leaf));
         }
         return null;
     }
@@ -73,7 +64,7 @@ public class Leaf implements Serializable {
     }
 
     public int getLevel() {
-        int level = 9;
+        int level = state.length();
         for (int i = 0; i < 9; i++) {
             if (state.substring(i, i + 1).equals("-")) {
                 level--;
@@ -97,31 +88,20 @@ public class Leaf implements Serializable {
 
     @Override
     public String toString() {
-        return "[" + state + "]";
-    }
-
-    public String toBoardString() {
-        String baord = "";
-        baord += state.substring(0, 3) + "\n";
-        baord += state.substring(3, 6) + "\n";
-        baord += state.substring(6, 9) + "\n";
-        baord += "------------------------";
-        return baord;
+        return state;
     }
 
     public void showTree(int limit) {
-        //System.out.println();
+
 
         int level = getLevel();
         if (level <= limit) {
             String space = "";
-            for (int i = 0; i < level; i++) space+="\t";
-            //System.out.println(level+" "+state+" -> ("+leaves.size()+")"+leaves);
-            //System.out.println("(" + level + ")" + state + " = " + value);
-            System.out.println(space+"(" + level + ")" + state + " = " + value);
-            System.out.println(space+state.substring(0,3));
-            System.out.println(space+state.substring(3,6));
-            System.out.println(space+state.substring(6,9));
+            for (int i = 0; i < level; i++) space += "\t";
+            System.out.println(space + "(" + level + ")" + state + " = " + value);
+            System.out.println(space + state.substring(0, 3));
+            System.out.println(space + state.substring(3, 6));
+            System.out.println(space + state.substring(6, 9));
 
             if (!children.isEmpty()) {
                 for (Leaf leaf : children
@@ -130,31 +110,6 @@ public class Leaf implements Serializable {
                 }
             }
         }
-    }
-    public void showTreeTheBestWay(int limit) {
-        //System.out.println();
-        Leaf theBest = null;
-        double max = 0.0;
-        int level = getLevel();
-        if (level < limit) {
-            //for(int i=0;i<level;i++) System.out.print("\t");
-            //System.out.println(level+" "+state+" -> ("+leaves.size()+")"+leaves);
-
-            System.out.println("(" + level + ")" + state + " = " + value);
-            if (!children.isEmpty()) {
-                for (Leaf leaf : children
-                ) {
-                    if (leaf.getValue() > max) {
-                        max = leaf.getValue();
-                        theBest = leaf;
-                    }
-                    //leaf.showTreeTheBestWay(maxLevel);
-                }
-                //theBest.showTreeTheBestWay(limit);
-            }
-        }
-
-
     }
 
     public static void main(String[] args) {

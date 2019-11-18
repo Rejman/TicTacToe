@@ -7,7 +7,6 @@ import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
 import RL.Policy.Policy;
-import RL.Policy.Tree.Leaf;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -209,7 +208,6 @@ public class GamePanelController {
         String message = "rounds: "+crossPolicy.getRounds()+"\n";
         message+="expRate: "+crossPolicy.getExpRate();
 
-        message+="\n"+crossPolicy.getCurrentLeaf().getChildren();
 
         crossPolicy.getTree().showTree(99);
 
