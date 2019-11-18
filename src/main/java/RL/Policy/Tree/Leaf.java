@@ -1,37 +1,43 @@
 package RL.Policy.Tree;
 
-import Models.Game.Sign;
-import RL.Policy.Policy;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class Leaf implements Serializable {
+
     private String state;
-    private HashMap<Leaf,Double> leaves;
+    private double value;
+    private ArrayList<Leaf> children;
+
+    public Leaf(String state, double value) {
+        this.state = state;
+        this.value = value;
+        this.children = new ArrayList<>();
+    }
 
     public Leaf(String state) {
-        this.state = state;
-        this.leaves = new HashMap<Leaf,Double>();
-        //test
-        //leaves.put(new Leaf("d"),0.0);
+        this(state, 0.0);
     }
 
-    public HashMap<Leaf, Double> getLeaves() {
-        return leaves;
+    public Leaf getChild(Leaf leaf) {
+
+        boolean isExist = children.contains(leaf);
+        if (isExist) {
+            return children.get(children.indexOf(leaf));
+        }
+        return null;
     }
 
-    public void setLeaves(HashMap<Leaf, Double> leaves) {
-        this.leaves = leaves;
+    public void addChild(Leaf leaf) {
+        int id = children.indexOf(leaf);
+        if (id >= 0) {
+            //System.out.println("nadpisanie liscia nową oceną");
+            children.set(id, leaf);
+        } else {
+            //System.out.println("dodanie nowego liścia bo go nie było");
+            children.add(leaf);
+        }
     }
-
-    public boolean isHasChildren(){
-        return leaves.isEmpty();
-    }
-
 
     public String getState() {
         return state;
@@ -39,6 +45,32 @@ public class Leaf implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public ArrayList<Leaf> getChildren() {
+        return children;
+    }
+
+    public void setChildren(ArrayList<Leaf> children) {
+        this.children = children;
+    }
+
+    public int getLevel() {
+        int level = state.length();
+        for (int i = 0; i < 9; i++) {
+            if (state.substring(i, i + 1).equals("-")) {
+                level--;
+            }
+        }
+        return level;
     }
 
     @Override
@@ -58,43 +90,47 @@ public class Leaf implements Serializable {
     public String toString() {
         return state;
     }
-    public String toBoardString(){
-        String baord = "";
-        baord+=state.substring(0,3)+"\n";
-        baord+=state.substring(3,6)+"\n";
-        baord+=state.substring(6,9)+"\n";
-        baord+="------------------------";
 
-        //System.out.println("\t"+leaves);
-        return baord;
+    public void showTree(int limit) {
+
+
+        int level = getLevel();
+        if (level <= limit) {
+            String space = "";
+            for (int i = 0; i < level; i++) space += "\t";
+            System.out.println(space + "(" + level + ")" + state + " = " + value);
+            System.out.println(space + state.substring(0, 3));
+            System.out.println(space + state.substring(3, 6));
+            System.out.println(space + state.substring(6, 9));
+
+            if (!children.isEmpty()) {
+                for (Leaf leaf : children
+                ) {
+                    leaf.showTree(limit);
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
-        System.out.println("tree test");
-
-        Leaf root = new Leaf("---X-----");
-
-        System.out.println(root);
-
-        /*HashMap<Leaf,Double> children = root.getLeaves();
-        children.put(new Leaf("O--X-----"), 0.3);
-        children.put(new Leaf("-O-X-----"), 0.3);
-        children.put(new Leaf("--OX-----"), 0.3);
-        children.put(new Leaf("---XO----"), 0.3);
-        children.put(new Leaf("---X-O---"), 0.3);
-        children.put(new Leaf("---X--O--"), 0.3);
-        children.put(new Leaf("test"), 0.4);
 
 
-        System.out.println(children);
+        Leaf root = new Leaf("---------", 0);
 
-        System.out.println(children.get(new Leaf("test")));*/
+        root.addChild(new Leaf("---X-----", 0.3));
+        root.addChild(new Leaf("--X------", 0.3));
+        root.addChild(new Leaf("-X-------", 0.3));
+        root.addChild(new Leaf("---X-----", 0.4));
 
-        Policy policy = new Policy(Sign.CROSS,0,0.0);
-        //policy.setTree(root);
+        Leaf child = root.getChild(new Leaf("--X------", 0.8));
+        child.addChild(new Leaf("-OX------", 0.5));
+        //root.showTree(0);
+        Leaf test = root.getChild(new Leaf("-X-------", 10.2));
 
-        System.out.println(policy.getCurrentLeaf().getLeaves());
+        test.setState("XXXXXXXXX");
 
+        root.showTree(55);
 
     }
+
 }

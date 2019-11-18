@@ -4,40 +4,27 @@ import Models.Game.Sign;
 import RL.Policy.Tree.Leaf;
 
 import java.io.Serializable;
-import java.util.HashMap;
 
 public class Policy implements Serializable {
 
     private Sign sign;
     private int rounds;
     private double expRate;
-    private Leaf tree;
-
-    private Leaf currentLeaf;
-
-    public Leaf getCurrentLeaf() {
-        return currentLeaf;
-    }
-
-    public void setCurrentLeaf(Leaf currentLeaf) {
-        this.currentLeaf = currentLeaf;
-    }
+    private Leaf root;
 
     public Policy(Sign sign, int rounds, double expRate) {
         this.sign = sign;
         this.rounds = rounds;
         this.expRate = expRate;
-        this.tree = new Leaf("root");
-        this.currentLeaf = tree;
+        this.root = new Leaf("---------", 0.0);
     }
 
     public Leaf getTree() {
-        return tree;
+        return root;
     }
 
-    public void setTree(Leaf tree) {
-        this.tree = tree;
-        this.currentLeaf = this.tree;
+    public void setTree(Leaf root) {
+        this.root = root;
     }
 
     public Sign getSign() {

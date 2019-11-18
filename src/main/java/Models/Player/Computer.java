@@ -4,17 +4,15 @@ import Models.Game.*;
 import RL.Policy.Policy;
 import RL.Policy.Tree.Leaf;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Computer extends Player {
     //object that chooses random movement
     private Random generator = new Random();
-    //REINFORCEMENT_LEARNING_VARIABLES
-    private ArrayList<String> states;
     private Policy policy;
+    private Leaf lastMove;
+    private Leaf nextMove;
+    private ArrayList<Leaf> moves;
 
     /**
      * @param name
@@ -23,110 +21,95 @@ public class Computer extends Player {
      */
     public Computer(String name, Sign value, Game game) {
         super(name, value, game);
-        states = new ArrayList<String>();
         policy = new Policy(this.value,0,0);
+        //lastMove = policy.getTree();
+        moves = new ArrayList<>();
+        resetMoves();
     }
 
-    public ArrayList<String> getStates() {
-        return states;
+    public ArrayList<Leaf> getMoves() {
+        return moves;
     }
 
-    public void addState(String state) {
-        states.add(state);
-    }
-
-    public void resetStates() {
-        states.clear();
-        policy.setCurrentLeaf(policy.getTree());
+    public void resetMoves(){
+        moves.clear();
+        lastMove = policy.getTree();
     }
 
     public void setPolicy(Policy policy) {
         this.policy = policy;
+        resetMoves();
     }
-
 
     public Policy getPolicy() {
         return this.policy;
     }
+    private int randomMove(ArrayList<Integer> emptyFields){
+        emptyFields = game.getEmptyFields();
 
-    /**
-     * Performs random movement
-     *
-     * @return field that was chosen
-     */
-    public int randomMove() {
-        if (game.getVerdict() != Verdict.NOBODY) return -1;
+        int randomId = generator.nextInt(emptyFields.size());
+        int field = emptyFields.get(randomId);
 
-        List<Integer> emptyFields = game.getEmptyFields();
-        int numberOfEmptyFields = emptyFields.size();
-        if (numberOfEmptyFields > 0) {
-
-            int randomId = generator.nextInt(numberOfEmptyFields);
-            int field = emptyFields.get(randomId);
-            game.addMove(field, value);
-            return field;
+        ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
+        nextResultMatrix.add(field,this.value);
+        String nextResultMatrixHash = nextResultMatrix.getHash();
+        //!
+        nextMove = new Leaf(nextResultMatrixHash);
+        if(lastMove.getChild(nextMove)==null){
+            //gdy wylosowany ruch jest wylosowany po raz pierwszy
+            lastMove.addChild(nextMove);
         }
-        return -1;
+        nextMove = lastMove.getChild(nextMove);
+
+        return field;
     }
-
     public int move(double exp_rate){
-        Leaf theBestLeaf = null;
 
-        System.out.println(policy.getCurrentLeaf().getLeaves());
-
+        nextMove = new Leaf("");
 
         ArrayList<Integer> emptyFields = game.getEmptyFields();
+
         int action = 0;
+
         Random generator = new Random();
-        //Random generatorInt = new Random();
         if(generator.nextDouble()<=exp_rate){
-            if(emptyFields.isEmpty()) return 0;
-            int randomId = generator.nextInt(emptyFields.size());
-            int field = emptyFields.get(randomId);
+            //if move is random
+            action =  randomMove(emptyFields);
 
-            HashMap<Leaf,Double> leaves = policy.getCurrentLeaf().getLeaves();
-
-            ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
-            nextResultMatrix.add(field,this.value);
-            String nextResultMatrixHash = nextResultMatrix.getHash();
-
-            Leaf newLeaf = new Leaf(nextResultMatrixHash);
-            //leaves.put(newLeaf,0.0);
-            theBestLeaf = newLeaf;
-            action =  field;
         }else{
+            //if move is form policy
+            double valueMax = Integer.MIN_VALUE;
 
-            double value_max = -999;
-            HashMap<Leaf,Double> leaves = policy.getCurrentLeaf().getLeaves();
             for (Integer field:emptyFields
             ) {
-
-
                 ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
                 nextResultMatrix.add(field,this.value);
                 String nextResultMatrixHash = nextResultMatrix.getHash();
-                double value=0.0;
-                Leaf leaf = new Leaf(nextResultMatrixHash);
-                if(leaves.get(leaf) == null){
 
-                    value = 0.0;
+                double value = 0.0;
+                Leaf newLeaf = lastMove.getChild(new Leaf(nextResultMatrixHash));
+                if(newLeaf != null){
+                    value = newLeaf.getValue();
                 }else{
-
-                    value = leaves.get(leaf);
+                    lastMove.addChild(new Leaf(nextResultMatrixHash, value));
                 }
+                //!!!
+                if(value>=valueMax){
+                    //!
+                    newLeaf = new Leaf(nextResultMatrixHash);
+                    nextMove = lastMove.getChild(newLeaf);
 
-                if(value>=value_max){
-                    theBestLeaf = leaf;
-                    value_max = value;
+                    valueMax = value;
                     action = field;
                 }
             }
 
 
         }
-        this.policy.setCurrentLeaf(theBestLeaf);
-        //!!!!!!
-        System.out.println(theBestLeaf.toBoardString());
+        lastMove = nextMove;
+
+        this.moves.add(lastMove);
+
         game.addMove(action, value);
         return action;
     }

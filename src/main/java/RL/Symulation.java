@@ -8,9 +8,11 @@ import RL.Policy.Policy;
 import RL.Policy.Tree.Leaf;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Symulation {
+
+    private double DECAYGAMMA = 0.9;
+    private double LR = 0.2;
 
     private int cross = 0;
     private int circle = 0;
@@ -30,52 +32,61 @@ public class Symulation {
         circlePlayer = new Computer("secondPlayer", Sign.CIRCLE, this.game);
 
     }
+
     public Policy getFirstPlayerPolicy() {
-        return  crossPlayer.getPolicy();
+        return crossPlayer.getPolicy();
     }
+
     public Policy getSecondPlayerPolicy() {
-        return  circlePlayer.getPolicy();
+        return circlePlayer.getPolicy();
     }
+
     private void resetStatistics() {
         rounds = 0;
         cross = 0;
         circle = 0;
         draw = 0;
     }
-    public void play(int rounds, double exp_rate){
-        resetStatistics();
-        this.rounds = rounds;
 
-        for(int i=0;i<rounds;i++){
-
-
-            Verdict verdict = Verdict.NOBODY;
-            while(verdict==Verdict.NOBODY){
-                crossPlayer.move(exp_rate);
-                circlePlayer.move(exp_rate);
-                verdict = game.getVerdict();
-            }
-            if(verdict == Verdict.CROSS) cross++;
-            if(verdict == Verdict.CIRCLE) circle++;
-            if(verdict == Verdict.DRAW) draw++;
-
-            game.reset();
-        }
-        showStatistics();
-    }
-    public void train(int rounds, double exp_rate) {
-        crossPlayer.setPolicy(new Policy(Sign.CROSS,rounds,exp_rate));
-        circlePlayer.setPolicy(new Policy(Sign.CIRCLE,rounds,exp_rate));
+    public void test(int rounds, double exp_rate) {
         resetStatistics();
         this.rounds = rounds;
 
         for (int i = 0; i < rounds; i++) {
-            if (rounds % 10000 == 0) System.out.println((i * 100) / rounds + " %");
+
+            Verdict verdict = Verdict.NOBODY;
+            while (verdict == Verdict.NOBODY) {
+                crossPlayer.move(exp_rate);
+                circlePlayer.move(exp_rate);
+                verdict = game.getVerdict();
+            }
+            switch (verdict) {
+                case CIRCLE:
+                    cross++;
+                    break;
+                case CROSS:
+                    circle++;
+                    break;
+                case DRAW:
+                    draw++;
+            }
+            game.reset();
+        }
+        showStatistics();
+    }
+
+    public void train(int rounds, double exp_rate) {
+        crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, exp_rate));
+        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, exp_rate));
+        resetStatistics();
+        this.rounds = rounds;
+
+        for (int i = 0; i < rounds; i++) {
+            if (rounds % 100000 == 0) System.out.println((i * 100) / rounds + " %");
             Verdict verdict;
             while (true) {
 
                 crossPlayer.move(exp_rate);
-                crossPlayer.addState(game.getResultMatrix().getHash());
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
@@ -84,7 +95,6 @@ public class Symulation {
                 }
 
                 circlePlayer.move(exp_rate);
-                circlePlayer.addState(game.getResultMatrix().getHash());
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
@@ -97,10 +107,9 @@ public class Symulation {
             if (verdict == Verdict.DRAW) draw++;
 
             game.reset();
-            crossPlayer.resetStates();
-            circlePlayer.resetStates();
+            crossPlayer.resetMoves();
+            circlePlayer.resetMoves();
         }
-
     }
 
     public void giveReward(Verdict verdict) {
@@ -122,34 +131,21 @@ public class Symulation {
 
     }
 
-    public static void main(String[] args) {
-        Symulation symulation = new Symulation(3,3);
-        symulation.train(10000,0.3);
-        symulation.play(10,0.0);
-    }
     public void setReward(double reward, Computer computer) {
 
-        double decayGamma = 0.9;
-        double lr = 0.2;
+        ArrayList<Leaf> moves = computer.getMoves();
 
-        ArrayList<String> states = computer.getStates();
-        HashMap<Leaf, Double> leaves = computer.getPolicy().getCurrentLeaf().getLeaves();
+        for (int i = moves.size() - 1; i > 0; i--) {
+            Leaf move = moves.get(i);
+            Leaf parent = moves.get(i - 1);
 
-        for (int i = states.size() - 1; i >= 0; i--) {
-            String state = states.get(i);
-            Leaf leaf = new Leaf(state);
+            double newValue = LR * (DECAYGAMMA * reward - move.getValue()) + move.getValue();
 
-            if (leaves.get(leaf) == null) {
-                leaves.put(leaf, 0.0);
-            }
-            double value = lr * (decayGamma * reward - leaves.get(leaf));
-            value += leaves.get(leaf);
-            leaves.put(leaf, value);
-            reward = value;
+            move.setValue(newValue);
+            reward = newValue;
+
+            parent.addChild(move);
         }
-        //System.out.println(leaves);
-        System.out.println(computer.getPolicy().getCurrentLeaf().getLeaves());
-        //computer.getPolicy().getCurrentLeaf().setLeaves(leaves);
     }
 
     public void showStatistics() {
@@ -159,5 +155,14 @@ public class Symulation {
         System.out.println("\tcross won " + cross + " times\t(" + (cross * 100) / rounds + "%)");
         System.out.println("\tdraw was " + draw + " times\t(" + (draw * 100) / rounds + "%)");
     }
+
+    public static void main(String[] args) {
+
+        Symulation symulation = new Symulation(3, 3);
+        symulation.train(50000, 0.3);
+        symulation.test(10, 0.0);
+
+    }
+
 
 }
