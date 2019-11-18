@@ -148,32 +148,33 @@ public class Symulation {
         double lr = 0.2;
 
         ArrayList<Leaf> moves = computer.getMoves();
+        moves.add(0,computer.getPolicy().getTree());
         //ArrayList<String> states = computer.getStates();
         //resetowanie drzewa do pozycji początkowej
 
-        Leaf level = computer.getPolicy().getTree();
+        //Leaf level = moves.get(moves.size()-2);
 
 
-        for (int i = 0; i < moves.size(); i++) {
+        for (int i = moves.size()-1; i >0; i--) {
+
             Leaf move = moves.get(i);
-            Leaf leaf = level.getChild(move);
-            if(leaf==null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Leaf parent = moves.get(i-1);
+            System.out.println(move);
+            Leaf leaf = parent.getChild(move);
+            //if(leaf==null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             //System.out.println("move nr"+(i+1)+"-> "+move);
             //System.out.println("level -> "+level);
-            /*if (level.getChild(move) == null) {
-                move.setValue(0.0);
 
-                level.addChild(move);
-            }*/
             double value = lr * (decayGamma * reward - move.getValue());
             value += move.getValue();
 
             leaf.setValue(value);
             reward = value;
 
-            //level.addChild(move);
-            level = leaf;
+            parent.addChild(move);
+            //level = move;
         }
+        System.out.println("end");
         //computer.resetMoves();
 
 
