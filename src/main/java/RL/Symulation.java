@@ -1,17 +1,27 @@
 package RL;
 
 import Controllers.SymulationPanelController;
+import IO.Serialize;
 import Models.Game.Game;
 import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import RL.Policy.Policy;
 import RL.Policy.Tree.Leaf;
+import javafx.beans.property.BooleanProperty;
 import javafx.concurrent.Task;
+import javafx.scene.control.Button;
 
 import java.util.ArrayList;
 
 public class Symulation extends Task<Void> {
+
+
+    private Button button;
+
+    public void setButton(Button button) {
+        this.button = button;
+    }
 
     private double DECAYGAMMA = 0.9;
     private double LR = 0.2;
@@ -86,7 +96,6 @@ public class Symulation extends Task<Void> {
 
 
         for (int i = 0; i < rounds; i++) {
-            if (rounds % 100000 == 0) System.out.println((i * 100) / rounds + " %");
             Verdict verdict;
             while (true) {
 
@@ -171,7 +180,40 @@ public class Symulation extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
-        this.train();
+        crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
+        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
+        System.out.println(rounds);
+
+
+        for (int i = 0; i < rounds; i++) {
+            Verdict verdict;
+            while (true) {
+                crossPlayer.move(expRate);
+
+                verdict = game.getVerdict();
+                if (verdict != Verdict.NOBODY) {
+                    giveReward(verdict);
+                    break;
+                }
+
+                circlePlayer.move(expRate);
+
+                verdict = game.getVerdict();
+                if (verdict != Verdict.NOBODY) {
+                    giveReward(verdict);
+                    break;
+                }
+            }
+            if (verdict == Verdict.CROSS) cross++;
+            if (verdict == Verdict.CIRCLE) circle++;
+            if (verdict == Verdict.DRAW) draw++;
+
+            game.reset();
+            crossPlayer.resetMoves();
+            circlePlayer.resetMoves();
+            updateProgress(i,rounds);
+        }
+
         return null;
     }
 
@@ -182,7 +224,8 @@ public class Symulation extends Task<Void> {
 
     @Override
     protected void succeeded() {
-        System.out.println("Koniec");
-        SymulationPanelController.runSaveAlert("filename", this.getFirstPlayerPolicy(), this.getSecondPlayerPolicy());
+
+        button.setDisable(false);
+
     }
 }
