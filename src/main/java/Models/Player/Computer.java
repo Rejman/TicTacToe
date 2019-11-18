@@ -11,6 +11,7 @@ public class Computer extends Player {
     private Random generator = new Random();
     private Policy policy;
     private Leaf lastMove;
+    private Leaf nextMove;
     private ArrayList<Leaf> moves;
 
     /**
@@ -43,10 +44,28 @@ public class Computer extends Player {
     public Policy getPolicy() {
         return this.policy;
     }
+    private int randomMove(ArrayList<Integer> emptyFields){
+        emptyFields = game.getEmptyFields();
 
+        int randomId = generator.nextInt(emptyFields.size());
+        int field = emptyFields.get(randomId);
+
+        ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
+        nextResultMatrix.add(field,this.value);
+        String nextResultMatrixHash = nextResultMatrix.getHash();
+        //!
+        nextMove = new Leaf(nextResultMatrixHash);
+        if(lastMove.getChild(nextMove)==null){
+            //gdy wylosowany ruch jest wylosowany po raz pierwszy
+            lastMove.addChild(nextMove);
+        }
+        nextMove = lastMove.getChild(nextMove);
+
+        return field;
+    }
     public int move(double exp_rate){
 
-        Leaf nextMove = new Leaf("???");
+        nextMove = new Leaf("");
 
         ArrayList<Integer> emptyFields = game.getEmptyFields();
 
@@ -55,22 +74,10 @@ public class Computer extends Player {
         Random generator = new Random();
         if(generator.nextDouble()<=exp_rate){
             //if move is random
-            int randomId = generator.nextInt(emptyFields.size());
-            int field = emptyFields.get(randomId);
+            action =  randomMove(emptyFields);
 
-            ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
-            nextResultMatrix.add(field,this.value);
-            String nextResultMatrixHash = nextResultMatrix.getHash();
-            //!
-            nextMove = new Leaf(nextResultMatrixHash);
-            if(lastMove.getChild(nextMove)==null){
-                //gdy wylosowany ruch jest wylosowany po raz pierwszy
-                lastMove.addChild(nextMove);
-            }
-            nextMove = lastMove.getChild(nextMove);
-            action =  field;
         }else{
-            //if move is geting form policy
+            //if move is form policy
             double valueMax = Integer.MIN_VALUE;
 
             for (Integer field:emptyFields
@@ -83,15 +90,13 @@ public class Computer extends Player {
                 Leaf newLeaf = lastMove.getChild(new Leaf(nextResultMatrixHash));
                 if(newLeaf != null){
                     value = newLeaf.getValue();
+                }else{
+                    lastMove.addChild(new Leaf(nextResultMatrixHash, value));
                 }
                 //!!!
                 if(value>=valueMax){
                     //!
                     newLeaf = new Leaf(nextResultMatrixHash);
-                    if(lastMove.getChild(newLeaf)==null){
-                        //gdy wybrany ruch jest wybrany po raz pierwszy
-                        lastMove.addChild(newLeaf);
-                    }
                     nextMove = lastMove.getChild(newLeaf);
 
                     valueMax = value;
@@ -102,7 +107,7 @@ public class Computer extends Player {
 
         }
         lastMove = nextMove;
-        //dodanie ostatiego ruchu do swojej pamięci
+
         this.moves.add(lastMove);
 
         game.addMove(action, value);
