@@ -47,6 +47,7 @@ public class Computer extends Player {
     }
     public void resetMoves(){
         moves.clear();
+        lastMove = policy.getTree();
     }
 
     public void setPolicy(Policy policy) {
@@ -59,41 +60,24 @@ public class Computer extends Player {
         return this.policy;
     }
 
-    /**
-     * Performs random movement
-     *
-     * @return field that was chosen
-     */
-/*    public int randomMove() {
-        if (game.getVerdict() != Verdict.NOBODY) return -1;
-
-        List<Integer> emptyFields = game.getEmptyFields();
-        int numberOfEmptyFields = emptyFields.size();
-        if (numberOfEmptyFields > 0) {
-
-            int randomId = generator.nextInt(numberOfEmptyFields);
-            int field = emptyFields.get(randomId);
-            game.addMove(field, value);
-            return field;
-        }
-        return -1;
-    }*/
-
     public int move(double exp_rate){
 
-        Leaf nextMove = new Leaf("",0.0);
+        Leaf nextMove = new Leaf("???");
 
         ArrayList<Integer> emptyFields = game.getEmptyFields();
+
         int action = 0;
+
         Random generator = new Random();
-        System.out.println("Dostępne ruchy: ");
+        /*System.out.println("Dostępne ruchy: ");
         for (Leaf leaf:lastMove.getChildren()
              ) {
             System.out.println(leaf.getState()+" "+leaf.getValue());
-        }
+        }*/
 
         if(generator.nextDouble()<=exp_rate){
-            if(emptyFields.isEmpty()) return 0;
+            //gdy ruch ma być losowy
+            //if(emptyFields.isEmpty()) return 0;
             int randomId = generator.nextInt(emptyFields.size());
             int field = emptyFields.get(randomId);
 
@@ -101,18 +85,16 @@ public class Computer extends Player {
             nextResultMatrix.add(field,this.value);
             String nextResultMatrixHash = nextResultMatrix.getHash();
             //!
-            Leaf newLeaf = new Leaf(nextResultMatrixHash, 0.0);
-            if(lastMove.getChild(newLeaf)==null){
+            Leaf randomLeaf = new Leaf(nextResultMatrixHash, 0.0);
+            if(lastMove.getChild(randomLeaf)==null){
                 //gdy wylosowany ruch jest wylosowany po raz pierwszy
-                lastMove.addChild(newLeaf);
+                lastMove.addChild(randomLeaf);
             }
-            nextMove = lastMove.getChild(newLeaf);
-
-
+            nextMove = lastMove.getChild(randomLeaf);
             action =  field;
         }else{
-
-            double value_max = -999;
+            //gdy ruch jest wybierany z polityki
+            double value_max = Integer.MIN_VALUE;
 
             for (Integer field:emptyFields
             ) {
@@ -120,19 +102,21 @@ public class Computer extends Player {
                 nextResultMatrix.add(field,this.value);
                 String nextResultMatrixHash = nextResultMatrix.getHash();
                 double value=0.0;
-                Leaf move = new Leaf(nextResultMatrixHash,0.0);
-                if(!lastMove.getChildren().isEmpty()){
+
+                Leaf move = new Leaf(nextResultMatrixHash);
+                //if(!lastMove.getChildren().isEmpty()){
                     if(lastMove.getChild(move) == null){
+                        //lastMove.addChild(move);
                         value = 0.0;
                     }else{
                         value = lastMove.getChild(move).getValue();
                     }
-                }
+                //}
 
                 //!!!
                 if(value>=value_max){
                     //!
-                    Leaf newLeaf = new Leaf(nextResultMatrixHash, 0.0);
+                    Leaf newLeaf = new Leaf(nextResultMatrixHash);
                     if(lastMove.getChild(newLeaf)==null){
                         //gdy wybrany ruch jest wybrany po raz pierwszy
                         lastMove.addChild(newLeaf);
@@ -150,10 +134,10 @@ public class Computer extends Player {
         //dodanie ostatiego ruchu do swojej pamięci
         this.moves.add(lastMove);
 
-        System.out.println("Najlepszy ruch: ");
-        lastMove.showTreeTheBestWay(lastMove.getLevel()+1);
-        System.out.println("Last move:"+this.value);
-        System.out.println(lastMove.toBoardString());
+        //System.out.println("Najlepszy ruch: ");
+        //lastMove.showTreeTheBestWay(lastMove.getLevel()+1);
+        //System.out.println("Last move:"+this.value);
+        //System.out.println(lastMove.toBoardString());
         game.addMove(action, value);
         return action;
     }

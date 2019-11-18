@@ -8,7 +8,6 @@ import Models.Player.Computer;
 import RL.Policy.Policy;
 import RL.Policy.Tree.Leaf;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Symulation {
@@ -81,7 +80,7 @@ public class Symulation {
             while (true) {
 
                 crossPlayer.move(exp_rate);
-                crossPlayer.addState(game.getResultMatrix().getHash());
+                //crossPlayer.addState(game.getResultMatrix().getHash());
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
@@ -90,7 +89,7 @@ public class Symulation {
                 }
 
                 circlePlayer.move(exp_rate);
-                circlePlayer.addState(game.getResultMatrix().getHash());
+                //circlePlayer.addState(game.getResultMatrix().getHash());
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
@@ -103,8 +102,10 @@ public class Symulation {
             if (verdict == Verdict.DRAW) draw++;
 
             game.reset();
-            crossPlayer.resetStates();
-            circlePlayer.resetStates();
+            crossPlayer.resetMoves();
+            circlePlayer.resetMoves();
+            //crossPlayer.resetStates();
+            //circlePlayer.resetStates();
         }
         //crossPlayer.getPolicy().getTree().showTree();
     }
@@ -146,17 +147,19 @@ public class Symulation {
         double decayGamma = 0.9;
         double lr = 0.2;
 
-        ArrayList<String> states = computer.getStates();
+        ArrayList<Leaf> moves = computer.getMoves();
+        //ArrayList<String> states = computer.getStates();
         //resetowanie drzewa do pozycji początkowej
 
         Leaf level = computer.getPolicy().getTree();
-        ArrayList<Leaf> moves = computer.getMoves();
+
+
         for (int i = 0; i < moves.size(); i++) {
             Leaf move = moves.get(i);
             Leaf leaf = level.getChild(move);
-
-            System.out.println("move nr"+(i+1)+"-> "+move);
-            System.out.println("level -> "+level);
+            if(leaf==null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            //System.out.println("move nr"+(i+1)+"-> "+move);
+            //System.out.println("level -> "+level);
             /*if (level.getChild(move) == null) {
                 move.setValue(0.0);
 
@@ -171,7 +174,7 @@ public class Symulation {
             //level.addChild(move);
             level = leaf;
         }
-        computer.resetMoves();
+        //computer.resetMoves();
 
 
     }
