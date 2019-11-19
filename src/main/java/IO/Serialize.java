@@ -64,7 +64,7 @@ public abstract class Serialize {
         {
             Files.deleteIfExists(Paths.get(Serialize.pathToFile(policyName,Sign.CROSS)));
             Files.deleteIfExists(Paths.get(Serialize.pathToFile(policyName,Sign.CIRCLE)));
-            //policyChoiceBox.getItems().remove(policyName);
+            System.out.println("Deletion successful.");
         }
         catch(NoSuchFileException e)
         {
@@ -78,7 +78,7 @@ public abstract class Serialize {
         {
             System.out.println("Invalid permissions.");
         }
-        System.out.println("Deletion successful.");
+
         return true;
     }
     public static String pathToFile(String filename, Sign sign){

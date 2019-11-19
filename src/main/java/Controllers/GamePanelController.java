@@ -7,8 +7,6 @@ import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
 import RL.Policy.Policy;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -22,6 +20,7 @@ import static Models.Gui.GameType.*;
 public class GamePanelController {
 
 
+    private Policy lastLoadedPolicy;
     private final int GOMOKU_SIZE = 15;
     private final int GOMOKU_FULL = 5;
     private final int TICTACTOE_VALUE = 3;
@@ -55,7 +54,7 @@ public class GamePanelController {
 
     @FXML
     void play(ActionEvent event) {
-        playButton.setText("RESET");
+
 
         int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
         int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
@@ -71,9 +70,13 @@ public class GamePanelController {
         Computer computer;
         if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
         else computer = new Computer("computer", Sign.CIRCLE, newGame);
-        //System.out.println(buildPathToFile(policyName));
 
-        computer.setPolicy(Serialize.loadPolicy(Serialize.pathToFile(policyName,computer.getValue())));
+        if(playButton.getText().equals("PLAY")){
+            playButton.setText("RESET");
+            lastLoadedPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName,computer.getValue()));
+        }
+
+        computer.setPolicy(lastLoadedPolicy);
 
 
         HumanVsComputer gameBoard = new HumanVsComputer(newGame, human, computer, computerFirst);
