@@ -7,6 +7,7 @@ import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
 import RL.Policy.Policy;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -20,14 +21,15 @@ import static Models.Gui.GameType.*;
 public class GamePanelController {
 
 
-    private Policy lastLoadedPolicy;
+    private Policy lastLoadedPolicy = null;
     private final int GOMOKU_SIZE = 15;
     private final int GOMOKU_FULL = 5;
     private final int TICTACTOE_VALUE = 3;
     private boolean lock = false;
     @FXML
     private Button infoButton;
-
+    @FXML
+    private ProgressBar loadProgressBar;
     @FXML
     private Button deleteButton;
     @FXML
@@ -54,8 +56,11 @@ public class GamePanelController {
 
     @FXML
     void play(ActionEvent event) {
-
-
+        if(lastLoadedPolicy==null){
+            loadPolicy();
+            return;
+        }
+        System.out.println("Ok");
         int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
         int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
@@ -71,11 +76,6 @@ public class GamePanelController {
         if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
         else computer = new Computer("computer", Sign.CIRCLE, newGame);
 
-        if(playButton.getText().equals("PLAY")){
-            playButton.setText("RESET");
-            lastLoadedPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName,computer.getValue()));
-        }
-
         computer.setPolicy(lastLoadedPolicy);
 
 
@@ -84,6 +84,31 @@ public class GamePanelController {
         borderStackPane.getChildren().clear();
         borderStackPane.getChildren().add(gameBoard);
 
+    }
+    private void loadPolicy(){
+        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+        Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
+
+        Task<Void> load = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                playButton.setDisable(true);
+                lastLoadedPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, sign));
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                System.out.println("Koniec");
+                loadProgressBar.setVisible(false);
+                playButton.setDisable(false);
+                playButton.setText("RESET");
+                playButton.fire();
+            }
+        };
+        loadProgressBar.progressProperty().bind(load.progressProperty());
+        Thread thread = new Thread(load);
+        thread.start();
     }
     @FXML
     private StackPane stackPane;
