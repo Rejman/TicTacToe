@@ -28,8 +28,7 @@ public class GamePanelController {
     private boolean lock = false;
     @FXML
     private Button infoButton;
-    @FXML
-    private ProgressBar loadProgressBar;
+
     @FXML
     private Button deleteButton;
     @FXML
@@ -53,7 +52,8 @@ public class GamePanelController {
 
     @FXML
     private Label verdictLabel;
-
+    @FXML
+    private ProgressIndicator loadProgress;
     @FXML
     void play(ActionEvent event) {
         if(lastLoadedPolicy==null){
@@ -88,25 +88,31 @@ public class GamePanelController {
     private void loadPolicy(){
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
-
+        if(sign==Sign.CROSS){
+            sign=Sign.CIRCLE;
+        }else{
+            sign=Sign.CROSS;
+        }
+        Sign finalSign = sign;
         Task<Void> load = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 playButton.setDisable(true);
-                lastLoadedPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, sign));
+                lastLoadedPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, finalSign));
                 return null;
             }
 
             @Override
             protected void succeeded() {
                 System.out.println("Koniec");
-                loadProgressBar.setVisible(false);
                 playButton.setDisable(false);
                 playButton.setText("RESET");
                 playButton.fire();
             }
         };
-        loadProgressBar.progressProperty().bind(load.progressProperty());
+        //loadProgressBar.progressProperty().bind(load.progressProperty());
+        loadProgress.progressProperty().bind(load.progressProperty());
+        loadProgress.setVisible(true);
         Thread thread = new Thread(load);
         thread.start();
     }
@@ -187,6 +193,8 @@ public class GamePanelController {
     }
     @FXML
     void initialize() {
+        loadProgress.setVisible(false);
+
         buildGameTypeChoiceBox();
         buildPolicyChoiceBox();
         buildSignChoiceBox();

@@ -11,11 +11,17 @@ import RL.Policy.Tree.Leaf;
 import javafx.beans.property.BooleanProperty;
 import javafx.concurrent.Task;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 
 import java.util.ArrayList;
 
 public class Symulation extends Task<Void> {
 
+    private CheckBox autoSave;
+
+    public void setAutoSave(CheckBox autoSave) {
+        this.autoSave = autoSave;
+    }
 
     private Button button;
 
@@ -226,6 +232,7 @@ public class Symulation extends Task<Void> {
     protected void succeeded() {
 
         button.setDisable(false);
+        if(autoSave.isSelected()) button.fire();
 
     }
 }

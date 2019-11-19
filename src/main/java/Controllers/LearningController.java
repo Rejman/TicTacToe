@@ -8,15 +8,23 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 public class LearningController {
 
+
+    private Thread thread;
     @FXML
     private TextField fileNameTextField;
-
+    @FXML
+    private CheckBox autoSaveCheckBox;
     @FXML
     private Button saveButton;
 
@@ -41,6 +49,7 @@ public class LearningController {
     public void setSymulation(Symulation symulation) {
         this.symulation = symulation;
         this.symulation.setButton(saveButton);
+        this.symulation.setAutoSave(autoSaveCheckBox);
     }
 
     @FXML
@@ -67,15 +76,19 @@ public class LearningController {
     public void start() throws InterruptedException {
         progressBar.progressProperty().unbind();
         progressBar.progressProperty().bind(symulation.progressProperty());
-        Thread thread = new Thread(symulation);
+        thread = new Thread(symulation);
 
         thread.setDaemon(true);
         thread.start();
 
     }
-
+    @FXML
+    void cancel(ActionEvent event) {
+        thread.stop();
+        parent.close();
+    }
     @FXML
     void initialize() {
-
+        fileNameTextField.setText(new Date().getTime()+"");
     }
 }

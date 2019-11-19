@@ -2,25 +2,26 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-border-color: #aaaaaa; -fx-border-width: 10;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.LearningController">
    <children>
-      <VBox alignment="CENTER" StackPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="130.0" prefWidth="464.0" StackPane.alignment="CENTER">
          <children>
-            <ProgressBar fx:id="progressBar" prefHeight="30.0" prefWidth="367.0" progress="0.0" />
+            <ProgressBar fx:id="progressBar" prefHeight="30.0" prefWidth="423.0" progress="0.0" />
             <GridPane alignment="CENTER" hgap="10.0" vgap="10.0">
                <columnConstraints>
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="95.0" minWidth="8.0" prefWidth="26.0" />
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="154.0" minWidth="8.0" prefWidth="130.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="330.0" minWidth="277.0" prefWidth="301.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints vgrow="SOMETIMES" />
@@ -29,7 +30,13 @@
                <children>
                   <TextField fx:id="fileNameTextField" GridPane.columnIndex="1" />
                   <Label text="File name:" />
-                  <Button fx:id="saveButton" disable="true" mnemonicParsing="false" onAction="#save" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+                        <Button fx:id="saveButton" disable="true" mnemonicParsing="false" onAction="#save" text="Save" />
+                     </children>
+                  </HBox>
+                  <CheckBox fx:id="autoSaveCheckBox" mnemonicParsing="false" text="auto save" GridPane.rowIndex="1" />
                </children>
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

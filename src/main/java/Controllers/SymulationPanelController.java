@@ -14,9 +14,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class SymulationPanelController {
+
 
     @FXML
     private Spinner<?> roundsSpinner;
