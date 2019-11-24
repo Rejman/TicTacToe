@@ -23,12 +23,6 @@ public class MainController {
     private StackPane mainStackPane;
 
     @FXML
-    private CheckMenuItem histroyOfMatchesCheckMenuItem;
-
-    @FXML
-    private CheckMenuItem MovementsCheckMenuItem;
-
-    @FXML
     private StackPane stackPane;
 
     @FXML

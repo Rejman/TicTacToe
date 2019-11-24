@@ -1,15 +1,39 @@
 package RL;
 
+import Controllers.SymulationPanelController;
+import IO.Serialize;
 import Models.Game.Game;
 import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
-import IO.Serialize;
+import RL.Policy.Policy;
+import RL.Policy.Tree.Leaf;
+import javafx.beans.property.BooleanProperty;
+import javafx.concurrent.Task;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class Symulation {
+public class Symulation extends Task<Void> {
+
+    private CheckBox autoSave;
+
+    public void setAutoSave(CheckBox autoSave) {
+        this.autoSave = autoSave;
+    }
+
+    private Button button;
+
+    public void setButton(Button button) {
+        this.button = button;
+    }
+
+    private double DECAYGAMMA = 0.9;
+    private double LR = 0.2;
+
+    private double expRate;
+    private int rounds;
 
     private int cross = 0;
     private int circle = 0;
@@ -21,40 +45,67 @@ public class Symulation {
 
     private Game game;
 
-    private int rounds = 0;
-
-    public Symulation(int size, int full) {
+    public Symulation(int size, int full, double expRate, int rounds) {
         this.game = new Game(size, full);
         crossPlayer = new Computer("firstPlayer", Sign.CROSS, this.game);
         circlePlayer = new Computer("secondPlayer", Sign.CIRCLE, this.game);
+        this.expRate = expRate;
+        this.rounds = rounds;
 
     }
+
     public Policy getFirstPlayerPolicy() {
-        return  crossPlayer.getPolicy();
+        return crossPlayer.getPolicy();
     }
+
     public Policy getSecondPlayerPolicy() {
-        return  circlePlayer.getPolicy();
+        return circlePlayer.getPolicy();
     }
+
     private void resetStatistics() {
-        rounds = 0;
         cross = 0;
         circle = 0;
         draw = 0;
     }
 
-    public void train(int rounds, double exp_rate) {
-        crossPlayer.setPolicy(new Policy(Sign.CROSS,rounds,exp_rate));
-        circlePlayer.setPolicy(new Policy(Sign.CIRCLE,rounds,exp_rate));
+    public void test(int rounds, double exp_rate) {
         resetStatistics();
         this.rounds = rounds;
 
         for (int i = 0; i < rounds; i++) {
-            if (rounds % 10000 == 0) System.out.println((i * 100) / rounds + " %");
+
+            Verdict verdict = Verdict.NOBODY;
+            while (verdict == Verdict.NOBODY) {
+                crossPlayer.move(exp_rate);
+                circlePlayer.move(exp_rate);
+                verdict = game.getVerdict();
+            }
+            switch (verdict) {
+                case CIRCLE:
+                    cross++;
+                    break;
+                case CROSS:
+                    circle++;
+                    break;
+                case DRAW:
+                    draw++;
+            }
+            game.reset();
+        }
+        showStatistics();
+    }
+
+    public void train() {
+        crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
+        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
+        resetStatistics();
+
+
+        for (int i = 0; i < rounds; i++) {
             Verdict verdict;
             while (true) {
 
-                crossPlayer.move(exp_rate);
-                crossPlayer.addState(game.getResultMatrix().getHash());
+                crossPlayer.move(expRate);
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
@@ -62,8 +113,7 @@ public class Symulation {
                     break;
                 }
 
-                circlePlayer.move(exp_rate);
-                circlePlayer.addState(game.getResultMatrix().getHash());
+                circlePlayer.move(expRate);
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
@@ -76,10 +126,9 @@ public class Symulation {
             if (verdict == Verdict.DRAW) draw++;
 
             game.reset();
-            crossPlayer.resetStates();
-            circlePlayer.resetStates();
+            crossPlayer.resetMoves();
+            circlePlayer.resetMoves();
         }
-
     }
 
     public void giveReward(Verdict verdict) {
@@ -103,21 +152,18 @@ public class Symulation {
 
     public void setReward(double reward, Computer computer) {
 
-        double decayGamma = 0.9;
-        double lr = 0.2;
+        ArrayList<Leaf> moves = computer.getMoves();
 
-        ArrayList<String> states = computer.getStates();
-        HashMap<String,Double> dictionary = computer.getPolicy().getDictionary();
+        for (int i = moves.size() - 1; i > 0; i--) {
+            Leaf move = moves.get(i);
+            Leaf parent = moves.get(i - 1);
 
-        for (int i = states.size() - 1; i >= 0; i--) {
-            String state = states.get(i);
-            if (dictionary.get(state) == null) {
-                dictionary.put(state, 0.0);
-            }
-            double value = lr * (decayGamma * reward - dictionary.get(state));
-            value += dictionary.get(state);
-            dictionary.put(state, value);
-            reward = value;
+            double newValue = LR * (DECAYGAMMA * reward - move.getValue()) + move.getValue();
+
+            move.setValue(newValue);
+            reward = newValue;
+
+            parent.addChild(move);
         }
     }
 
@@ -129,4 +175,64 @@ public class Symulation {
         System.out.println("\tdraw was " + draw + " times\t(" + (draw * 100) / rounds + "%)");
     }
 
+    public static void main(String[] args) {
+
+        Symulation symulation = new Symulation(3, 3, 0.3,100000);
+        symulation.train();
+        symulation.test(10, 0.0);
+
+    }
+
+
+    @Override
+    protected Void call() throws Exception {
+        crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
+        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
+        System.out.println(rounds);
+
+
+        for (int i = 0; i < rounds; i++) {
+            Verdict verdict;
+            while (true) {
+                crossPlayer.move(expRate);
+
+                verdict = game.getVerdict();
+                if (verdict != Verdict.NOBODY) {
+                    giveReward(verdict);
+                    break;
+                }
+
+                circlePlayer.move(expRate);
+
+                verdict = game.getVerdict();
+                if (verdict != Verdict.NOBODY) {
+                    giveReward(verdict);
+                    break;
+                }
+            }
+            if (verdict == Verdict.CROSS) cross++;
+            if (verdict == Verdict.CIRCLE) circle++;
+            if (verdict == Verdict.DRAW) draw++;
+
+            game.reset();
+            crossPlayer.resetMoves();
+            circlePlayer.resetMoves();
+            updateProgress(i,rounds);
+        }
+
+        return null;
+    }
+
+    @Override
+    protected void failed() {
+        System.out.println("Failed");
+    }
+
+    @Override
+    protected void succeeded() {
+
+        button.setDisable(false);
+        if(autoSave.isSelected()) button.fire();
+
+    }
 }

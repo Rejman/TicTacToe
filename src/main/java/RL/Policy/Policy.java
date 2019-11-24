@@ -1,21 +1,30 @@
-package RL;
+package RL.Policy;
 
 import Models.Game.Sign;
+import RL.Policy.Tree.Leaf;
 
 import java.io.Serializable;
-import java.util.HashMap;
 
 public class Policy implements Serializable {
+
     private Sign sign;
     private int rounds;
     private double expRate;
-    private HashMap<String, Double> dictionary;
+    private Leaf root;
 
     public Policy(Sign sign, int rounds, double expRate) {
         this.sign = sign;
         this.rounds = rounds;
         this.expRate = expRate;
-        this.dictionary = new HashMap<String, Double>();
+        this.root = new Leaf("---------", 0.0);
+    }
+
+    public Leaf getTree() {
+        return root;
+    }
+
+    public void setTree(Leaf root) {
+        this.root = root;
     }
 
     public Sign getSign() {
@@ -42,11 +51,5 @@ public class Policy implements Serializable {
         this.expRate = expRate;
     }
 
-    public HashMap<String, Double> getDictionary() {
-        return dictionary;
-    }
 
-    public void setDictionary(HashMap<String, Double> dictionary) {
-        this.dictionary = dictionary;
-    }
 }
