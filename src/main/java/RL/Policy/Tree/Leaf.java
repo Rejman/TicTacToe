@@ -31,9 +31,11 @@ public class Leaf implements Serializable {
     public void addChild(Leaf leaf) {
         int id = children.indexOf(leaf);
         if (id >= 0) {
+            System.out.println("nadpisanie");
             //System.out.println("nadpisanie liscia nową oceną");
             children.set(id, leaf);
         } else {
+            System.out.println("Nowy stan "+state);
             //System.out.println("dodanie nowego liścia bo go nie było");
             children.add(leaf);
         }
@@ -115,7 +117,7 @@ public class Leaf implements Serializable {
     public static void main(String[] args) {
 
 
-        Leaf root = new Leaf("---------", 0);
+        /*Leaf root = new Leaf("---------", 0);
 
         root.addChild(new Leaf("---X-----", 0.3));
         root.addChild(new Leaf("--X------", 0.3));
@@ -129,8 +131,17 @@ public class Leaf implements Serializable {
 
         test.setState("XXXXXXXXX");
 
-        root.showTree(55);
+        root.showTree(55);*/
 
+        String state = "-X-O-----";
+        showInRows(state);
+
+    }
+
+    public static void showInRows(String state){
+        System.out.println(state.substring(0,3));
+        System.out.println(state.substring(3,6));
+        System.out.println(state.substring(6));
     }
 
 }
