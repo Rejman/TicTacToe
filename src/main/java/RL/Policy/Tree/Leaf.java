@@ -31,11 +31,11 @@ public class Leaf implements Serializable {
     public void addChild(Leaf leaf) {
         int id = children.indexOf(leaf);
         if (id >= 0) {
-            System.out.println("nadpisanie");
+            //System.out.println("nadpisanie");
             //System.out.println("nadpisanie liscia nową oceną");
             children.set(id, leaf);
         } else {
-            System.out.println("Nowy stan "+state);
+            //System.out.println("Nowy stan "+state);
             //System.out.println("dodanie nowego liścia bo go nie było");
             children.add(leaf);
         }

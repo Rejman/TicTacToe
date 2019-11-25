@@ -250,7 +250,7 @@ public class GamePanelController {
         message+="expRate: "+crossPolicy.getExpRate();
 
 
-        crossPolicy.getTree().showTree(99);
+        crossPolicy.getTree().showTree(2);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Policy details");

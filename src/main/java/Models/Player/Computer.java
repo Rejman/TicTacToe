@@ -33,6 +33,7 @@ public class Computer extends Player {
 
     public void resetMoves(){
         moves.clear();
+        moves.add(0,policy.getTree());
         lastMove = policy.getTree();
     }
 
@@ -64,7 +65,7 @@ public class Computer extends Player {
         return field;
     }
     public int move(double exp_rate){
-
+        double value =0.0;
         nextMove = new Leaf("");
 
         ArrayList<Integer> emptyFields = game.getEmptyFields();
@@ -86,19 +87,19 @@ public class Computer extends Player {
                 nextResultMatrix.add(field,this.value);
                 String nextResultMatrixHash = nextResultMatrix.getHash();
 
-                double value = 0.0;
+                value = 0.0;
                 Leaf newLeaf = lastMove.getChild(new Leaf(nextResultMatrixHash));
                 if(newLeaf != null){
                     value = newLeaf.getValue();
                 }else{
-                    lastMove.addChild(new Leaf(nextResultMatrixHash, value));
+                    continue;
+                    //lastMove.addChild(new Leaf(nextResultMatrixHash, value));
                 }
                 //!!!
                 if(value>=valueMax){
                     //!
                     newLeaf = new Leaf(nextResultMatrixHash);
                     nextMove = lastMove.getChild(newLeaf);
-
                     valueMax = value;
                     action = field;
                 }
@@ -106,11 +107,14 @@ public class Computer extends Player {
 
 
         }
+        System.out.println("Wybrano ruch o wartości: "+value);
+        if(value==0.0) action =  randomMove(emptyFields);
         lastMove = nextMove;
-
+        System.out.println("Dodaje "+lastMove.getState());
         this.moves.add(lastMove);
 
-        game.addMove(action, value);
+        game.addMove(action, this.value);
+
         return action;
     }
 

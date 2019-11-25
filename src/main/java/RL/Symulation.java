@@ -154,7 +154,7 @@ public class Symulation extends Task<Void> {
 
         ArrayList<Leaf> moves = computer.getMoves();
 
-        for (int i = moves.size() - 1; i > 0; i--) {
+        for (int i = moves.size() -1; i > 0; i--) {
             Leaf move = moves.get(i);
             Leaf parent = moves.get(i - 1);
 
@@ -162,7 +162,7 @@ public class Symulation extends Task<Void> {
 
             move.setValue(newValue);
             reward = newValue;
-
+            System.out.println(computer.getValue()+" Oceniam: "+move.getState()+" na "+newValue);
             parent.addChild(move);
         }
     }

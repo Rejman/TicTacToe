@@ -223,4 +223,5 @@ public class ResultMatrix implements Cloneable{
         System.out.println(hash.substring(3,6));
         System.out.println(hash.substring(6));
     }
+
 }
