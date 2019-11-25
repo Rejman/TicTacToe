@@ -7,6 +7,7 @@ import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
 import RL.Policy.Policy;
+import RL.Policy.State;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -70,7 +71,7 @@ public class GamePanelController {
         else computerFirst = true;
 
         Game newGame = new Game(size, full);
-
+        State.degree = size;
         Human human = new Human("You", sign, newGame);
         Computer computer;
         if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
@@ -248,9 +249,9 @@ public class GamePanelController {
         System.out.println(crossPolicy.getExpRate());
         String message = "rounds: "+crossPolicy.getRounds()+"\n";
         message+="expRate: "+crossPolicy.getExpRate();
-
-
-        crossPolicy.getTree().showTree(2);
+        State.degree = 4;
+        //System.out.println("Uwaga "+State.degree);
+        crossPolicy.getTree().showTree(3);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Policy details");

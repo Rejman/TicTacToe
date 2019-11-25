@@ -7,7 +7,9 @@ import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import RL.Policy.Policy;
+import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
+import Tools.Stoper;
 import javafx.beans.property.BooleanProperty;
 import javafx.concurrent.Task;
 import javafx.scene.control.Button;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 
 public class Symulation extends Task<Void> {
 
+    private Stoper stoper;
     private CheckBox autoSave;
 
     public void setAutoSave(CheckBox autoSave) {
@@ -46,6 +49,7 @@ public class Symulation extends Task<Void> {
     private Game game;
 
     public Symulation(int size, int full, double expRate, int rounds) {
+        this.stoper = new Stoper();
         this.game = new Game(size, full);
         crossPlayer = new Computer("firstPlayer", Sign.CROSS, this.game);
         circlePlayer = new Computer("secondPlayer", Sign.CIRCLE, this.game);
@@ -96,6 +100,7 @@ public class Symulation extends Task<Void> {
     }
 
     public void train() {
+        stoper.start();
         crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
         circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
         resetStatistics();
@@ -129,6 +134,8 @@ public class Symulation extends Task<Void> {
             crossPlayer.resetMoves();
             circlePlayer.resetMoves();
         }
+        stoper.stop();
+        System.out.println(stoper.getMinutes()+" minutes");
     }
 
     public void giveReward(Verdict verdict) {
@@ -186,6 +193,7 @@ public class Symulation extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
+        stoper.start();
         crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
         circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
         System.out.println(rounds);
@@ -219,7 +227,7 @@ public class Symulation extends Task<Void> {
             circlePlayer.resetMoves();
             updateProgress(i,rounds);
         }
-
+        stoper.stop();
         return null;
     }
 
@@ -230,7 +238,7 @@ public class Symulation extends Task<Void> {
 
     @Override
     protected void succeeded() {
-
+        System.out.println("Learning time: "+stoper.getMinutes()+" minutes");
         button.setDisable(false);
         if(autoSave.isSelected()) button.fire();
 

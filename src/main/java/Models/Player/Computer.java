@@ -108,7 +108,10 @@ public class Computer extends Player {
 
         }
         //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
-        if(value==0.0) action =  randomMove(emptyFields);
+        if(value==0.0) {
+            action =  randomMove(emptyFields);
+           // System.out.println("Nie rozpoznano");
+        }
         lastMove = nextMove;
         this.moves.add(lastMove);
 
