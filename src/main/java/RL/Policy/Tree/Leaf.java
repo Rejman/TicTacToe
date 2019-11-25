@@ -1,5 +1,8 @@
 package RL.Policy.Tree;
 
+import RL.Policy.State;
+import javafx.scene.layout.StackPane;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -133,8 +136,14 @@ public class Leaf implements Serializable {
 
         root.showTree(55);*/
 
-        String state = "-X-O-----";
-        showInRows(state);
+        String state = "-----OX---X-XO--";
+        State.degree = 4;
+        String[] allState = State.allternatveState(state);
+        for (String s:allState
+             ) {
+            State.showAsBoard(s);
+            System.out.println("----------------------");
+        }
 
     }
 

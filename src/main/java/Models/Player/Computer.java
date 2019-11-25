@@ -107,10 +107,9 @@ public class Computer extends Player {
 
 
         }
-        System.out.println("Wybrano ruch o wartości: "+value);
+        //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
         if(value==0.0) action =  randomMove(emptyFields);
         lastMove = nextMove;
-        System.out.println("Dodaje "+lastMove.getState());
         this.moves.add(lastMove);
 
         game.addMove(action, this.value);

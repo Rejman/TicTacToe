@@ -162,7 +162,7 @@ public class Symulation extends Task<Void> {
 
             move.setValue(newValue);
             reward = newValue;
-            System.out.println(computer.getValue()+" Oceniam: "+move.getState()+" na "+newValue);
+
             parent.addChild(move);
         }
     }

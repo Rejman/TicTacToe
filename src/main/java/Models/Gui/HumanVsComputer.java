@@ -48,7 +48,6 @@ public class HumanVsComputer extends GameBoard {
                 gridPane.setCursor(Cursor.DEFAULT);
             }
         }
-        System.out.println(computer.getMoves().toString());
     }
     private void modifyVerdictLabel(){
         Verdict verdict = game.getVerdict();
