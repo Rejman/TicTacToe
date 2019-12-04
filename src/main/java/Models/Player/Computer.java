@@ -2,6 +2,7 @@ package Models.Player;
 
 import Models.Game.*;
 import RL.Policy.Policy;
+import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
 
 import java.util.*;
@@ -110,8 +111,28 @@ public class Computer extends Player {
         //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
         if(value==0.0) {
             action =  randomMove(emptyFields);
-           // System.out.println("Nie rozpoznano");
+            System.out.println("Nie rozpoznano");
         }
+
+/*        if(moves.size()==1){
+            //pierwszy ruch
+            System.out.println("pierwszu");
+            Set<String> alters = State.allternatveState(nextMove.getState());
+            int index = new Random().nextInt(alters.size());
+
+            Iterator<String> iter = alters.iterator();
+            for (int i = 0; i < index; i++) {
+                iter.next();
+            }
+
+            nextMove.setState(iter.next());
+
+            String oppositeSign;
+            if(this.value == Sign.CROSS) oppositeSign="X";
+            else oppositeSign="O";
+
+            action = nextMove.getState().indexOf(oppositeSign);
+        }*/
         lastMove = nextMove;
         this.moves.add(lastMove);
 

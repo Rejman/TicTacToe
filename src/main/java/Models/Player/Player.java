@@ -43,6 +43,7 @@ public abstract class Player {
     public Sign getValue(){
         return value;
     }
+
     public void setValue(Sign sign){
         this.value = sign;
     }

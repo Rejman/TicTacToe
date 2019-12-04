@@ -75,4 +75,5 @@ public abstract class State {
         System.out.println(alters.contains(state2));
         showAsBoard(state2);
     }
+
 }
