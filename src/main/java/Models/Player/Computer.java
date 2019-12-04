@@ -4,6 +4,7 @@ import Models.Game.*;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
+import RL.Symulation;
 
 import java.util.*;
 
@@ -112,6 +113,7 @@ public class Computer extends Player {
         if(value==0.0) {
             action =  randomMove(emptyFields);
             System.out.println("Nie rozpoznano");
+
         }
 
 /*        if(moves.size()==1){
@@ -135,7 +137,7 @@ public class Computer extends Player {
         }*/
         lastMove = nextMove;
         this.moves.add(lastMove);
-
+        System.out.println("Ruchy: "+lastMove.getChildren().size());
         game.addMove(action, this.value);
 
         return action;
