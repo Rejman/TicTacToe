@@ -42,7 +42,22 @@ public class ResultMatrix implements Cloneable{
         }
         return copy;
     }
-
+    public void mirror(){
+        ResultMatrix newMatrix = new ResultMatrix(degree);
+        int index = degree;
+        for(int i=0;i<degree;i++){
+            index--;
+            newMatrix.setColumn(this.getColumn(i),index);
+        }
+        this.setValues(newMatrix.getValues());
+    }
+    public void rule(){
+        ResultMatrix newMatrix = new ResultMatrix(degree);
+        for(int i=degree-1;i>=0;i--){
+            newMatrix.setColumn(this.getRevertRow(i),i);
+        }
+        this.setValues(newMatrix.getValues());
+    }
     public int getDegree() {
         return degree;
     }
@@ -75,12 +90,31 @@ public class ResultMatrix implements Cloneable{
     public Sign[] getRow(int number){
         return values[number];
     }
+    public Sign[] getRevertRow(int number){
+        Sign[] column = values[number];
+        Sign[] revertRow = new Sign[degree];
+        int index = degree;
+        for(int i=0;i<degree;i++){
+            index--;
+            revertRow[i] = column[index];
+
+        }
+        return revertRow;
+    }
+    public void setRow(Sign[] row, int number){
+        values[number] = row;
+    }
     public Sign[] getColumn(int number){
         Sign[] column = new Sign[degree];
         for(int i=0;i<degree;i++){
             column[i] = values[i][number];
         }
         return column;
+    }
+    public void setColumn(Sign[] column, int number){
+        for(int i=0;i<degree;i++){
+            values[i][number] = column[i];
+        }
     }
     public Sign[] findRow(Position pos){
         return getRow(pos.row);
@@ -161,15 +195,33 @@ public class ResultMatrix implements Cloneable{
     }
 
     public static void main(String[] args) {
-        ResultMatrix resultMatrix = new ResultMatrix(5);
-        resultMatrix.values[0][0] = Sign.CROSS;
+        ResultMatrix resultMatrix = new ResultMatrix(3);
+        /*resultMatrix.values[0][0] = Sign.CROSS;
         resultMatrix.values[1][1] = Sign.CROSS;
-        resultMatrix.values[2][2] = Sign.CROSS;
+        resultMatrix.values[2][2] = Sign.CIRCLE;
+        resultMatrix.values[1][2] = Sign.CIRCLE;*/
+
+        resultMatrix.values[0][0] = Sign.CIRCLE;
+        resultMatrix.values[0][1] = Sign.CIRCLE;
+        resultMatrix.values[0][2] = Sign.CROSS;
 
 
-        Position pos = new Position(4,0);
-        List<Sign> row = resultMatrix.findGrowingDiagonal(pos);
+        //Position pos = new Position(4,0);
+        //List<Sign> row = resultMatrix.findGrowingDiagonal(pos);
 
+
+        resultMatrix.showIn3D();
+        resultMatrix.mirror();
+        resultMatrix.showIn3D();
+
+
+
+    }
+    private void showIn3D(){
+        String hash = this.getHash();
+        System.out.println(hash.substring(0,3));
+        System.out.println(hash.substring(3,6));
+        System.out.println(hash.substring(6));
     }
 
 }

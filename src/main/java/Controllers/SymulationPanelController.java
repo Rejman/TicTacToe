@@ -1,6 +1,7 @@
 package Controllers;
 import IO.Serialize;
 import RL.Policy.Policy;
+import RL.Policy.State;
 import RL.Symulation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,7 +48,7 @@ public class SymulationPanelController {
 
         symulation = new Symulation(Integer.parseInt(size), Integer.parseInt(number), Double.parseDouble(expRate)/100, Integer.parseInt(rounds));
         System.out.println(Double.parseDouble(expRate)/100);
-
+        State.degree = Integer.parseInt(size);
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/Learning.fxml"));
         StackPane stackPane = loader.load();
         LearningController learningController = loader.getController();
