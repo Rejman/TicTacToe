@@ -135,12 +135,24 @@ public class Computer extends Player {
 
             action = nextMove.getState().indexOf(oppositeSign);
         }*/
+
+        showMoves();
         lastMove = nextMove;
         this.moves.add(lastMove);
-        System.out.println("Ruchy: "+lastMove.getChildren().size());
+
         game.addMove(action, this.value);
 
         return action;
+    }
+
+    void showMoves(){
+        System.out.println("Ruchy: "+lastMove.getChildren().size());
+        for(int i=0;i<lastMove.getChildren().size();i++){
+            Leaf l = lastMove.getChildren().get(i);
+            Set<String> states = State.allternatveState(l.getState());
+            System.out.println("Ruch "+(i+1)+"________________________________"+l.getValue());
+            System.out.println(State.showAsBoards(states));;
+        }
     }
 
 }

@@ -62,6 +62,25 @@ public abstract class State {
         }
     }
 
+    public static String showAsBoards(Set<String> states){
+        String[] rows = new String[degree];
+        String newState = new String();
+        int index = 0;
+        String board = "";
+        for(int i=0;i<degree*degree;i+=degree){
+            String line = "";
+            //System.out.println(state.substring(i,i+degree));
+            for (String s:states
+                 ) {
+                line+=s.substring(i,i+degree);
+                line+="\t";
+            }
+            index++;
+            board+=line+"\n";
+        }
+        return board;
+    }
+
     public static void main(String[] args) {
 
         String state1 = "XO--------------";
