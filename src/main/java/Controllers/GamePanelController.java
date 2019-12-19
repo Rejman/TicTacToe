@@ -6,20 +6,16 @@ import Models.Gui.*;
 import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
-import RL.Policy;
+import RL.Policy.Policy;
+import RL.Policy.State;
+import RL.Policy.Tree.Leaf;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.nio.file.DirectoryNotEmptyException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Paths;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 import static Models.Gui.GameType.*;
@@ -27,6 +23,7 @@ import static Models.Gui.GameType.*;
 public class GamePanelController {
 
 
+    private Policy lastLoadedPolicy = null;
     private final int GOMOKU_SIZE = 15;
     private final int GOMOKU_FULL = 5;
     private final int TICTACTOE_VALUE = 3;
@@ -57,11 +54,15 @@ public class GamePanelController {
 
     @FXML
     private Label verdictLabel;
-
+    @FXML
+    private ProgressIndicator loadProgress;
     @FXML
     void play(ActionEvent event) {
-        playButton.setText("RESET");
-
+        if(lastLoadedPolicy==null){
+            loadPolicy();
+            return;
+        }
+        System.out.println("Ok");
         int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
         int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
@@ -71,14 +72,13 @@ public class GamePanelController {
         else computerFirst = true;
 
         Game newGame = new Game(size, full);
-
+        State.degree = size;
         Human human = new Human("You", sign, newGame);
         Computer computer;
         if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
         else computer = new Computer("computer", Sign.CIRCLE, newGame);
-        //System.out.println(buildPathToFile(policyName));
 
-        computer.setPolicy(Serialize.loadPolicy(Serialize.pathToFile(policyName,computer.getValue())));
+        computer.setPolicy(lastLoadedPolicy);
 
 
         HumanVsComputer gameBoard = new HumanVsComputer(newGame, human, computer, computerFirst);
@@ -86,6 +86,37 @@ public class GamePanelController {
         borderStackPane.getChildren().clear();
         borderStackPane.getChildren().add(gameBoard);
 
+    }
+    private void loadPolicy(){
+        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+        Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
+        if(sign==Sign.CROSS){
+            sign=Sign.CIRCLE;
+        }else{
+            sign=Sign.CROSS;
+        }
+        Sign finalSign = sign;
+        Task<Void> load = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                playButton.setDisable(true);
+                lastLoadedPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, finalSign));
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                System.out.println("Koniec");
+                playButton.setDisable(false);
+                playButton.setText("RESET");
+                playButton.fire();
+            }
+        };
+        //loadProgressBar.progressProperty().bind(load.progressProperty());
+        loadProgress.progressProperty().bind(load.progressProperty());
+        loadProgress.setVisible(true);
+        Thread thread = new Thread(load);
+        thread.start();
     }
     @FXML
     private StackPane stackPane;
@@ -164,6 +195,8 @@ public class GamePanelController {
     }
     @FXML
     void initialize() {
+        loadProgress.setVisible(false);
+
         buildGameTypeChoiceBox();
         buildPolicyChoiceBox();
         buildSignChoiceBox();
@@ -176,6 +209,7 @@ public class GamePanelController {
 
 
         borderStackPane.setMinWidth(GameBoard.SIZE);
+        borderStackPane.setMinHeight(GameBoard.SIZE);
         borderStackPane.setMinHeight(GameBoard.SIZE);
         listFilesForFolder(new File("policy"));
 
@@ -205,15 +239,25 @@ public class GamePanelController {
 
     }
 
+
+
     @FXML
     void infoPolicy(ActionEvent event) {
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
         Policy crossPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CROSS));
-        System.out.println(crossPolicy.getSign().toString());
-        System.out.println(crossPolicy.getRounds());
-        System.out.println(crossPolicy.getExpRate());
+        //System.out.println(crossPolicy.getSign().toString());
+        //System.out.println(crossPolicy.getRounds());
+        //System.out.println(crossPolicy.getExpRate());
         String message = "rounds: "+crossPolicy.getRounds()+"\n";
-        message+="expRate: "+crossPolicy.getExpRate();
+        message+="expRate: "+crossPolicy.getExpRate()+"\n";
+        State.degree = 3;
+        //System.out.println("Uwaga "+State.degree);
+        //crossPolicy.getTree().showTree(3);
+
+        Leaf tree = crossPolicy.getTree();
+        tree.rate = 0;
+        tree.rating();
+        message+="Rate: "+tree.rate;
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Policy details");
         alert.setHeaderText("Information of \""+policyName+"\" policy");
