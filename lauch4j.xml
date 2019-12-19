@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>C:\Users\Konrad\IdeaProjects\TicTacToe\classes\artifacts\TicTacToe_jar\TicTacToe.jar</jar>
-  <outfile>C:\Users\Konrad\Desktop\TicTacToe.exe</outfile>
+  <outfile>C:\Users\Konrad\IdeaProjects\TicTacToe\TicTacToe.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
