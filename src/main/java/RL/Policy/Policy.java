@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 public class Policy implements Serializable {
 
+
     private Sign sign;
     private int rounds;
     private double expRate;
@@ -51,6 +52,7 @@ public class Policy implements Serializable {
     public void setExpRate(double expRate) {
         this.expRate = expRate;
     }
+
 
 
 }

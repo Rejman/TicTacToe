@@ -8,6 +8,7 @@ import java.util.*;
 
 public class Leaf implements Serializable {
 
+    public static int rate;
     private String state;
     private double value;
     private ArrayList<Leaf> children;
@@ -133,26 +134,34 @@ public class Leaf implements Serializable {
 
     public static void main(String[] args) {
 
-        State.degree = 4;
+        State.degree = 3;
         Leaf root = new Leaf("---------", 0);
 
         root.addChild(new Leaf("---X-----", 0.3));
         root.addChild(new Leaf("--X------", 0.3));
-        //root.addChild(new Leaf("---------", 0.3));
+        root.addChild(new Leaf("---------", 0.3));
         //root.addChild(new Leaf("---X-----", 0.4));
 
         Set<String> alter = State.allternatveState("---X-----");
         System.out.println("test:" + alter.contains("--X------"));
         System.out.println(root.getChildren().indexOf("-------X-"));
-        root.showTree(55);
+        //root.showTree(55);
 
-        System.out.println("Porównywanie ");
+/*        System.out.println("Porównywanie ");
         Leaf leaf1 = new Leaf("X--------");
         State.showAsBoard(leaf1.getState());
         Leaf leaf2 = new Leaf("-X-------");
         System.out.println("Z");
         State.showAsBoard(leaf2.getState());
-        System.out.println(leaf1.equals(leaf2));
+        System.out.println(leaf1.equals(leaf2));*/
+
+        root.getChildren().get(0).addChild(new Leaf("---------"));
+        root.getChildren().get(0).addChild(new Leaf("---X-----"));
+        root.getChildren().get(1).addChild(new Leaf("---------"));
+        root.getChildren().get(0).getChildren().get(0).addChild(new Leaf("---------"));
+
+        root.rating();
+        System.out.println("Rate: "+root.rate);
 
 
     }
@@ -161,6 +170,16 @@ public class Leaf implements Serializable {
         System.out.println(state.substring(0,3));
         System.out.println(state.substring(3,6));
         System.out.println(state.substring(6));
+    }
+
+    public void rating(){
+
+        rate+=children.size();
+        for (Leaf child:children
+             ) {
+            child.rating();
+        }
+
     }
 
 }

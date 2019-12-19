@@ -184,7 +184,7 @@ public class Symulation extends Task<Void> {
 
     public static void main(String[] args) {
 
-        Symulation symulation = new Symulation(3, 3, 0.3,100000);
+        Symulation symulation = new Symulation(3, 3, 0.3,50000);
         symulation.train();
         symulation.test(10, 0.0);
 
