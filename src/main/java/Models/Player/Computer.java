@@ -67,6 +67,9 @@ public class Computer extends Player {
         return field;
     }
     public int move(double exp_rate){
+        return move(exp_rate, false);
+    }
+    public int move(double exp_rate, boolean trueGame){
         double value =0.0;
         nextMove = new Leaf("");
 
@@ -112,7 +115,7 @@ public class Computer extends Player {
         //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
         if(value==0.0) {
             action =  randomMove(emptyFields);
-            System.out.println("Nie rozpoznano");
+            if(trueGame) System.out.println("Nie rozpoznano");
 
         }
 
@@ -136,7 +139,7 @@ public class Computer extends Player {
             action = nextMove.getState().indexOf(oppositeSign);
         }*/
 
-        showMoves();
+        if(trueGame) showMoves();
         lastMove = nextMove;
         this.moves.add(lastMove);
 

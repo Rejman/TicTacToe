@@ -88,6 +88,11 @@ public class LearningController {
         parent.close();
     }
     @FXML
+    void autoSaveCheckBoxClick(ActionEvent event) {
+        if(autoSaveCheckBox.isSelected()) saveButton.setVisible(false);
+        else saveButton.setVisible(true);
+    }
+    @FXML
     void initialize() {
         fileNameTextField.setText(new Date().getTime()+"");
     }

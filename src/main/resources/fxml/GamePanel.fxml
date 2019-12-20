@@ -28,8 +28,8 @@
                            <content>
                               <GridPane hgap="10.0" vgap="10.0">
                                 <columnConstraints>
-                                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="268.0" minWidth="10.0" prefWidth="268.0" />
-                                  <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="245.0" minWidth="10.0" prefWidth="169.0" />
+                                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="268.0" minWidth="10.0" prefWidth="213.0" />
+                                  <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="245.0" minWidth="10.0" prefWidth="224.0" />
                                     <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="121.0" minWidth="93.0" prefWidth="121.0" />
                                 </columnConstraints>
                                 <rowConstraints>
@@ -40,14 +40,14 @@
                                  <children>
                                     <Label text="Game type" />
                                     <Label text="Your opponent's policy" GridPane.rowIndex="1" />
-                                    <ChoiceBox fx:id="gameTypeChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" />
-                                    <ChoiceBox fx:id="policyChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <ChoiceBox fx:id="gameTypeChoiceBox" prefHeight="25.0" prefWidth="222.0" GridPane.columnIndex="1" />
+                                    <ChoiceBox fx:id="policyChoiceBox" prefHeight="25.0" prefWidth="222.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <Label text="Your sign (cross makes the first move)" GridPane.rowIndex="2" />
-                                    <ChoiceBox fx:id="signChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <ChoiceBox fx:id="signChoiceBox" prefHeight="25.0" prefWidth="222.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                        <children>
-                                          <Button fx:id="infoButton" mnemonicParsing="false" onAction="#infoPolicy" text="Info" />
-                                          <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deletePolicy" text="Delete" />
+                                          <Button fx:id="infoButton" mnemonicParsing="false" onAction="#infoPolicy" prefHeight="25.0" prefWidth="54.0" text="Info" />
+                                          <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deletePolicy" prefHeight="25.0" prefWidth="60.0" text="Delete" />
                                        </children>
                                     </HBox>
                                  </children>
