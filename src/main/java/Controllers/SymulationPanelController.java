@@ -3,6 +3,8 @@ import IO.Serialize;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Symulation;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,8 +22,9 @@ public class SymulationPanelController {
 
 
     @FXML
-    private Spinner<?> roundsSpinner;
-
+    private Slider roundsSlider;
+    @FXML
+    private Label roundsLabel;
     @FXML
     private Spinner<?> sizeOfGameBoardSpinner;
 
@@ -44,9 +47,10 @@ public class SymulationPanelController {
         String size =  sizeOfGameBoardSpinner.getValue().toString();
         String number = winningNumberOfSignsSpinner.getValue().toString();
         String expRate = expRateSpinner.getValue().toString();
-        String rounds = roundsSpinner.getValue().toString();
-
-        symulation = new Symulation(Integer.parseInt(size), Integer.parseInt(number), Double.parseDouble(expRate)/100, Integer.parseInt(rounds));
+        //int rounds = roundsSlider.getValue();
+        //roundsSlider.getValue()
+        int rounds = (int)roundsSlider.getValue();
+        symulation = new Symulation(Integer.parseInt(size), Integer.parseInt(number), Double.parseDouble(expRate)/100, rounds);
         System.out.println(Double.parseDouble(expRate)/100);
         State.degree = Integer.parseInt(size);
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/Learning.fxml"));
@@ -73,24 +77,36 @@ public class SymulationPanelController {
     @FXML
     void initialize() {
         buildSpinners();
+        buildSliders();
 
     }
     private void buildSpinners(){
         SpinnerValueFactory sizeSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
         SpinnerValueFactory numberSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
         SpinnerValueFactory expRateSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,100);
-        SpinnerValueFactory roundsSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99999999,500000,10000);
+        //SpinnerValueFactory roundsSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99999999,500000,10000);
 
         sizeOfGameBoardSpinner.setValueFactory(sizeSVF);
         winningNumberOfSignsSpinner.setValueFactory(numberSVF);
         expRateSpinner.setValueFactory(expRateSVF);
-        roundsSpinner.setValueFactory(roundsSVF);
+        //roundsSpinner.setValueFactory(roundsSVF);
 
         expRateSVF.setValue(30);
         sizeSVF.setValue(3);
         numberSVF.setValue(3);
 
 
+    }
+    private void buildSliders(){
+
+        roundsSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                //cappuccino.setOpacity(new_val.doubleValue());
+                roundsSlider.setValue(Math.round(new_val.doubleValue()));
+                roundsLabel.setText(""+(int)roundsSlider.getValue());
+            }
+        });
     }
 /*    public static void runSaveAlert(String filename, Policy policyCross, Policy policyCircle){
         TextInputDialog dialog = new TextInputDialog(filename);
