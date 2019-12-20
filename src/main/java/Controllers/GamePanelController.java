@@ -16,6 +16,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NotDirectoryException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static Models.Gui.GameType.*;
@@ -154,10 +158,13 @@ public class GamePanelController {
 
                 });
     }
-    private void buildPolicyChoiceBox(){
-
-
-        ArrayList<String> list = listFilesForFolder(new File("policy"));
+    private void buildPolicyChoiceBox() throws IOException {
+        ArrayList<String> list = new ArrayList<>();
+        try{
+            list = listFilesForFolder(new File("policy"));
+        }catch(Exception ex){
+            Files.createDirectory(Paths.get("policy"));
+        }
         for(int i=0;i<list.size();i++){
             policyChoiceBox.getItems().add(list.get(i));
         }
@@ -194,7 +201,7 @@ public class GamePanelController {
         signChoiceBox.getSelectionModel().select(0);
     }
     @FXML
-    void initialize() {
+    void initialize() throws IOException {
         loadProgress.setVisible(false);
 
         buildGameTypeChoiceBox();
