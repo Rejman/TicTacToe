@@ -31,6 +31,7 @@ public class GamePanelController {
     private final int GOMOKU_SIZE = 15;
     private final int GOMOKU_FULL = 5;
     private final int TICTACTOE_VALUE = 3;
+    private final int FourOnFour_VALUE = 4;
     private boolean lock = false;
     @FXML
     private Button infoButton;
@@ -129,6 +130,7 @@ public class GamePanelController {
 
     private void buildGameTypeChoiceBox(){
         gameTypeChoiceBox.getItems().add(TICTACTOE);
+        gameTypeChoiceBox.getItems().add(FourOnFour);
         gameTypeChoiceBox.getItems().add(GOMOKU);
         gameTypeChoiceBox.getItems().add(CUSTOM);
         gameTypeChoiceBox.getSelectionModel().select(0);
@@ -148,6 +150,10 @@ public class GamePanelController {
                         case TICTACTOE:
                             sizeOfGameBoardSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
                             winningNumberOfSignsSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
+                            break;
+                        case FourOnFour:
+                            sizeOfGameBoardSpinner.getValueFactory().setValue(FourOnFour_VALUE);
+                            winningNumberOfSignsSpinner.getValueFactory().setValue(FourOnFour_VALUE);
                             break;
                         case CUSTOM:
                             customSettingsPanel.setExpanded(true);
