@@ -16,6 +16,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NotDirectoryException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static Models.Gui.GameType.*;
@@ -27,6 +31,7 @@ public class GamePanelController {
     private final int GOMOKU_SIZE = 15;
     private final int GOMOKU_FULL = 5;
     private final int TICTACTOE_VALUE = 3;
+    private final int FourOnFour_VALUE = 4;
     private boolean lock = false;
     @FXML
     private Button infoButton;
@@ -62,7 +67,9 @@ public class GamePanelController {
             loadPolicy();
             return;
         }
-        System.out.println("Ok");
+
+
+
         int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
         int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
@@ -100,7 +107,11 @@ public class GamePanelController {
             @Override
             protected Void call() throws Exception {
                 playButton.setDisable(true);
-                lastLoadedPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, finalSign));
+                if(policyChoiceBox.getItems().isEmpty()){
+                    lastLoadedPolicy = new Policy(Sign.CROSS,0,1);
+                }else{
+                    lastLoadedPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, finalSign));
+                }
                 return null;
             }
 
@@ -116,7 +127,9 @@ public class GamePanelController {
         loadProgress.progressProperty().bind(load.progressProperty());
         loadProgress.setVisible(true);
         Thread thread = new Thread(load);
+
         thread.start();
+
     }
     @FXML
     private StackPane stackPane;
@@ -125,6 +138,7 @@ public class GamePanelController {
 
     private void buildGameTypeChoiceBox(){
         gameTypeChoiceBox.getItems().add(TICTACTOE);
+        gameTypeChoiceBox.getItems().add(FourOnFour);
         gameTypeChoiceBox.getItems().add(GOMOKU);
         gameTypeChoiceBox.getItems().add(CUSTOM);
         gameTypeChoiceBox.getSelectionModel().select(0);
@@ -145,6 +159,10 @@ public class GamePanelController {
                             sizeOfGameBoardSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
                             winningNumberOfSignsSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
                             break;
+                        case FourOnFour:
+                            sizeOfGameBoardSpinner.getValueFactory().setValue(FourOnFour_VALUE);
+                            winningNumberOfSignsSpinner.getValueFactory().setValue(FourOnFour_VALUE);
+                            break;
                         case CUSTOM:
                             customSettingsPanel.setExpanded(true);
                             break;
@@ -154,10 +172,14 @@ public class GamePanelController {
 
                 });
     }
-    private void buildPolicyChoiceBox(){
-
-
-        ArrayList<String> list = listFilesForFolder(new File("policy"));
+    private void buildPolicyChoiceBox() throws IOException {
+        policyChoiceBox.getItems().clear();
+        ArrayList<String> list = new ArrayList<>();
+        try{
+            list = listFilesForFolder(new File("policy"));
+        }catch(Exception ex){
+            Files.createDirectory(Paths.get("policy"));
+        }
         for(int i=0;i<list.size();i++){
             policyChoiceBox.getItems().add(list.get(i));
         }
@@ -194,7 +216,7 @@ public class GamePanelController {
         signChoiceBox.getSelectionModel().select(0);
     }
     @FXML
-    void initialize() {
+    void initialize() throws IOException {
         loadProgress.setVisible(false);
 
         buildGameTypeChoiceBox();
@@ -231,11 +253,13 @@ public class GamePanelController {
         return list;
     }
     @FXML
-    void deletePolicy(ActionEvent event) {
+    void deletePolicy(ActionEvent event) throws IOException {
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
 
         boolean deleted = Serialize.deletePolicy(policyName);
-        if(deleted==true) policyChoiceBox.getItems().remove(policyName);
+        if(deleted==true){
+            buildPolicyChoiceBox();
+        }
 
     }
 

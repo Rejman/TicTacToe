@@ -27,6 +27,9 @@ hs_err_pid*
 *.iml
 target/
 
+#policy folder
+policy/
+
 #Launch4j
 
 launch4j.xml
