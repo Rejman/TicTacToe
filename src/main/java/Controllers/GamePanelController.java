@@ -165,6 +165,7 @@ public class GamePanelController {
                 });
     }
     private void buildPolicyChoiceBox() throws IOException {
+        policyChoiceBox.getItems().clear();
         ArrayList<String> list = new ArrayList<>();
         try{
             list = listFilesForFolder(new File("policy"));
@@ -244,11 +245,13 @@ public class GamePanelController {
         return list;
     }
     @FXML
-    void deletePolicy(ActionEvent event) {
+    void deletePolicy(ActionEvent event) throws IOException {
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
 
         boolean deleted = Serialize.deletePolicy(policyName);
-        if(deleted==true) policyChoiceBox.getItems().remove(policyName);
+        if(deleted==true){
+            buildPolicyChoiceBox();
+        }
 
     }
 
