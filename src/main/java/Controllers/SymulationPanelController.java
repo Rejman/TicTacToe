@@ -51,6 +51,7 @@ public class SymulationPanelController {
 
         double expRate = expRateSlider.getValue();
         int rounds = (int)roundsSlider.getValue();
+        expRate = expRate/100;
         symulation = new Symulation(Integer.parseInt(size), Integer.parseInt(number), expRate, rounds);
         System.out.println(expRate);
         State.degree = Integer.parseInt(size);
