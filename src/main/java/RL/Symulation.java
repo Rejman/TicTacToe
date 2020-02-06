@@ -98,11 +98,20 @@ public class Symulation extends Task<Void> {
         }
         showStatistics();
     }
-
-    public void train() {
+    public void train(){
+        this.train(null);
+    }
+    public void train(String baseFileName) {
         stoper.start();
-        crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
-        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
+
+        if(baseFileName==null){
+            crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
+            circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
+        }else{
+            crossPlayer.setPolicy(Serialize.loadPolicy(Serialize.pathToFile(baseFileName,Sign.CROSS)));
+            circlePlayer.setPolicy(Serialize.loadPolicy(Serialize.pathToFile(baseFileName,Sign.CIRCLE)));
+        }
+
         resetStatistics();
 
 
