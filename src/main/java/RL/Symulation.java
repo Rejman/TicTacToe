@@ -103,7 +103,7 @@ public class Symulation extends Task<Void> {
     }
     public void train(String baseFileName) {
         stoper.start();
-
+        this.game.addMove(4,Sign.CIRCLE);
         if(baseFileName==null){
             crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
             circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
@@ -192,7 +192,7 @@ public class Symulation extends Task<Void> {
     }
 
     public static void main(String[] args) {
-
+        System.out.println("Symulation tests");
         Symulation symulation = new Symulation(3, 3, 0.3,50000);
         symulation.train();
         symulation.test(10, 0.0);
@@ -252,4 +252,6 @@ public class Symulation extends Task<Void> {
         if(autoSave.isSelected()) button.fire();
 
     }
+
+
 }

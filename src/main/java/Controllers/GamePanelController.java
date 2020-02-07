@@ -79,6 +79,8 @@ public class GamePanelController {
         else computerFirst = true;
 
         Game newGame = new Game(size, full);
+        //newGame.addMove(4,Sign.CROSS);
+
         State.degree = size;
         Human human = new Human("You", sign, newGame);
         Computer computer;

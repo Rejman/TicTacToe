@@ -23,6 +23,7 @@ public class Computer extends Player {
      */
     public Computer(String name, Sign value, Game game) {
         super(name, value, game);
+
         policy = new Policy(this.value,0,0);
         //lastMove = policy.getTree();
         moves = new ArrayList<>();
@@ -38,6 +39,7 @@ public class Computer extends Player {
         moves.add(0,policy.getTree());
         lastMove = policy.getTree();
     }
+
 
     public void setPolicy(Policy policy) {
         this.policy = policy;
@@ -107,6 +109,7 @@ public class Computer extends Player {
                     nextMove = lastMove.getChild(newLeaf);
                     valueMax = value;
                     action = field;
+                    System.out.println("\t\t\t" + game.getNumberOfFields());
                 }
             }
 

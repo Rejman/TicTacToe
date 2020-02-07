@@ -1,8 +1,6 @@
 package Models.Gui;
 
-import Models.Game.Game;
-import Models.Game.Sign;
-import Models.Game.Verdict;
+import Models.Game.*;
 import Models.Player.Computer;
 import Models.Player.Human;
 import javafx.scene.Cursor;
@@ -17,14 +15,28 @@ public class HumanVsComputer extends GameBoard {
         super(game);
         this.human = player;
         this.computer = computer;
-
+        updateFields();
         if(computerFirst){
             int field = this.computer.move(0, true);
             Field temp = (Field) gridPane.getChildren().get(field);
             addSignToField(temp, this.computer.getValue());
         }
     }
-
+    private void updateFields(){
+        ResultMatrix resultMatrix = this.game.getResultMatrix();
+        Sign[][] values = resultMatrix.getValues();
+        for(int i=0;i<values.length;i++){
+            for(int j=0;j<values.length;j++){
+                if(values[i][j]==Sign.CROSS){
+                    Field temp = (Field) gridPane.getChildren().get(Position.convertToNumber(new Position(i,j), resultMatrix.getDegree()));
+                    addSignToField(temp, Sign.CROSS);
+                }else if(values[i][j]==Sign.CIRCLE){
+                    Field temp = (Field) gridPane.getChildren().get(i+j);
+                    addSignToField(temp, Sign.CIRCLE);
+                }
+            }
+        }
+    }
     protected void click(Field field) {
 
         int numberOfField = allFields.indexOf(field);

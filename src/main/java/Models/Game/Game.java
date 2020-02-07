@@ -31,6 +31,9 @@ public class Game {
     private ArrayList<Integer> emptyFields;
 
 
+    public int getNumberOfFields() {
+        return numberOfFields;
+    }
 
     public Game(int size, int full) {
 
