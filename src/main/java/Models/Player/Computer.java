@@ -1,6 +1,7 @@
 package Models.Player;
 
 import Models.Game.*;
+import RL.DynamicLearning;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
@@ -15,6 +16,26 @@ public class Computer extends Player {
     private Leaf lastMove;
     private Leaf nextMove;
     private ArrayList<Leaf> moves;
+
+    public Leaf getLastMove() {
+        return lastMove;
+    }
+
+    public void setLastMove(Leaf lastMove) {
+        this.lastMove = lastMove;
+    }
+
+    public Leaf getNextMove() {
+        return nextMove;
+    }
+
+    public void setNextMove(Leaf nextMove) {
+        this.nextMove = nextMove;
+    }
+
+    public void setMoves(ArrayList<Leaf> moves) {
+        this.moves = moves;
+    }
 
     /**
      * @param name
@@ -109,16 +130,23 @@ public class Computer extends Player {
                     nextMove = lastMove.getChild(newLeaf);
                     valueMax = value;
                     action = field;
-                    System.out.println("\t\t\t" + game.getNumberOfFields());
+                    //System.out.println("\t\t\t" + game.getNumberOfFields());
                 }
             }
 
 
         }
+        if(trueGame) DynamicLearning.train(this,game);
+
         //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
         if(value==0.0) {
-            action =  randomMove(emptyFields);
-            if(trueGame) System.out.println("Nie rozpoznano");
+            // tu będzie dynamiczne uczenie jak bedzie już działać
+            //DynamicLearning.train(this,game);
+            System.out.println("NIE ROZPOZNANO");
+            //action = this.move(exp_rate, trueGame);
+            action = randomMove(emptyFields);
+            /*action =  randomMove(emptyFields);
+            if(trueGame) System.out.println("Nie rozpoznano");*/
 
         }
 
@@ -142,11 +170,13 @@ public class Computer extends Player {
             action = nextMove.getState().indexOf(oppositeSign);
         }*/
 
-        if(trueGame) showMoves();
+        //if(trueGame) showMoves();
         lastMove = nextMove;
         this.moves.add(lastMove);
 
         game.addMove(action, this.value);
+
+
 
         return action;
     }

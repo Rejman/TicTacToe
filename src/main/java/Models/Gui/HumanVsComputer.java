@@ -3,6 +3,7 @@ package Models.Gui;
 import Models.Game.*;
 import Models.Player.Computer;
 import Models.Player.Human;
+import RL.DynamicLearning;
 import javafx.scene.Cursor;
 
 public class HumanVsComputer extends GameBoard {

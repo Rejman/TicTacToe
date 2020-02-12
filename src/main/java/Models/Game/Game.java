@@ -46,12 +46,17 @@ public class Game {
 
     }
 
+    public int getFull() {
+        return full;
+    }
+
     public ResultMatrix getResultMatrix() {
         return resultMatrix;
     }
 
     public void setResultMatrix(ResultMatrix resultMatrix) {
         this.resultMatrix = resultMatrix;
+        setEmptyFields();
     }
 
     /**
