@@ -106,6 +106,27 @@ public class Game {
             }
         }
     }
+    public void addMoveWithoutVerdict(int field, Sign sign){
+        emptyFields.remove(new Integer(field));
+        numberOfMove++;
+        resultMatrix.add(field, sign);
+    }
+
+    public void setGameStatus(ResultMatrix resultMatrix){
+        Sign[][] values = resultMatrix.getValues();
+        for(int i=0;i<resultMatrix.degree;i++){
+            for(int j=0;j<resultMatrix.degree;j++){
+                switch (values[i][j]){
+                    case CIRCLE:
+                    case CROSS:
+                        addMove(Position.convertToNumber(new Position(i,j),resultMatrix.degree), values[i][j]);
+                        break;
+                    case NONE:
+                        break;
+                }
+            }
+        }
+    }
 
     /**
      * @return Return all available movements

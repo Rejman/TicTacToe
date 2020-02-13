@@ -3,6 +3,7 @@ package RL;
 import Controllers.SymulationPanelController;
 import IO.Serialize;
 import Models.Game.Game;
+import Models.Game.ResultMatrix;
 import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
@@ -111,7 +112,7 @@ public class Symulation extends Task<Void> {
             game.reset();
             crossPlayer.resetMoves();
             circlePlayer.resetMoves();
-            
+
         }
         showStatistics();
     }
@@ -259,9 +260,22 @@ public class Symulation extends Task<Void> {
 
     public static void main(String[] args) {
         System.out.println("Symulation tests");
-        Symulation symulation = new Symulation(3, 3, 0.3,10);
-        symulation.train();
-        symulation.test(10, 0.0);
+        Symulation symulation = new Symulation(3, 3, 0.3,1000);
+        symulation.game.addMove(0,Sign.CROSS);
+
+        ResultMatrix resultMatrix = new ResultMatrix(3);
+        resultMatrix.add(0,Sign.CROSS);
+        resultMatrix.add(8,Sign.CIRCLE);
+        resultMatrix.add(4,Sign.CROSS);
+
+
+        //System.out.println(resultMatrix.getHash());
+        symulation.game.setGameStatus(resultMatrix);
+        System.out.println(symulation.game.getResultMatrix().getHash());
+        //symulation.train();
+        //symulation.test(100, 0.0);
+
+
 
     }
 
