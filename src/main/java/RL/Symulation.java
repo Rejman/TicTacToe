@@ -83,26 +83,35 @@ public class Symulation extends Task<Void> {
     public void test(int rounds, double exp_rate) {
         resetStatistics();
         this.rounds = rounds;
-
+        Verdict verdict;
         for (int i = 0; i < rounds; i++) {
 
-            Verdict verdict = Verdict.NOBODY;
-            while (verdict == Verdict.NOBODY) {
-                crossPlayer.move(exp_rate);
-                circlePlayer.move(exp_rate);
+            while (true) {
+
+                crossPlayer.move(expRate);
+
                 verdict = game.getVerdict();
-            }
-            switch (verdict) {
-                case CIRCLE:
-                    cross++;
+                if (verdict != Verdict.NOBODY) {
+                    //giveReward(verdict);
                     break;
-                case CROSS:
-                    circle++;
+                }
+
+                circlePlayer.move(expRate);
+
+                verdict = game.getVerdict();
+                if (verdict != Verdict.NOBODY) {
+                    //giveReward(verdict);
                     break;
-                case DRAW:
-                    draw++;
+                }
             }
+            if (verdict == Verdict.CROSS) cross++;
+            if (verdict == Verdict.CIRCLE) circle++;
+            if (verdict == Verdict.DRAW) draw++;
+
             game.reset();
+            crossPlayer.resetMoves();
+            circlePlayer.resetMoves();
+            
         }
         showStatistics();
     }
@@ -250,9 +259,9 @@ public class Symulation extends Task<Void> {
 
     public static void main(String[] args) {
         System.out.println("Symulation tests");
-        Symulation symulation = new Symulation(3, 3, 0.3,1000);
+        Symulation symulation = new Symulation(3, 3, 0.3,10);
         symulation.train();
-        //symulation.test(10, 0.0);
+        symulation.test(10, 0.0);
 
     }
 
