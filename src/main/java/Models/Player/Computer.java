@@ -136,7 +136,7 @@ public class Computer extends Player {
 
 
         }
-        if(trueGame) DynamicLearning.train(this,game);
+        //if(trueGame) DynamicLearning.train(this,game);
 
         //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
         if(value==0.0) {
@@ -170,7 +170,7 @@ public class Computer extends Player {
             action = nextMove.getState().indexOf(oppositeSign);
         }*/
 
-        //if(trueGame) showMoves();
+        if(trueGame) showMoves();
         lastMove = nextMove;
         this.moves.add(lastMove);
 

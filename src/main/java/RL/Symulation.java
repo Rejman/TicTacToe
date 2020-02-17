@@ -287,6 +287,7 @@ public class Symulation extends Task<Void> {
         circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
         System.out.println(rounds);
 
+        Test.startMoves(game);
 
         for (int i = 0; i < rounds; i++) {
             Verdict verdict;

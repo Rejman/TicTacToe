@@ -1,5 +1,6 @@
 package Models.Game;
 
+import RL.Test;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
@@ -82,9 +83,17 @@ public class Game {
      * reset game to initial settings
      */
     public void reset(){
-        verdict = Verdict.NOBODY;
-        setEmptyFields();
-        resultMatrix.clearMatrix();
+        if(started==null){
+            verdict = Verdict.NOBODY;
+            setEmptyFields();
+            resultMatrix.clearMatrix();
+        }else{
+            verdict = Verdict.NOBODY;
+            setEmptyFields();
+            resultMatrix.clearMatrix();
+            Test.startMoves(this);
+        }
+
     }
 
     /**
@@ -112,14 +121,18 @@ public class Game {
         resultMatrix.add(field, sign);
     }
 
+    private ResultMatrix started = null;
     public void setGameStatus(ResultMatrix resultMatrix){
+        started = resultMatrix;
         Sign[][] values = resultMatrix.getValues();
         for(int i=0;i<resultMatrix.degree;i++){
             for(int j=0;j<resultMatrix.degree;j++){
                 switch (values[i][j]){
                     case CIRCLE:
+                        addMove(Position.convertToNumber(new Position(i,j),resultMatrix.degree), Sign.CIRCLE);
+                        break;
                     case CROSS:
-                        addMove(Position.convertToNumber(new Position(i,j),resultMatrix.degree), values[i][j]);
+                        addMove(Position.convertToNumber(new Position(i,j),resultMatrix.degree), Sign.CROSS);
                         break;
                     case NONE:
                         break;

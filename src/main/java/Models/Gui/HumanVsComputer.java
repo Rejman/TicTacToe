@@ -4,6 +4,7 @@ import Models.Game.*;
 import Models.Player.Computer;
 import Models.Player.Human;
 import RL.DynamicLearning;
+import RL.Test;
 import javafx.scene.Cursor;
 
 public class HumanVsComputer extends GameBoard {
@@ -16,6 +17,9 @@ public class HumanVsComputer extends GameBoard {
         super(game);
         this.human = player;
         this.computer = computer;
+
+        Test.startMoves(game);
+
         updateFields();
         if(computerFirst){
             int field = this.computer.move(0, true);
@@ -32,7 +36,7 @@ public class HumanVsComputer extends GameBoard {
                     Field temp = (Field) gridPane.getChildren().get(Position.convertToNumber(new Position(i,j), resultMatrix.getDegree()));
                     addSignToField(temp, Sign.CROSS);
                 }else if(values[i][j]==Sign.CIRCLE){
-                    Field temp = (Field) gridPane.getChildren().get(i+j);
+                    Field temp = (Field) gridPane.getChildren().get(Position.convertToNumber(new Position(i,j), resultMatrix.getDegree()));
                     addSignToField(temp, Sign.CIRCLE);
                 }
             }
