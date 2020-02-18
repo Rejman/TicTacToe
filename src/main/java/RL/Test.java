@@ -12,4 +12,5 @@ public class Test {
         game.setGameStatus(resultMatrix);
         //System.out.println(game.getResultMatrix().getHash());
     }
+
 }

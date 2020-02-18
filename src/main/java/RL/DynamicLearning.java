@@ -10,21 +10,19 @@ import RL.Policy.Tree.Leaf;
 import java.util.ArrayList;
 
 public abstract class DynamicLearning {
-    public static void train(Computer player, Game oldGame){
-        System.out.println("dynamic learning");
-        //backup
-        /*Leaf oldLastMove = player.getLastMove();
-        Leaf oldNextMove = player.getNextMove();
-        ArrayList<Leaf> oldMoves = player.getMoves();*/
-        //
-        Game newGame = new Game(oldGame.getSize(),oldGame.getFull());
-        newGame.setResultMatrix(oldGame.getResultMatrix().clone());
 
-        //Symulation symulation = new Symulation(3,3,0.3,10);
-        Symulation symulation = new Symulation(newGame, 0.3,100);
-        symulation.dynamicTrain(player.getPolicy());
-        System.out.println(player.getName()+" "+player.getLastMove().toString());
-        //symulation.train();
-        //symulation.dynamicTrain(player.getPolicy());
+    public static Policy train(Game oldGame,double expRate, int rounds, Sign sign){
+        System.out.println("dynamic learning");
+        Game newGame = new Game(oldGame.getSize(),oldGame.getFull());
+        newGame.setGameStatus(oldGame.getResultMatrix());
+
+        Symulation symulation = new Symulation(newGame, expRate, rounds);
+
+        symulation.train();
+
+        if(sign==Sign.CROSS) return symulation.getFirstPlayerPolicy();
+        else if(sign==Sign.CIRCLE) return symulation.getSecondPlayerPolicy();
+        else return null;
+
     }
 }

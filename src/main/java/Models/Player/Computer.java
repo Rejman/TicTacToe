@@ -93,6 +93,14 @@ public class Computer extends Player {
         return move(exp_rate, false);
     }
     public int move(double exp_rate, boolean trueGame){
+        if(trueGame){
+            Policy newPolicy = DynamicLearning.train(game,0.3,10000,value);
+            System.out.println("POLITYKA: "+policy.getTree().getChildren());
+            this.setPolicy(newPolicy);
+
+        }
+
+
         double value =0.0;
         nextMove = new Leaf("");
 
@@ -142,9 +150,10 @@ public class Computer extends Player {
         if(value==0.0) {
             // tu będzie dynamiczne uczenie jak bedzie już działać
             //DynamicLearning.train(this,game);
-            System.out.println("NIE ROZPOZNANO");
+            System.out.print("NIE ROZPOZNANO: "+nextMove+" wylosowano: ");
             //action = this.move(exp_rate, trueGame);
             action = randomMove(emptyFields);
+            System.out.println(action);
             /*action =  randomMove(emptyFields);
             if(trueGame) System.out.println("Nie rozpoznano");*/
 

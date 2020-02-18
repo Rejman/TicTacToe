@@ -18,7 +18,7 @@ public class HumanVsComputer extends GameBoard {
         this.human = player;
         this.computer = computer;
 
-        Test.startMoves(game);
+        //Test.startMoves(game);
 
         updateFields();
         if(computerFirst){

@@ -91,7 +91,8 @@ public class Game {
             verdict = Verdict.NOBODY;
             setEmptyFields();
             resultMatrix.clearMatrix();
-            Test.startMoves(this);
+            //Test.startMoves(this);
+            this.setGameStatus(started);
         }
 
     }
@@ -123,16 +124,16 @@ public class Game {
 
     private ResultMatrix started = null;
     public void setGameStatus(ResultMatrix resultMatrix){
-        started = resultMatrix;
-        Sign[][] values = resultMatrix.getValues();
-        for(int i=0;i<resultMatrix.degree;i++){
-            for(int j=0;j<resultMatrix.degree;j++){
+        started = resultMatrix.clone();
+        Sign[][] values = started.getValues();
+        for(int i=0;i<started.degree;i++){
+            for(int j=0;j<started.degree;j++){
                 switch (values[i][j]){
                     case CIRCLE:
-                        addMove(Position.convertToNumber(new Position(i,j),resultMatrix.degree), Sign.CIRCLE);
+                        addMove(Position.convertToNumber(new Position(i,j),started.degree), Sign.CIRCLE);
                         break;
                     case CROSS:
-                        addMove(Position.convertToNumber(new Position(i,j),resultMatrix.degree), Sign.CROSS);
+                        addMove(Position.convertToNumber(new Position(i,j),started.degree), Sign.CROSS);
                         break;
                     case NONE:
                         break;
