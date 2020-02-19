@@ -116,8 +116,8 @@ public class Symulation extends Task<Void> {
         }
         showStatistics();
     }
-    public void train(){
-        this.train("");
+    public void train(Sign firstPlayer){
+        this.train("",firstPlayer);
     }
     public void dynamicTrain(Policy policy) {
         stoper.start();
@@ -168,7 +168,7 @@ public class Symulation extends Task<Void> {
         stoper.stop();
         System.out.println(stoper.getMinutes()+" minutes");
     }
-    public void train(String baseFileName) {
+    public void train(String baseFileName, Sign firstMove) {
         stoper.start();
         //this.game.addMove(4,Sign.CIRCLE);
         if(baseFileName.equals("")){
@@ -186,15 +186,17 @@ public class Symulation extends Task<Void> {
             Verdict verdict;
             while (true) {
 
-                crossPlayer.move(expRate);
+                if(firstMove==Sign.CIRCLE) circlePlayer.move(expRate);
+                else crossPlayer.move(expRate);
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
                     giveReward(verdict);
                     break;
                 }
+                if(firstMove==Sign.CIRCLE) crossPlayer.move(expRate);
+                else circlePlayer.move(expRate);
 
-                circlePlayer.move(expRate);
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
