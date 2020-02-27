@@ -3,6 +3,7 @@ package RL;
 import Controllers.SymulationPanelController;
 import IO.Serialize;
 import Models.Game.Game;
+import Models.Game.ResultMatrix;
 import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
@@ -43,8 +44,8 @@ public class Symulation extends Task<Void> {
     private int draw = 0;
 
     //cross is always first
-    private Computer crossPlayer;
-    private Computer circlePlayer;
+    public Computer crossPlayer;
+    public Computer circlePlayer;
 
     private Game game;
 
@@ -56,6 +57,14 @@ public class Symulation extends Task<Void> {
         this.expRate = expRate;
         this.rounds = rounds;
 
+    }
+    public Symulation(Game game, double expRate, int rounds){
+        this.stoper = new Stoper();
+        this.game = game;
+        crossPlayer = new Computer("firstPlayer", Sign.CROSS, this.game);
+        circlePlayer = new Computer("secondPlayer", Sign.CIRCLE, this.game);
+        this.expRate = expRate;
+        this.rounds = rounds;
     }
 
     public Policy getFirstPlayerPolicy() {
@@ -75,34 +84,56 @@ public class Symulation extends Task<Void> {
     public void test(int rounds, double exp_rate) {
         resetStatistics();
         this.rounds = rounds;
-
+        Verdict verdict;
         for (int i = 0; i < rounds; i++) {
 
-            Verdict verdict = Verdict.NOBODY;
-            while (verdict == Verdict.NOBODY) {
-                crossPlayer.move(exp_rate);
-                circlePlayer.move(exp_rate);
+            while (true) {
+
+                crossPlayer.move(expRate);
+
                 verdict = game.getVerdict();
-            }
-            switch (verdict) {
-                case CIRCLE:
-                    cross++;
+                if (verdict != Verdict.NOBODY) {
+                    //giveReward(verdict);
                     break;
-                case CROSS:
-                    circle++;
+                }
+
+                circlePlayer.move(expRate);
+
+                verdict = game.getVerdict();
+                if (verdict != Verdict.NOBODY) {
+                    //giveReward(verdict);
                     break;
-                case DRAW:
-                    draw++;
+                }
             }
+            if (verdict == Verdict.CROSS) cross++;
+            if (verdict == Verdict.CIRCLE) circle++;
+            if (verdict == Verdict.DRAW) draw++;
+
             game.reset();
+            crossPlayer.resetMoves();
+            circlePlayer.resetMoves();
+
         }
         showStatistics();
     }
-
-    public void train() {
+    public void train(Sign firstPlayer){
+        this.train("",firstPlayer);
+    }
+    public void dynamicTrain(Policy policy) {
         stoper.start();
-        crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
-        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
+        //this.game.addMove(4,Sign.CIRCLE);
+        /*crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
+        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));*/
+        switch (policy.getSign()){
+            case CROSS:
+                crossPlayer.setPolicy(policy);
+                circlePlayer.setPolicy(new Policy(Sign.CIRCLE, policy.getRounds(), policy.getExpRate()));
+                break;
+            case CIRCLE:
+                circlePlayer.setPolicy(policy);
+                crossPlayer.setPolicy(new Policy(Sign.CROSS, policy.getRounds(), policy.getExpRate()));
+        }
+
         resetStatistics();
 
 
@@ -119,6 +150,53 @@ public class Symulation extends Task<Void> {
                 }
 
                 circlePlayer.move(expRate);
+
+                verdict = game.getVerdict();
+                if (verdict != Verdict.NOBODY) {
+                    giveReward(verdict);
+                    break;
+                }
+            }
+            if (verdict == Verdict.CROSS) cross++;
+            if (verdict == Verdict.CIRCLE) circle++;
+            if (verdict == Verdict.DRAW) draw++;
+
+            game.reset();
+            crossPlayer.resetMoves();
+            circlePlayer.resetMoves();
+        }
+        stoper.stop();
+        System.out.println(stoper.getMinutes()+" minutes");
+    }
+    public void train(String baseFileName, Sign firstMove) {
+        stoper.start();
+        //this.game.addMove(4,Sign.CIRCLE);
+        if(baseFileName.equals("")){
+            crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
+            circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
+        }else{
+            crossPlayer.setPolicy(Serialize.loadPolicy(Serialize.pathToFile(baseFileName,Sign.CROSS)));
+            circlePlayer.setPolicy(Serialize.loadPolicy(Serialize.pathToFile(baseFileName,Sign.CIRCLE)));
+        }
+
+        resetStatistics();
+
+
+        for (int i = 0; i < rounds; i++) {
+            Verdict verdict;
+            while (true) {
+
+                if(firstMove==Sign.CIRCLE) circlePlayer.move(expRate);
+                else crossPlayer.move(expRate);
+
+                verdict = game.getVerdict();
+                if (verdict != Verdict.NOBODY) {
+                    giveReward(verdict);
+                    break;
+                }
+                if(firstMove==Sign.CIRCLE) crossPlayer.move(expRate);
+                else circlePlayer.move(expRate);
+
 
                 verdict = game.getVerdict();
                 if (verdict != Verdict.NOBODY) {
@@ -183,10 +261,23 @@ public class Symulation extends Task<Void> {
     }
 
     public static void main(String[] args) {
+        System.out.println("Symulation tests");
+        Symulation symulation = new Symulation(3, 3, 0.3,1000);
+        symulation.game.addMove(0,Sign.CROSS);
 
-        Symulation symulation = new Symulation(3, 3, 0.3,50000);
-        symulation.train();
-        symulation.test(10, 0.0);
+        ResultMatrix resultMatrix = new ResultMatrix(3);
+        resultMatrix.add(0,Sign.CROSS);
+        resultMatrix.add(8,Sign.CIRCLE);
+        resultMatrix.add(4,Sign.CROSS);
+
+
+        //System.out.println(resultMatrix.getHash());
+        symulation.game.setGameStatus(resultMatrix);
+        System.out.println(symulation.game.getResultMatrix().getHash());
+        //symulation.train();
+        //symulation.test(100, 0.0);
+
+
 
     }
 
@@ -198,6 +289,7 @@ public class Symulation extends Task<Void> {
         circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
         System.out.println(rounds);
 
+        //Test.startMoves(game);
 
         for (int i = 0; i < rounds; i++) {
             Verdict verdict;
@@ -243,4 +335,6 @@ public class Symulation extends Task<Void> {
         if(autoSave.isSelected()) button.fire();
 
     }
+
+
 }

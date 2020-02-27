@@ -1,10 +1,10 @@
 package Models.Player;
 
 import Models.Game.*;
+import RL.DynamicLearning;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
-import RL.Symulation;
 
 import java.util.*;
 
@@ -16,6 +16,26 @@ public class Computer extends Player {
     private Leaf nextMove;
     private ArrayList<Leaf> moves;
 
+    public Leaf getLastMove() {
+        return lastMove;
+    }
+
+    public void setLastMove(Leaf lastMove) {
+        this.lastMove = lastMove;
+    }
+
+    public Leaf getNextMove() {
+        return nextMove;
+    }
+
+    public void setNextMove(Leaf nextMove) {
+        this.nextMove = nextMove;
+    }
+
+    public void setMoves(ArrayList<Leaf> moves) {
+        this.moves = moves;
+    }
+
     /**
      * @param name
      * @param value
@@ -23,6 +43,7 @@ public class Computer extends Player {
      */
     public Computer(String name, Sign value, Game game) {
         super(name, value, game);
+
         policy = new Policy(this.value,0,0);
         //lastMove = policy.getTree();
         moves = new ArrayList<>();
@@ -38,6 +59,7 @@ public class Computer extends Player {
         moves.add(0,policy.getTree());
         lastMove = policy.getTree();
     }
+
 
     public void setPolicy(Policy policy) {
         this.policy = policy;
@@ -70,6 +92,14 @@ public class Computer extends Player {
         return move(exp_rate, false);
     }
     public int move(double exp_rate, boolean trueGame){
+/*        if(trueGame){
+            Policy newPolicy = DynamicLearning.train(game,0.3,10000,value);
+            System.out.println("POLITYKA: "+policy.getTree().getChildren());
+            this.setPolicy(newPolicy);
+
+        }*/
+
+
         double value =0.0;
         nextMove = new Leaf("");
 
@@ -107,16 +137,28 @@ public class Computer extends Player {
                     nextMove = lastMove.getChild(newLeaf);
                     valueMax = value;
                     action = field;
+                    //System.out.println("\t\t\t" + game.getNumberOfFields());
                 }
             }
 
 
         }
+
         //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
         if(value==0.0) {
-            action =  randomMove(emptyFields);
-            if(trueGame) System.out.println("Nie rozpoznano");
 
+            System.out.println("NIEZNANY");
+            /*if(trueGame){
+                Policy newPolicy = DynamicLearning.train(game,0.3,10000,this.value);
+                System.out.println("POLITYKA: "+newPolicy.getTree().getChildren());
+                ArrayList<Leaf> newChildren = newPolicy.getTree().getChildren();
+                this.lastMove.setChildren(newChildren);
+                return -1;
+            }else{
+                System.out.println("RANDOM MOVE");
+                action = randomMove(emptyFields);
+            }*/
+            action = randomMove(emptyFields);
         }
 
 /*        if(moves.size()==1){
@@ -144,6 +186,8 @@ public class Computer extends Player {
         this.moves.add(lastMove);
 
         game.addMove(action, this.value);
+
+
 
         return action;
     }
