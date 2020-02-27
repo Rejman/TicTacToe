@@ -1,9 +1,11 @@
 package Models.Gui;
 
+import IO.Serialize;
 import Models.Game.*;
 import Models.Player.Computer;
 import Models.Player.Human;
 import RL.DynamicLearning;
+import RL.Policy.Policy;
 import RL.Test;
 import javafx.scene.Cursor;
 
@@ -54,7 +56,13 @@ public class HumanVsComputer extends GameBoard {
 
             }
             if (game.getVerdict() == Verdict.NOBODY) {
-                int id = computer.move(0, true);
+
+                int id = -1;
+                while(id<0){
+                    System.out.println("PETLA id:"+id);
+                    id = computer.move(0, true);
+                }
+
                 Field temp = (Field) gridPane.getChildren().get(id);
                 addSignToField(temp, computer.getValue());
             }
@@ -67,6 +75,8 @@ public class HumanVsComputer extends GameBoard {
         }
     }
     private void modifyVerdictLabel(){
+        /*Policy updatePolicy = computer.getPolicy();
+        Serialize.savePolicy("new",updatePolicy);*/
         Verdict verdict = game.getVerdict();
         Sign sign = Sign.NONE;
 

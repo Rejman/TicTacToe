@@ -5,7 +5,6 @@ import RL.DynamicLearning;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
-import RL.Symulation;
 
 import java.util.*;
 
@@ -144,25 +143,22 @@ public class Computer extends Player {
 
 
         }
-        //if(trueGame) DynamicLearning.train(this,game);
 
         //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
         if(value==0.0) {
 
-/*            System.out.print("NIE ROZPOZNANO: "+nextMove+" wylosowano: ");
-
-            action = randomMove(emptyFields);
-            System.out.println(action);*/
             System.out.println("NIEZNANY");
-            if(trueGame){
+            /*if(trueGame){
                 Policy newPolicy = DynamicLearning.train(game,0.3,10000,this.value);
                 System.out.println("POLITYKA: "+newPolicy.getTree().getChildren());
-                this.setPolicy(newPolicy);
-                action = this.move(exp_rate);
+                ArrayList<Leaf> newChildren = newPolicy.getTree().getChildren();
+                this.lastMove.setChildren(newChildren);
+                return -1;
             }else{
+                System.out.println("RANDOM MOVE");
                 action = randomMove(emptyFields);
-            }
-
+            }*/
+            action = randomMove(emptyFields);
         }
 
 /*        if(moves.size()==1){

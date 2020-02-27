@@ -2,12 +2,7 @@ package RL;
 
 import Models.Game.Game;
 import Models.Game.Sign;
-import Models.Player.Computer;
-import Models.Player.Player;
 import RL.Policy.Policy;
-import RL.Policy.Tree.Leaf;
-
-import java.util.ArrayList;
 
 public abstract class DynamicLearning {
 
