@@ -201,5 +201,84 @@ public class Computer extends Player {
             System.out.println(State.showAsBoards(states));;
         }
     }
+    private ArrayList<Integer> selectMovements(){
+        ArrayList<Integer> selected = new ArrayList<>();
+        ResultMatrix actualResultMatrix = game.getResultMatrix();
+
+        for (Integer field:game.getEmptyFields()
+             ) {
+            boolean okRow = false;
+            Sign[] row = actualResultMatrix.findRow(field);
+            okRow = canSbWin(row);
+
+            boolean okColumn = false;
+            Sign[] column = actualResultMatrix.findColumn(field);
+            okColumn = canSbWin(column);
+
+            boolean okFDiag = false;
+            boolean okGDiag = false;
+
+            List fallingDiagonal = actualResultMatrix.findFallingDiagonal(field);
+            if(fallingDiagonal.size()>=game.getFull()){
+                okFDiag = canSbWin(fallingDiagonal);
+                List growingDiagonal = actualResultMatrix.findGrowingDiagonal(field);
+                okGDiag = canSbWin(growingDiagonal);
+            }
+            if(okColumn || okRow || okFDiag || okGDiag) selected.add(field);
+
+
+        }
+
+        return selected;
+    }
+    private boolean canSbWin(Sign[] line){
+        int x = 0;
+        int o = 0;
+        for (Sign sign:line
+             ) {
+            switch (sign){
+                case CIRCLE:
+                    x++;
+                    break;
+                case CROSS:
+                    o++;
+                    break;
+            }
+        }
+        return !(x>0 && o>0);
+    }
+    private boolean canSbWin(List line){
+        int x = 0;
+        int o = 0;
+        for (Object elem:line
+        ) {
+            Sign sign = (Sign) elem;
+            switch (sign){
+                case CIRCLE:
+                    x++;
+                    break;
+                case CROSS:
+                    o++;
+                    break;
+            }
+        }
+        return !(x>0 && o>0);
+    }
+
+    public static void main(String[] args) {
+        Game game = new Game(4,4);
+
+        Computer computer = new Computer("test", Sign.CIRCLE, game);
+        game.addMove(0,Sign.CIRCLE);
+        game.addMove(6,Sign.CIRCLE);
+        game.addMove(7,Sign.CROSS);
+        game.addMove(9,Sign.CROSS);
+        game.addMove(10,Sign.CROSS);
+        game.addMove(12,Sign.CROSS);
+        game.addMove(15,Sign.CIRCLE);
+        System.out.println(game.getResultMatrix().getHash());
+        System.out.println(computer.selectMovements());
+
+    }
 
 }
