@@ -69,8 +69,9 @@ public class Computer extends Player {
     public Policy getPolicy() {
         return this.policy;
     }
-    private int randomMove(){
-        ArrayList<Integer> emptyFields = game.getEmptyFields();
+    private int randomMove(ArrayList<Integer> emptyFields){
+
+        if(emptyFields.size()<=0) emptyFields = game.getEmptyFields();
 
         int randomId = generator.nextInt(emptyFields.size());
         int field = emptyFields.get(randomId);
@@ -110,7 +111,7 @@ public class Computer extends Player {
         Random generator = new Random();
         if(generator.nextDouble()<=exp_rate){
             //if move is random
-            action =  randomMove();
+            action =  randomMove(selectedFields);
 
         }else{
             //if move is form policy
@@ -158,7 +159,7 @@ public class Computer extends Player {
                 System.out.println("RANDOM MOVE");
                 action = randomMove(emptyFields);
             }*/
-            action = randomMove();
+            action = randomMove(selectedFields);
         }
 
 /*        if(moves.size()==1){
