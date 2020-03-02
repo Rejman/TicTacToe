@@ -149,16 +149,14 @@ public class Computer extends Player {
         if(value==0.0) {
 
             System.out.println("NIEZNANY");
-            /*if(trueGame){
+
+            if(trueGame && selectedFields.size()>0){
                 Policy newPolicy = DynamicLearning.train(game,0.3,10000,this.value);
                 System.out.println("POLITYKA: "+newPolicy.getTree().getChildren());
                 ArrayList<Leaf> newChildren = newPolicy.getTree().getChildren();
                 this.lastMove.setChildren(newChildren);
                 return -1;
-            }else{
-                System.out.println("RANDOM MOVE");
-                action = randomMove(emptyFields);
-            }*/
+            }
             action = randomMove(selectedFields);
         }
 
