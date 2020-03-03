@@ -63,6 +63,7 @@ public class Computer extends Player {
 
     public void setPolicy(Policy policy) {
         this.policy = policy;
+
         resetMoves();
     }
 
