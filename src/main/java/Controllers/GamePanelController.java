@@ -113,7 +113,7 @@ public class GamePanelController {
             protected Void call() throws Exception {
                 playButton.setDisable(true);
                 if(policyChoiceBox.getItems().isEmpty()){
-                    lastLoadedPolicy = new Policy(Sign.CROSS,0,1);
+                    lastLoadedPolicy = null;
                 }else{
                     lastLoadedPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, finalSign));
                 }
@@ -273,7 +273,7 @@ public class GamePanelController {
     @FXML
     void infoPolicy(ActionEvent event) throws IOException {
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
-        Policy policy = new Policy(Sign.NONE, 0,0);
+        Policy policy =null;
 
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
         switch (sign){

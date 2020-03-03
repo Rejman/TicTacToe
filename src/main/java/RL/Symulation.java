@@ -127,11 +127,11 @@ public class Symulation extends Task<Void> {
         switch (policy.getSign()){
             case CROSS:
                 crossPlayer.setPolicy(policy);
-                circlePlayer.setPolicy(new Policy(Sign.CIRCLE, policy.getRounds(), policy.getExpRate()));
+                circlePlayer.setPolicy(new Policy(Sign.CIRCLE, policy.getRounds(), policy.getExpRate(),game.getSize(),game.getFull()));
                 break;
             case CIRCLE:
                 circlePlayer.setPolicy(policy);
-                crossPlayer.setPolicy(new Policy(Sign.CROSS, policy.getRounds(), policy.getExpRate()));
+                crossPlayer.setPolicy(new Policy(Sign.CROSS, policy.getRounds(), policy.getExpRate(),game.getSize(),game.getFull()));
         }
 
         resetStatistics();
@@ -170,10 +170,11 @@ public class Symulation extends Task<Void> {
     }
     public void train(String baseFileName, Sign firstMove) {
         stoper.start();
+        System.out.println("TUTAJ"+game.getSize());
         //this.game.addMove(4,Sign.CIRCLE);
         if(baseFileName.equals("")){
-            crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
-            circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
+            crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate,game.getSize(),game.getFull()));
+            circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate,game.getSize(),game.getFull()));
         }else{
             crossPlayer.setPolicy(Serialize.loadPolicy(Serialize.pathToFile(baseFileName,Sign.CROSS)));
             circlePlayer.setPolicy(Serialize.loadPolicy(Serialize.pathToFile(baseFileName,Sign.CIRCLE)));
@@ -285,8 +286,9 @@ public class Symulation extends Task<Void> {
     @Override
     protected Void call() throws Exception {
         stoper.start();
-        crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
-        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));
+
+        crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate,game.getSize(),game.getFull()));
+        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate,game.getSize(),game.getFull()));
         System.out.println(rounds);
 
         //Test.startMoves(game);

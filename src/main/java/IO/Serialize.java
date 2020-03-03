@@ -50,7 +50,7 @@ public abstract class Serialize {
             out.writeObject(policy);
             out.close();
             file.close();
-            System.out.println("Policy has saved as "+filename);
+            System.out.println("Policy has saved as "+filename+""+policy.getSize());
 
         }
         catch(IOException ex)
