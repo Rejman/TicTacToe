@@ -1,12 +1,8 @@
 package Models.Gui;
 
-import IO.Serialize;
 import Models.Game.*;
 import Models.Player.Computer;
 import Models.Player.Human;
-import RL.DynamicLearning;
-import RL.Policy.Policy;
-import RL.Test;
 import javafx.scene.Cursor;
 
 public class HumanVsComputer extends GameBoard {
