@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="mainStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.TreeViewPanelController">
+<StackPane fx:id="mainStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.TreeViewPanelController">
    <children>
-      <VBox prefHeight="200.0" prefWidth="100.0">
+      <HBox>
          <children>
-            <StackPane fx:id="parentPanel" prefHeight="150.0" prefWidth="200.0" />
-            <ScrollPane prefHeight="248.0" prefWidth="600.0">
+            <StackPane fx:id="parentPanel">
+               <children>
+                  <Label text="Parent" />
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding></StackPane>
+            <ScrollPane hbarPolicy="NEVER" pannable="true">
                <content>
-                  <VBox fx:id="childrenPanel" prefHeight="200.0" prefWidth="597.0" />
+                  <VBox fx:id="childrenPanel">
+                     <children>
+                        <Label text="Children" />
+                     </children>
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding></VBox>
                </content>
             </ScrollPane>
          </children>
-      </VBox>
+      </HBox>
    </children>
 </StackPane>

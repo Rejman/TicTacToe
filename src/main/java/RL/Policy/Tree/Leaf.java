@@ -6,7 +6,7 @@ import javafx.scene.layout.StackPane;
 import java.io.Serializable;
 import java.util.*;
 
-public class Leaf implements Serializable {
+public class Leaf implements Serializable, Comparable {
 
     public static int rate;
     private String state;
@@ -182,4 +182,10 @@ public class Leaf implements Serializable {
 
     }
 
+    @Override
+    public int compareTo(Object o) {
+        Leaf leaf = (Leaf) o;
+        return Double.compare(leaf.getValue(),this.getValue());
+
+    }
 }
