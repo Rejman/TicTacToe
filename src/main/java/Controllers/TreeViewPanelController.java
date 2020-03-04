@@ -53,7 +53,9 @@ public class TreeViewPanelController {
     public void setPolicy(Policy policy){
         this.policy = policy;
         generalInfoLabel.setText(policy.getSign().toString());
-        loadTree(policy.getTree());
+        Leaf root = policy.getTree();
+        loadTree(root);
+        history.add(root);
 
     }
     @FXML
@@ -64,9 +66,12 @@ public class TreeViewPanelController {
         childrenPanel.setPrefHeight(PARENT_SIZE);
     }
     private void loadTree(Leaf leaf){
+
+        System.out.println("Load "+leaf.getState());
         ratingLabel.setText(String.format("%.5f", leaf.getValue()));
         levelLabel.setText(level+"");
         StackPane parent = GameBoard.draw(PARENT_SIZE,leaf.getState(),policy.getSize());
+        parentPanel.getChildren().clear();
         parentPanel.getChildren().add(parent);
 
         childrenPanel.getChildren().clear();
@@ -100,33 +105,38 @@ public class TreeViewPanelController {
         childrenPanel.getChildren().add(row);
 
     }
-    private int level = -1;
+    private int level = 0;
+
     private void addMauseAction(final StackPane gameBoard, Leaf leaf) {
         gameBoard.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
+
             public void handle(MouseEvent event) {
-                history.add(leaf);
-                level++;
-                levelLabel.setText(history.size()+"");
+                addPrefLeaf(leaf);
+               // this.level++;
+                System.out.println("test");
+
                 loadTree(leaf);
             }
 
+
         });
+    }
+
+    private void addPrefLeaf(Leaf leaf){
+        this.history.add(leaf);
+        level++;
     }
     @FXML
     void back(ActionEvent event) {
-        if(level<0){
-            backButton.setDisable(true);
-        }else{
-            backButton.setDisable(false);
-
-            Leaf leaf = history.get(level);
-            //loadTree(leaf);
-            this.loadTree(leaf);
-            //history.remove(level);
+        System.out.println(level);
+        if(level>1){
+            history.remove(history.size()-1);
             level--;
-        }
+            Leaf leaf = history.get(level-1);
 
+            this.loadTree(leaf);
+        }
     }
 
 }
