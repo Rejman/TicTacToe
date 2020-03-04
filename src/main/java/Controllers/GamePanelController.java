@@ -313,6 +313,7 @@ public class GamePanelController {
         primaryStage.setScene(scene);
         treeViewPanelController.setPolicy(policy);
         primaryStage.setTitle(policyName+" - tree view");
+        primaryStage.setMaximized(true);
         primaryStage.show();
 
 

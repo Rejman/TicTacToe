@@ -5,6 +5,7 @@ import Models.Game.Sign;
 import RL.Policy.Tree.Leaf;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -75,6 +76,7 @@ public abstract class GameBoard extends StackPane {
 
     public static StackPane draw(int size, String boardHash, int sizeOfBoard){
         StackPane stackPane = new StackPane();
+
         GridPane gridPane = new GridPane();
         stackPane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         int sizeOfField = size / sizeOfBoard;
@@ -102,6 +104,12 @@ public abstract class GameBoard extends StackPane {
         }
         gridPane.setGridLinesVisible(true);
         stackPane.getChildren().add(gridPane);
+        //stackPane.setAlignment(Pos.CENTER);
+        //stackPane.setPrefWidth(USE_COMPUTED_SIZE);
+
+        //gridPane.setPrefHeight();
+        //gridPane.setPrefWidth(100);
+        //stackPane.setPrefWidth(100);
         return stackPane;
 
     }

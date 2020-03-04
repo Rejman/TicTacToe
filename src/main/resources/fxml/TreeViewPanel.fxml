@@ -4,75 +4,89 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<StackPane fx:id="mainStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.TreeViewPanelController">
+<StackPane fx:id="mainStackPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.TreeViewPanelController">
    <children>
-      <BorderPane>
-         <center>
-            <HBox BorderPane.alignment="CENTER">
-               <children>
-                  <VBox>
+      <VBox alignment="TOP_CENTER">
+         <children>
+            <BorderPane fx:id="borderPane">
+               <center>
+                  <AnchorPane fx:id="parentPanel" BorderPane.alignment="CENTER">
                      <children>
-                        <StackPane fx:id="parentPanel">
-                           <children>
-                              <Label text="Parent" />
-                           </children>
-                           <padding>
-                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                           </padding>
-                        </StackPane>
-                        <GridPane>
-                          <columnConstraints>
-                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="118.0" minWidth="83.0" prefWidth="115.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="121.0" minWidth="10.0" prefWidth="89.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
-                            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
-                            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label text="Rating" />
-                              <Label text="Number of children" GridPane.rowIndex="1" />
-                              <Label text="Level" GridPane.rowIndex="2" />
-                              <Label fx:id="ratingLabel" text="Label" GridPane.columnIndex="1" />
-                              <Label fx:id="numberOfChildrenLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label fx:id="levelLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                           </children>
-                           <padding>
-                              <Insets bottom="20.0" left="20.0" right="20.0" />
-                           </padding>
-                        </GridPane>
+                        <Label text="Parent" />
                      </children>
-                  </VBox>
-                  <ScrollPane hbarPolicy="NEVER" pannable="true">
+                     <BorderPane.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </BorderPane.margin>
+                  </AnchorPane>
+               </center>
+               <right>
+                  <GridPane BorderPane.alignment="CENTER">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="118.0" minWidth="83.0" prefWidth="115.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="121.0" minWidth="10.0" prefWidth="89.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+                        <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+                        <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label text="Rating" />
+                        <Label text="Number of children" GridPane.rowIndex="1" />
+                        <Label fx:id="ratingLabel" text="Label" GridPane.columnIndex="1" />
+                        <Label fx:id="numberOfChildrenLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
+               </right>
+               <bottom>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#back" text="🡠   previous state" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
+                        <Label text="Level:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="levelLabel" text="Label">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                     </padding>
+                  </HBox>
+               </bottom>
+            </BorderPane>
+            <VBox alignment="CENTER">
+               <children>
+                  <ScrollPane hbarPolicy="NEVER">
                      <content>
-                        <VBox fx:id="childrenPanel">
-                           <children>
-                              <Label text="Children" />
-                           </children>
-                           <padding>
-                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                           </padding>
-                        </VBox>
+                        <FlowPane fx:id="childrenPanel" />
                      </content>
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin>
                   </ScrollPane>
                </children>
-            </HBox>
-         </center>
-         <top>
-            <Label fx:id="generalInfoLabel" text="Info" BorderPane.alignment="CENTER" />
-         </top>
-         <left>
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#back" prefHeight="109.0" prefWidth="25.0" text="&lt;" BorderPane.alignment="CENTER" />
-         </left>
-      </BorderPane>
+            </VBox>
+         </children>
+      </VBox>
    </children>
 </StackPane>

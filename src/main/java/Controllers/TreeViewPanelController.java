@@ -11,14 +11,16 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -29,15 +31,17 @@ public class TreeViewPanelController {
 
     private final int PARENT_SIZE = 200;
     private final int CHILD_SIZE = 80;
-    private final int NUMBER_IN_ROW = 5;
+
+    @FXML
+    private BorderPane borderPane;
     @FXML
     private StackPane mainStackPane;
     @FXML
-    private StackPane parentPanel;
+    private AnchorPane parentPanel;
     @FXML
     private Label generalInfoLabel;
     @FXML
-    private VBox childrenPanel;
+    private FlowPane childrenPanel;
     @FXML
     private Label ratingLabel;
     @FXML
@@ -52,7 +56,7 @@ public class TreeViewPanelController {
 
     public void setPolicy(Policy policy){
         this.policy = policy;
-        generalInfoLabel.setText(policy.getSign().toString());
+
         Leaf root = policy.getTree();
         loadTree(root);
         history.add(root);
@@ -60,10 +64,9 @@ public class TreeViewPanelController {
     }
     @FXML
     void initialize() {
-        //System.out.println( mainStackPane.getPadding().toString());
-        //mainStackPane.setPrefHeight(PARENT_SIZE);
-        childrenPanel.setPrefWidth(NUMBER_IN_ROW*(CHILD_SIZE+10)+40);
-        childrenPanel.setPrefHeight(PARENT_SIZE);
+        childrenPanel.prefWidthProperty().bind(mainStackPane.widthProperty());
+        backButton.setPrefWidth(PARENT_SIZE);
+
     }
     private void loadTree(Leaf leaf){
 
@@ -71,8 +74,7 @@ public class TreeViewPanelController {
         ratingLabel.setText(String.format("%.5f", leaf.getValue()));
         levelLabel.setText(level+"");
         StackPane parent = GameBoard.draw(PARENT_SIZE,leaf.getState(),policy.getSize());
-        parentPanel.getChildren().clear();
-        parentPanel.getChildren().add(parent);
+
 
         childrenPanel.getChildren().clear();
 
@@ -81,8 +83,7 @@ public class TreeViewPanelController {
         numberOfChildrenLabel.setText(children.size()+"");
 
 
-        HBox row = new HBox();
-        row.setSpacing(10);
+
         for(int i=0;i<children.size();i++){
             Leaf child = children.get(i);
 
@@ -91,21 +92,22 @@ public class TreeViewPanelController {
             String value = String.format("%.5f", child.getValue());
 
             VBox childInfo = new VBox();
+            childInfo.setAlignment(Pos.CENTER);
+            childInfo.setPadding(new Insets(10, 10, 10, 10));
             childInfo.getChildren().add(gameBoard);
-            childInfo.getChildren().add(new Label(value));
+            Label rateLabel = new Label(value);
+            childInfo.getChildren().add(rateLabel);
 
-            row.getChildren().add(childInfo);
-            if((i+1)%NUMBER_IN_ROW==0){
-                childrenPanel.getChildren().add(row);
-                row = new HBox();
-                row.setSpacing(10);
-            }
+            childrenPanel.getChildren().add(childInfo);
 
         }
-        childrenPanel.getChildren().add(row);
+        //borderPane.setCenter(parent);
+        parentPanel.getChildren().clear();
+        parentPanel.getChildren().add(parent);
+
 
     }
-    private int level = 0;
+    private int level = 1;
 
     private void addMauseAction(final StackPane gameBoard, Leaf leaf) {
         gameBoard.setOnMouseClicked(new EventHandler<MouseEvent>() {
