@@ -29,9 +29,15 @@ import java.util.Collections;
 
 public class TreeViewPanelController {
 
+    private final int SCROLL_PANEL_SIZE = 500;
     private final int PARENT_SIZE = 200;
     private final int CHILD_SIZE = 80;
+    private Stage stage;
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        stage.sizeToScene();
+    }
     @FXML
     private BorderPane borderPane;
     @FXML
@@ -48,7 +54,11 @@ public class TreeViewPanelController {
     private Button backButton;
     @FXML
     private Label numberOfChildrenLabel;
+    @FXML
+    private Label roundsLabel;
 
+    @FXML
+    private Label expRateLabel;
     @FXML
     private Label levelLabel;
     private Policy policy;
@@ -59,16 +69,26 @@ public class TreeViewPanelController {
 
         Leaf root = policy.getTree();
         loadTree(root);
+
         history.add(root);
+        signLabel.setText(policy.getSign().toString());
+        roundsLabel.setText(policy.getRounds()+"");
+        expRateLabel.setText((int)(policy.getExpRate()*100)+" %");
 
     }
     @FXML
+    private Label signLabel;
+    @FXML
     void initialize() {
-        childrenPanel.prefWidthProperty().bind(mainStackPane.widthProperty());
+        //childrenPanel.prefWidthProperty().bind(mainStackPane.widthProperty());
+        childrenPanel.setPrefWidth(SCROLL_PANEL_SIZE);
+        childrenPanel.setPrefHeight(SCROLL_PANEL_SIZE);
         backButton.setPrefWidth(PARENT_SIZE);
+
 
     }
     private void loadTree(Leaf leaf){
+
 
         System.out.println("Load "+leaf.getState());
         ratingLabel.setText(String.format("%.5f", leaf.getValue()));
@@ -104,9 +124,11 @@ public class TreeViewPanelController {
         //borderPane.setCenter(parent);
         parentPanel.getChildren().clear();
         parentPanel.getChildren().add(parent);
+        stage.sizeToScene();
 
 
     }
+
     private int level = 1;
 
     private void addMauseAction(final StackPane gameBoard, Leaf leaf) {
@@ -114,6 +136,7 @@ public class TreeViewPanelController {
 
 
             public void handle(MouseEvent event) {
+                backButton.setDisable(false);
                 addPrefLeaf(leaf);
                // this.level++;
                 System.out.println("test");
@@ -128,10 +151,12 @@ public class TreeViewPanelController {
     private void addPrefLeaf(Leaf leaf){
         this.history.add(leaf);
         level++;
+
     }
     @FXML
     void back(ActionEvent event) {
-        System.out.println(level);
+
+
         if(level>1){
             history.remove(history.size()-1);
             level--;
@@ -139,6 +164,8 @@ public class TreeViewPanelController {
 
             this.loadTree(leaf);
         }
+        if(level<=1) backButton.setDisable(true);
+
     }
 
 }

@@ -30,6 +30,8 @@ import static Models.Gui.GameType.*;
 public class GamePanelController {
 
 
+
+
     private Policy lastLoadedPolicy = null;
     private final int GOMOKU_SIZE = 15;
     private final int GOMOKU_FULL = 5;
@@ -311,11 +313,13 @@ public class GamePanelController {
 
         Stage primaryStage = new Stage();
         primaryStage.setScene(scene);
+        treeViewPanelController.setStage(primaryStage);
         treeViewPanelController.setPolicy(policy);
-        primaryStage.setTitle(policyName+" - tree view");
-        primaryStage.setMaximized(true);
-        primaryStage.show();
 
+        primaryStage.setTitle(policyName+" - tree view");
+        //primaryStage.setMaximized(true);
+        primaryStage.setResizable(false);
+        primaryStage.show();
 
     }
 }
