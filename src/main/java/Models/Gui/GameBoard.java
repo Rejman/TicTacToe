@@ -67,7 +67,6 @@ public abstract class GameBoard extends StackPane {
         field.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             public void handle(MouseEvent event) {
-
                 click(field);
             }
 
@@ -116,7 +115,7 @@ public abstract class GameBoard extends StackPane {
     protected abstract void click(Field field);
 
     protected void addSignToField(Field field, Sign value) {
-
+        Field.setSize(sizeOfField,15,20);
         switch (value) {
             case CROSS:
                 field.drawCross(Color.GREEN);
