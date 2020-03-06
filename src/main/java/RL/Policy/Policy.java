@@ -18,8 +18,11 @@ public class Policy implements Serializable {
         this.sign = sign;
         this.rounds = rounds;
         this.expRate = expRate;
-
-        this.root = new Leaf("-------------------------------------", 0.0);
+        String rootValue = "";
+        for(int i=0;i<(size*size);i++){
+            rootValue+="-";
+        }
+        this.root = new Leaf(rootValue, 0.0);
     }
 
     public int getSize() {
