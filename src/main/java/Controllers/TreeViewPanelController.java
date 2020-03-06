@@ -17,6 +17,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.Glow;
+import javafx.scene.effect.Lighting;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -132,15 +134,25 @@ public class TreeViewPanelController {
     private int level = 1;
 
     private void addMauseAction(final StackPane gameBoard, Leaf leaf) {
+        gameBoard.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Lighting lighting = new Lighting();
+                gameBoard.setEffect(lighting);
+            }
+        });
+        gameBoard.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                gameBoard.setEffect(null);
+            }
+        });
         gameBoard.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 
             public void handle(MouseEvent event) {
                 backButton.setDisable(false);
                 addPrefLeaf(leaf);
-               // this.level++;
-                System.out.println("test");
-
                 loadTree(leaf);
             }
 
