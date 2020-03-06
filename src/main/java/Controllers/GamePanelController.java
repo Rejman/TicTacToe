@@ -12,8 +12,11 @@ import RL.Policy.Tree.Leaf;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +28,8 @@ import java.util.ArrayList;
 import static Models.Gui.GameType.*;
 
 public class GamePanelController {
+
+
 
 
     private Policy lastLoadedPolicy = null;
@@ -110,7 +115,7 @@ public class GamePanelController {
             protected Void call() throws Exception {
                 playButton.setDisable(true);
                 if(policyChoiceBox.getItems().isEmpty()){
-                    lastLoadedPolicy = new Policy(Sign.CROSS,0,1);
+                    lastLoadedPolicy = null;
                 }else{
                     lastLoadedPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, finalSign));
                 }
@@ -268,19 +273,29 @@ public class GamePanelController {
 
 
     @FXML
-    void infoPolicy(ActionEvent event) {
+    void infoPolicy(ActionEvent event) throws IOException {
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
-        Policy crossPolicy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CROSS));
-        //System.out.println(crossPolicy.getSign().toString());
+        Policy policy =null;
+
+        Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
+        switch (sign){
+            case CROSS:
+                policy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CROSS));
+                break;
+            case CIRCLE:
+                policy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CIRCLE));
+                break;
+        }
+/*        //System.out.println(crossPolicy.getSign().toString());
         //System.out.println(crossPolicy.getRounds());
         //System.out.println(crossPolicy.getExpRate());
-        String message = "rounds: "+crossPolicy.getRounds()+"\n";
-        message+="expRate: "+crossPolicy.getExpRate()+"\n";
+        String message = "rounds: "+policy.getRounds()+"\n";
+        message+="expRate: "+policy.getExpRate()+"\n";
         State.degree = 3;
         //System.out.println("Uwaga "+State.degree);
         //crossPolicy.getTree().showTree(3);
 
-        Leaf tree = crossPolicy.getTree();
+        Leaf tree = policy.getTree();
         tree.rate = 0;
         tree.rating();
         message+="Rate: "+tree.rate;
@@ -289,6 +304,22 @@ public class GamePanelController {
         alert.setHeaderText("Information of \""+policyName+"\" policy");
         alert.setContentText(message);
 
-        alert.showAndWait();
+        alert.showAndWait();*/
+        //
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/TreeViewPanel.fxml"));
+        StackPane stackPane = loader.load();
+        TreeViewPanelController treeViewPanelController = loader.getController();
+        Scene scene = new Scene(stackPane);
+
+        Stage primaryStage = new Stage();
+        primaryStage.setScene(scene);
+        treeViewPanelController.setStage(primaryStage);
+        treeViewPanelController.setPolicy(policy);
+
+        primaryStage.setTitle(policyName+" - tree view");
+        //primaryStage.setMaximized(true);
+        primaryStage.setResizable(false);
+        primaryStage.show();
+
     }
 }

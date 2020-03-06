@@ -44,7 +44,7 @@ public class Computer extends Player {
     public Computer(String name, Sign value, Game game) {
         super(name, value, game);
 
-        policy = new Policy(this.value,0,0);
+        policy = new Policy(this.value,0,0, game.getSize(), game.getFull());
         //lastMove = policy.getTree();
         moves = new ArrayList<>();
         resetMoves();
@@ -63,6 +63,9 @@ public class Computer extends Player {
 
     public void setPolicy(Policy policy) {
         this.policy = policy;
+        this.policy.setSize(game.getSize());
+        this.policy.setFull(game.getFull());
+
         resetMoves();
     }
 
