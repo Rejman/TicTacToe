@@ -1,10 +1,12 @@
 package Models.Player;
 
+import IO.Serialize;
 import Models.Game.*;
 import RL.DynamicLearning;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
+import javafx.concurrent.Task;
 
 import java.util.*;
 
@@ -154,10 +156,32 @@ public class Computer extends Player {
             System.out.println("NIEZNANY");
 
             if(trueGame && selectedFields.size()>0){
-                Policy newPolicy = DynamicLearning.train(game,0.3,10000,this.value);
-                System.out.println("POLITYKA: "+newPolicy.getTree().getChildren());
-                ArrayList<Leaf> newChildren = newPolicy.getTree().getChildren();
-                this.lastMove.setChildren(newChildren);
+
+                Task<Void> load = new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        Policy newPolicy = DynamicLearning.train(game,0.3,10000,Sign.CIRCLE);
+                        return null;
+                    }
+
+                    @Override
+                    protected void succeeded() {
+                        System.out.println("Koniec");
+
+                    }
+                };
+                //loadProgressBar.progressProperty().bind(load.progressProperty());
+                //loadProgress.progressProperty().bind(load.progressProperty());
+                //loadProgress.setVisible(true);
+                Thread thread = new Thread(load);
+
+                thread.start();
+
+
+
+                //System.out.println("POLITYKA: "+newPolicy.getTree().getChildren());
+                //ArrayList<Leaf> newChildren = newPolicy.getTree().getChildren();
+                //this.lastMove.setChildren(newChildren);
                 return -1;
             }
             action = randomMove(selectedFields);
