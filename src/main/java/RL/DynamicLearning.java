@@ -13,9 +13,9 @@ public abstract class DynamicLearning {
 
         Symulation symulation = new Symulation(newGame, expRate, rounds);
         if(sign==Sign.CIRCLE){
-            symulation.train(Sign.CIRCLE);
+            //symulation.train(Sign.CIRCLE);
         }else{
-            symulation.train(Sign.CROSS);
+            //symulation.train(Sign.CROSS);
         }
 
 

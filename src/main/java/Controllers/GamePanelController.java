@@ -6,6 +6,7 @@ import Models.Gui.*;
 import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
+import RL.DynamicLearning;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
@@ -29,7 +30,8 @@ import static Models.Gui.GameType.*;
 
 public class GamePanelController {
 
-
+    @FXML
+    public ProgressBar dynamicProgressBar;
 
 
     private Policy lastLoadedPolicy = null;
@@ -93,6 +95,7 @@ public class GamePanelController {
         else computer = new Computer("computer", Sign.CIRCLE, newGame);
 
         computer.setPolicy(lastLoadedPolicy);
+        computer.setProgressBar(this.dynamicProgressBar);
 
 
         HumanVsComputer gameBoard = new HumanVsComputer(newGame, human, computer, computerFirst);
@@ -224,6 +227,7 @@ public class GamePanelController {
     }
     @FXML
     void initialize() throws IOException {
+
         loadProgress.setVisible(false);
 
         buildGameTypeChoiceBox();
@@ -241,6 +245,8 @@ public class GamePanelController {
         borderStackPane.setMinHeight(GameBoard.SIZE);
         borderStackPane.setMinHeight(GameBoard.SIZE);
         listFilesForFolder(new File("policy"));
+
+
 
     }
 

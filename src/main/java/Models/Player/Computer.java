@@ -3,10 +3,15 @@ package Models.Player;
 import IO.Serialize;
 import Models.Game.*;
 import RL.DynamicLearning;
+import RL.Policy.DynamicLearningTask;
+import RL.Policy.DynamicSymulation;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.ProgressBar;
 
 import java.util.*;
 
@@ -17,6 +22,8 @@ public class Computer extends Player {
     private Leaf lastMove;
     private Leaf nextMove;
     private ArrayList<Leaf> moves;
+
+    private ProgressBar progressBar;
 
     public Leaf getLastMove() {
         return lastMove;
@@ -36,6 +43,10 @@ public class Computer extends Player {
 
     public void setMoves(ArrayList<Leaf> moves) {
         this.moves = moves;
+    }
+
+    public void setProgressBar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
     }
 
     /**
@@ -153,35 +164,28 @@ public class Computer extends Player {
         //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
         if(value==0.0) {
 
-            System.out.println("NIEZNANY");
+            //System.out.println("NIEZNANY");
 
             if(trueGame && selectedFields.size()>0){
 
-                Task<Void> load = new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        Policy newPolicy = DynamicLearning.train(game,0.3,10000,Sign.CIRCLE);
-                        return null;
-                    }
+                //DynamicLearningTask dynamicLearningTask = new DynamicLearningTask(game,0.3,10000,this.value, progressBar);
+                DynamicSymulation dynamicSymulation = new DynamicSymulation(game, 0.3, 1000, this.value);
 
-                    @Override
-                    protected void succeeded() {
-                        System.out.println("Koniec");
+                Thread thread = new Thread(dynamicSymulation);
 
-                    }
-                };
-                //loadProgressBar.progressProperty().bind(load.progressProperty());
-                //loadProgress.progressProperty().bind(load.progressProperty());
-                //loadProgress.setVisible(true);
-                Thread thread = new Thread(load);
-
+                thread.setDaemon(true);
                 thread.start();
 
+                while(thread.isAlive()){
 
+                    //System.out.println("i am waiting");
+                }
+                Policy newPolicy = dynamicSymulation.getNewPolicy();
+                System.out.println("UWAGA" + newPolicy);
+                System.out.println("POLITYKA: "+newPolicy.getTree().getChildren());
+                ArrayList<Leaf> newChildren = newPolicy.getTree().getChildren();
 
-                //System.out.println("POLITYKA: "+newPolicy.getTree().getChildren());
-                //ArrayList<Leaf> newChildren = newPolicy.getTree().getChildren();
-                //this.lastMove.setChildren(newChildren);
+                this.lastMove.setChildren(newChildren);
                 return -1;
             }
             action = randomMove(selectedFields);

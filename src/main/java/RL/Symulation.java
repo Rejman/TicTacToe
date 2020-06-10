@@ -7,14 +7,17 @@ import Models.Game.ResultMatrix;
 import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
+import RL.Policy.DynamicLearningTask;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
 import Tools.Stoper;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.concurrent.Task;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ProgressBar;
 
 import java.util.ArrayList;
 
@@ -104,6 +107,7 @@ public class Symulation extends Task<Void> {
                     //giveReward(verdict);
                     break;
                 }
+
             }
             if (verdict == Verdict.CROSS) cross++;
             if (verdict == Verdict.CIRCLE) circle++;
@@ -116,8 +120,8 @@ public class Symulation extends Task<Void> {
         }
         showStatistics();
     }
-    public void train(Sign firstPlayer){
-        this.train("",firstPlayer);
+    public void train(Sign firstPlayer, ProgressBar progressBar){
+        this.train("",firstPlayer, progressBar);
     }
     public void dynamicTrain(Policy policy) {
         stoper.start();
@@ -166,9 +170,9 @@ public class Symulation extends Task<Void> {
             circlePlayer.resetMoves();
         }
         stoper.stop();
-        System.out.println(stoper.getMinutes()+" minutes");
+        System.out.println(stoper.getTime()+" minutes");
     }
-    public void train(String baseFileName, Sign firstMove) {
+    public void train(String baseFileName, Sign firstMove, ProgressBar progressBar) {
         stoper.start();
         System.out.println("TUTAJ"+game.getSize());
         //this.game.addMove(4,Sign.CIRCLE);
@@ -204,17 +208,17 @@ public class Symulation extends Task<Void> {
                     giveReward(verdict);
                     break;
                 }
+                progressBar.setProgress((i/rounds));
             }
-            if (verdict == Verdict.CROSS) cross++;
-            if (verdict == Verdict.CIRCLE) circle++;
-            if (verdict == Verdict.DRAW) draw++;
+
 
             game.reset();
             crossPlayer.resetMoves();
             circlePlayer.resetMoves();
+            updateProgress(i,rounds);
         }
         stoper.stop();
-        System.out.println(stoper.getMinutes()+" minutes");
+        System.out.println(stoper.getTime()+" minutes");
     }
 
     public void giveReward(Verdict verdict) {
@@ -332,7 +336,7 @@ public class Symulation extends Task<Void> {
 
     @Override
     protected void succeeded() {
-        System.out.println("Learning time: "+stoper.getMinutes()+" minutes");
+        System.out.println("Learning time: "+stoper.getTime()+" minutes");
         button.setDisable(false);
         if(autoSave.isSelected()) button.fire();
 
