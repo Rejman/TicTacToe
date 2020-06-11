@@ -169,7 +169,7 @@ public class Computer extends Player {
             if(trueGame && selectedFields.size()>0){
 
                 //DynamicLearningTask dynamicLearningTask = new DynamicLearningTask(game,0.3,10000,this.value, progressBar);
-                DynamicSymulation dynamicSymulation = new DynamicSymulation(game, 0.3, 1000, this.value);
+                DynamicSymulation dynamicSymulation = new DynamicSymulation(game, 0.3, 10000, this.value);
 
                 Thread thread = new Thread(dynamicSymulation);
 
