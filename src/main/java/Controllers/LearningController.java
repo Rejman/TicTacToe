@@ -81,6 +81,7 @@ public class LearningController {
         thread.setDaemon(true);
         thread.start();
 
+
     }
     @FXML
     void cancel(ActionEvent event) {
