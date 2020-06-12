@@ -57,6 +57,10 @@ public class HumanVsComputer extends GameBoard {
                 while(id<0){
                     System.out.println("PETLA id:"+id);
                     id = computer.move(0, true);
+                    if(id == -10){
+                        System.out.println("STOP");
+                        return;
+                    }
                 }
 
                 Field temp = (Field) gridPane.getChildren().get(id);
@@ -70,6 +74,13 @@ public class HumanVsComputer extends GameBoard {
             }
         }
     }
+
+    public void computerMove(){
+        int id = computer.move(0, true);
+        Field temp = (Field) gridPane.getChildren().get(id);
+        addSignToField(temp, computer.getValue());
+    }
+
     private void modifyVerdictLabel(){
         /*Policy updatePolicy = computer.getPolicy();
         Serialize.savePolicy("new",updatePolicy);*/

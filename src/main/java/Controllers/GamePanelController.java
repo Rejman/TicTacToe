@@ -94,11 +94,15 @@ public class GamePanelController {
         if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
         else computer = new Computer("computer", Sign.CIRCLE, newGame);
 
+
         computer.setPolicy(lastLoadedPolicy);
         computer.setProgressBar(this.dynamicProgressBar);
 
 
         HumanVsComputer gameBoard = new HumanVsComputer(newGame, human, computer, computerFirst);
+        // dodanie planszy komputerowemu graczowi
+        computer.game_board = gameBoard;
+
         gameBoard.setVerdictLabel(verdictLabel);
         borderStackPane.getChildren().clear();
         borderStackPane.getChildren().add(gameBoard);

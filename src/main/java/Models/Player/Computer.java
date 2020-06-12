@@ -1,22 +1,33 @@
 package Models.Player;
 
+import Controllers.DynamicLearningController;
+import Controllers.LearningController;
 import IO.Serialize;
 import Models.Game.*;
+import Models.Gui.HumanVsComputer;
 import RL.DynamicLearning;
 import RL.Policy.DynamicLearningTask;
 import RL.Policy.DynamicSymulation;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Computer extends Player {
     //object that chooses random movement
+    public HumanVsComputer game_board = null;
     private Random generator = new Random();
     private Policy policy;
     private Leaf lastMove;
@@ -169,24 +180,55 @@ public class Computer extends Player {
             if(trueGame && selectedFields.size()>0){
 
                 //DynamicLearningTask dynamicLearningTask = new DynamicLearningTask(game,0.3,10000,this.value, progressBar);
-                DynamicSymulation dynamicSymulation = new DynamicSymulation(game, 0.3, 1000, this.value);
+                DynamicSymulation symulation = new DynamicSymulation(game, 0.3, 1000, this.value);
 
-                Thread thread = new Thread(dynamicSymulation);
-
-                thread.setDaemon(true);
-                thread.start();
-
-                while(thread.isAlive()){
-
-                    //System.out.println("i am waiting");
+                FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/DynamicLearning.fxml"));
+                StackPane stackPane = null;
+                try {
+                    stackPane = loader.load();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                Policy newPolicy = dynamicSymulation.getNewPolicy();
-                System.out.println("UWAGA" + newPolicy);
-                System.out.println("POLITYKA: "+newPolicy.getTree().getChildren());
-                ArrayList<Leaf> newChildren = newPolicy.getTree().getChildren();
+                DynamicLearningController dynamicLearningController = loader.getController();
+                dynamicLearningController.setSymulation(symulation);
+                Scene scene = new Scene(stackPane);
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.setTitle("Dynamic Learning");
+                stage.setResizable(false);
+                dynamicLearningController.setParent(stage);
+                //stage.setAlwaysOnTop(true);
+                stage.initStyle(StageStyle.UNDECORATED);
 
-                this.lastMove.setChildren(newChildren);
-                return -1;
+                try {
+                    dynamicLearningController.start();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                stage.show();
+                Thread thread2 = new Thread(() ->{
+                    while(dynamicLearningController.thread.isAlive()){
+
+                    }
+                    System.out.println("KONIEC!!!!!!!");
+                    ArrayList<Leaf> newChildren = symulation.getNewPolicy().getTree().getChildren();
+                    this.lastMove.setChildren(newChildren);
+                    this.game_board.computerMove();
+                    dynamicLearningController.thread.stop();
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            dynamicLearningController.getParent().close();
+                        }
+                    });
+
+
+
+                });
+                thread2.setDaemon(true);
+                thread2.start();
+
+                return -10;
             }
             action = randomMove(selectedFields);
         }
