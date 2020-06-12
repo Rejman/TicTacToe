@@ -5,7 +5,6 @@ import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import RL.Policy.Policy;
-import RL.Policy.Symulation;
 import Tools.Stoper;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;

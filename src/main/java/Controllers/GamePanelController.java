@@ -125,6 +125,7 @@ public class GamePanelController {
             @Override
             protected void succeeded() {
                 System.out.println("Koniec");
+
                 playButton.setDisable(false);
                 playButton.setText("RESET");
                 playButton.fire();

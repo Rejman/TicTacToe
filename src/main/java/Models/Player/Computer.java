@@ -124,7 +124,7 @@ public class Computer extends Player {
         double value =0.0;
         nextMove = new Leaf("");
 
-        ArrayList<Integer> selectedFields = this.selectMovements();
+        ArrayList<Integer> selectedFields = this.selectMovements(false);
 
         int action = 0;
 
@@ -266,10 +266,12 @@ public class Computer extends Player {
             System.out.println(State.showAsBoards(states));;
         }
     }
-    private ArrayList<Integer> selectMovements(){
+    private ArrayList<Integer> selectMovements(boolean on){
         ArrayList<Integer> selected = new ArrayList<>();
         ResultMatrix actualResultMatrix = game.getResultMatrix();
-
+        if(on == false){
+            return game.getEmptyFields();
+        }
         for (Integer field:game.getEmptyFields()
              ) {
             boolean okRow = false;
@@ -297,6 +299,8 @@ public class Computer extends Player {
         return selected;
     }
     private boolean canSbWin(Sign[] line){
+
+
         int x = 0;
         int o = 0;
         for (Sign sign:line
@@ -330,20 +334,6 @@ public class Computer extends Player {
         return !(x>0 && o>0);
     }
 
-    public static void main(String[] args) {
-        Game game = new Game(4,4);
 
-        Computer computer = new Computer("test", Sign.CIRCLE, game);
-        game.addMove(0,Sign.CIRCLE);
-        game.addMove(6,Sign.CIRCLE);
-        game.addMove(7,Sign.CROSS);
-        game.addMove(9,Sign.CROSS);
-        game.addMove(10,Sign.CROSS);
-        game.addMove(12,Sign.CROSS);
-        game.addMove(15,Sign.CIRCLE);
-        System.out.println(game.getResultMatrix().getHash());
-        System.out.println(computer.selectMovements());
-
-    }
 
 }
