@@ -1,19 +1,14 @@
 package RL;
 
-import Controllers.SymulationPanelController;
 import IO.Serialize;
 import Models.Game.Game;
 import Models.Game.ResultMatrix;
 import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
-import RL.Policy.DynamicLearningTask;
 import RL.Policy.Policy;
-import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
 import Tools.Stoper;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.concurrent.Task;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -21,7 +16,7 @@ import javafx.scene.control.ProgressBar;
 
 import java.util.ArrayList;
 
-public class Symulation extends Task<Void> {
+public class BaseSymulation extends Task<Void> {
 
     private Stoper stoper;
     private CheckBox autoSave;
@@ -52,7 +47,7 @@ public class Symulation extends Task<Void> {
 
     private Game game;
 
-    public Symulation(int size, int full, double expRate, int rounds) {
+    public BaseSymulation(int size, int full, double expRate, int rounds) {
         this.stoper = new Stoper();
         this.game = new Game(size, full);
         crossPlayer = new Computer("firstPlayer", Sign.CROSS, this.game);
@@ -61,7 +56,7 @@ public class Symulation extends Task<Void> {
         this.rounds = rounds;
 
     }
-    public Symulation(Game game, double expRate, int rounds){
+    public BaseSymulation(Game game, double expRate, int rounds){
         this.stoper = new Stoper();
         this.game = game;
         crossPlayer = new Computer("firstPlayer", Sign.CROSS, this.game);
@@ -125,9 +120,7 @@ public class Symulation extends Task<Void> {
     }
     public void dynamicTrain(Policy policy) {
         stoper.start();
-        //this.game.addMove(4,Sign.CIRCLE);
-        /*crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate));
-        circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate));*/
+
         switch (policy.getSign()){
             case CROSS:
                 crossPlayer.setPolicy(policy);
@@ -175,7 +168,7 @@ public class Symulation extends Task<Void> {
     public void train(String baseFileName, Sign firstMove, ProgressBar progressBar) {
         stoper.start();
         System.out.println("TUTAJ"+game.getSize());
-        //this.game.addMove(4,Sign.CIRCLE);
+
         if(baseFileName.equals("")){
             crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate,game.getSize(),game.getFull()));
             circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate,game.getSize(),game.getFull()));
@@ -267,8 +260,8 @@ public class Symulation extends Task<Void> {
 
     public static void main(String[] args) {
         System.out.println("Symulation tests");
-        Symulation symulation = new Symulation(3, 3, 0.3,1000);
-        symulation.game.addMove(0,Sign.CROSS);
+        BaseSymulation baseSymulation = new BaseSymulation(3, 3, 0.3,1000);
+        baseSymulation.game.addMove(0,Sign.CROSS);
 
         ResultMatrix resultMatrix = new ResultMatrix(3);
         resultMatrix.add(0,Sign.CROSS);
@@ -277,11 +270,8 @@ public class Symulation extends Task<Void> {
 
 
         //System.out.println(resultMatrix.getHash());
-        symulation.game.setGameStatus(resultMatrix);
-        System.out.println(symulation.game.getResultMatrix().getHash());
-        //symulation.train();
-        //symulation.test(100, 0.0);
-
+        baseSymulation.game.setGameStatus(resultMatrix);
+        System.out.println(baseSymulation.game.getResultMatrix().getHash());
 
 
     }
@@ -295,7 +285,6 @@ public class Symulation extends Task<Void> {
         circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate,game.getSize(),game.getFull()));
         System.out.println(rounds);
 
-        //Test.startMoves(game);
 
         for (int i = 0; i < rounds; i++) {
             Verdict verdict;

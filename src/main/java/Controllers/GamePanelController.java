@@ -33,18 +33,13 @@ public class GamePanelController {
     @FXML
     public ProgressBar dynamicProgressBar;
 
-
     private Policy lastLoadedPolicy = null;
     private final int GOMOKU_SIZE = 15;
     private final int GOMOKU_FULL = 5;
     private final int TICTACTOE_VALUE = 3;
     private final int FourOnFour_VALUE = 4;
     private boolean lock = false;
-    @FXML
-    private Button infoButton;
 
-    @FXML
-    private Button deleteButton;
     @FXML
     private Button playButton;
     @FXML
@@ -76,7 +71,6 @@ public class GamePanelController {
         }
 
 
-
         int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
         int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
@@ -86,7 +80,6 @@ public class GamePanelController {
         else computerFirst = true;
 
         Game newGame = new Game(size, full);
-        //newGame.addMove(4,Sign.CROSS);
 
         State.degree = size;
         Human human = new Human("You", sign, newGame);
@@ -137,7 +130,7 @@ public class GamePanelController {
                 playButton.fire();
             }
         };
-        //loadProgressBar.progressProperty().bind(load.progressProperty());
+
         loadProgress.progressProperty().bind(load.progressProperty());
         loadProgress.setVisible(true);
         Thread thread = new Thread(load);
@@ -296,26 +289,7 @@ public class GamePanelController {
                 policy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CIRCLE));
                 break;
         }
-/*        //System.out.println(crossPolicy.getSign().toString());
-        //System.out.println(crossPolicy.getRounds());
-        //System.out.println(crossPolicy.getExpRate());
-        String message = "rounds: "+policy.getRounds()+"\n";
-        message+="expRate: "+policy.getExpRate()+"\n";
-        State.degree = 3;
-        //System.out.println("Uwaga "+State.degree);
-        //crossPolicy.getTree().showTree(3);
 
-        Leaf tree = policy.getTree();
-        tree.rate = 0;
-        tree.rating();
-        message+="Rate: "+tree.rate;
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Policy details");
-        alert.setHeaderText("Information of \""+policyName+"\" policy");
-        alert.setContentText(message);
-
-        alert.showAndWait();*/
-        //
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/TreeViewPanel.fxml"));
         StackPane stackPane = loader.load();
         TreeViewPanelController treeViewPanelController = loader.getController();
@@ -327,7 +301,6 @@ public class GamePanelController {
         treeViewPanelController.setPolicy(policy);
 
         primaryStage.setTitle(policyName+" - tree view");
-        //primaryStage.setMaximized(true);
         primaryStage.setResizable(false);
         primaryStage.show();
 
