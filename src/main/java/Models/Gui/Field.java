@@ -37,6 +37,7 @@ public class Field extends Canvas {
         graphicsContext.clearRect(0,0, size, size);
     }
     public void drawCircle(Color color){
+        graphicsContext.setLineWidth(bold);
         graphicsContext.setStroke(color);
         double width = size - margin*2;
         graphicsContext.strokeOval(margin,margin,width,width);
@@ -45,7 +46,7 @@ public class Field extends Canvas {
         return (percent*size)/100;
     }
     public void drawCross(Color color){
-
+        graphicsContext.setLineWidth(bold);
         graphicsContext.setStroke(color);
         double y = size-margin;
         graphicsContext.strokeLine(margin,y,y,margin);

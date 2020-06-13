@@ -1,17 +1,13 @@
 package Controllers;
-import IO.Serialize;
-import RL.Policy.Policy;
+import RL.BaseSymulation;
 import RL.Policy.State;
-import RL.Symulation;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -52,13 +48,13 @@ public class SymulationPanelController {
         double expRate = expRateSlider.getValue();
         int rounds = (int)roundsSlider.getValue();
         expRate = expRate/100;
-        symulation = new Symulation(Integer.parseInt(size), Integer.parseInt(number), expRate, rounds);
+        baseSymulation = new BaseSymulation(Integer.parseInt(size), Integer.parseInt(number), expRate, rounds);
         System.out.println(expRate);
         State.degree = Integer.parseInt(size);
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/Learning.fxml"));
         StackPane stackPane = loader.load();
         LearningController learningController = loader.getController();
-        learningController.setSymulation(symulation);
+        learningController.setBaseSymulation(baseSymulation);
         Scene scene = new Scene(stackPane);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -75,7 +71,7 @@ public class SymulationPanelController {
 
     }
 
-    private Symulation symulation;
+    private BaseSymulation baseSymulation;
     @FXML
     void initialize() {
         buildSpinners();

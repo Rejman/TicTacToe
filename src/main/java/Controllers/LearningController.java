@@ -1,8 +1,7 @@
 package Controllers;
 
 import IO.Serialize;
-import RL.Symulation;
-import javafx.application.Platform;
+import RL.BaseSymulation;
 import javafx.beans.property.BooleanProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -13,9 +12,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class LearningController {
 
@@ -40,16 +37,16 @@ public class LearningController {
         return saveButton.visibleProperty();
     }
 
-    private Symulation symulation;
+    private BaseSymulation baseSymulation;
 
-    public Symulation getSymulation() {
-        return symulation;
+    public BaseSymulation getBaseSymulation() {
+        return baseSymulation;
     }
 
-    public void setSymulation(Symulation symulation) {
-        this.symulation = symulation;
-        this.symulation.setButton(saveButton);
-        this.symulation.setAutoSave(autoSaveCheckBox);
+    public void setBaseSymulation(BaseSymulation baseSymulation) {
+        this.baseSymulation = baseSymulation;
+        this.baseSymulation.setButton(saveButton);
+        this.baseSymulation.setAutoSave(autoSaveCheckBox);
     }
 
     @FXML
@@ -58,8 +55,8 @@ public class LearningController {
         Task<Void> save = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                Serialize.savePolicy(filename, symulation.getFirstPlayerPolicy());
-                Serialize.savePolicy(filename, symulation.getSecondPlayerPolicy());
+                Serialize.savePolicy(filename, baseSymulation.getFirstPlayerPolicy());
+                Serialize.savePolicy(filename, baseSymulation.getSecondPlayerPolicy());
                 return null;
             }
 
@@ -75,11 +72,12 @@ public class LearningController {
 
     public void start() throws InterruptedException {
         progressBar.progressProperty().unbind();
-        progressBar.progressProperty().bind(symulation.progressProperty());
-        thread = new Thread(symulation);
+        progressBar.progressProperty().bind(baseSymulation.progressProperty());
+        thread = new Thread(baseSymulation);
 
         thread.setDaemon(true);
         thread.start();
+
 
     }
     @FXML

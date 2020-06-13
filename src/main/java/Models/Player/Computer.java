@@ -1,20 +1,33 @@
 package Models.Player;
 
+import Controllers.DynamicLearningController;
 import Models.Game.*;
-import RL.DynamicLearning;
+import Models.Gui.HumanVsComputer;
+import RL.DynamicSymulation;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Computer extends Player {
     //object that chooses random movement
+    public HumanVsComputer game_board = null;
     private Random generator = new Random();
     private Policy policy;
     private Leaf lastMove;
     private Leaf nextMove;
     private ArrayList<Leaf> moves;
+
+    private ProgressBar progressBar;
 
     public Leaf getLastMove() {
         return lastMove;
@@ -34,6 +47,10 @@ public class Computer extends Player {
 
     public void setMoves(ArrayList<Leaf> moves) {
         this.moves = moves;
+    }
+
+    public void setProgressBar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
     }
 
     /**
@@ -107,7 +124,7 @@ public class Computer extends Player {
         double value =0.0;
         nextMove = new Leaf("");
 
-        ArrayList<Integer> selectedFields = this.selectMovements();
+        ArrayList<Integer> selectedFields = this.selectMovements(false);
 
         int action = 0;
 
@@ -151,14 +168,60 @@ public class Computer extends Player {
         //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
         if(value==0.0) {
 
-            System.out.println("NIEZNANY");
+            //System.out.println("NIEZNANY");
 
             if(trueGame && selectedFields.size()>0){
-                Policy newPolicy = DynamicLearning.train(game,0.3,10000,this.value);
-                System.out.println("POLITYKA: "+newPolicy.getTree().getChildren());
-                ArrayList<Leaf> newChildren = newPolicy.getTree().getChildren();
-                this.lastMove.setChildren(newChildren);
-                return -1;
+
+                //DynamicLearningTask dynamicLearningTask = new DynamicLearningTask(game,0.3,10000,this.value, progressBar);
+                DynamicSymulation symulation = new DynamicSymulation(game, 0.3, 1000, this.value);
+
+                FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/DynamicLearning.fxml"));
+                StackPane stackPane = null;
+                try {
+                    stackPane = loader.load();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                DynamicLearningController dynamicLearningController = loader.getController();
+                dynamicLearningController.setSymulation(symulation);
+                Scene scene = new Scene(stackPane);
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.setTitle("Dynamic Learning");
+                stage.setResizable(false);
+                dynamicLearningController.setParent(stage);
+                //stage.setAlwaysOnTop(true);
+                stage.initStyle(StageStyle.UNDECORATED);
+
+                try {
+                    dynamicLearningController.start();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                stage.show();
+                Thread thread2 = new Thread(() ->{
+                    while(dynamicLearningController.thread.isAlive()){
+
+                    }
+                    System.out.println("KONIEC!!!!!!!");
+                    ArrayList<Leaf> newChildren = symulation.getNewPolicy().getTree().getChildren();
+                    this.lastMove.setChildren(newChildren);
+                    this.game_board.computerMove();
+                    dynamicLearningController.thread.stop();
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            dynamicLearningController.getParent().close();
+                        }
+                    });
+
+
+
+                });
+                thread2.setDaemon(true);
+                thread2.start();
+
+                return -10;
             }
             action = randomMove(selectedFields);
         }
@@ -203,10 +266,12 @@ public class Computer extends Player {
             System.out.println(State.showAsBoards(states));;
         }
     }
-    private ArrayList<Integer> selectMovements(){
+    private ArrayList<Integer> selectMovements(boolean on){
         ArrayList<Integer> selected = new ArrayList<>();
         ResultMatrix actualResultMatrix = game.getResultMatrix();
-
+        if(on == false){
+            return game.getEmptyFields();
+        }
         for (Integer field:game.getEmptyFields()
              ) {
             boolean okRow = false;
@@ -234,6 +299,8 @@ public class Computer extends Player {
         return selected;
     }
     private boolean canSbWin(Sign[] line){
+
+
         int x = 0;
         int o = 0;
         for (Sign sign:line
@@ -267,20 +334,6 @@ public class Computer extends Player {
         return !(x>0 && o>0);
     }
 
-    public static void main(String[] args) {
-        Game game = new Game(4,4);
 
-        Computer computer = new Computer("test", Sign.CIRCLE, game);
-        game.addMove(0,Sign.CIRCLE);
-        game.addMove(6,Sign.CIRCLE);
-        game.addMove(7,Sign.CROSS);
-        game.addMove(9,Sign.CROSS);
-        game.addMove(10,Sign.CROSS);
-        game.addMove(12,Sign.CROSS);
-        game.addMove(15,Sign.CIRCLE);
-        System.out.println(game.getResultMatrix().getHash());
-        System.out.println(computer.selectMovements());
-
-    }
 
 }

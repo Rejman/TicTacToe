@@ -6,6 +6,7 @@ import Models.Gui.*;
 import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
+import RL.DynamicLearning;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
@@ -29,8 +30,8 @@ import static Models.Gui.GameType.*;
 
 public class GamePanelController {
 
-
-
+    @FXML
+    public ProgressBar dynamicProgressBar;
 
     private Policy lastLoadedPolicy = null;
     private final int GOMOKU_SIZE = 15;
@@ -38,29 +39,18 @@ public class GamePanelController {
     private final int TICTACTOE_VALUE = 3;
     private final int FourOnFour_VALUE = 4;
     private boolean lock = false;
-    @FXML
-    private Button infoButton;
 
     @FXML
-    private Button deleteButton;
+    private Button resetButton;
+
     @FXML
     private Button playButton;
-    @FXML
-    private TitledPane customSettingsPanel;
-    @FXML
-    private ChoiceBox<GameType> gameTypeChoiceBox;
 
     @FXML
     private ChoiceBox<String> policyChoiceBox;
 
     @FXML
     private ChoiceBox<Sign> signChoiceBox;
-
-    @FXML
-    private Spinner<Integer> sizeOfGameBoardSpinner;
-
-    @FXML
-    private Spinner<Integer> winningNumberOfSignsSpinner;
 
     @FXML
     private Label verdictLabel;
@@ -74,9 +64,10 @@ public class GamePanelController {
         }
 
 
-
-        int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
-        int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
+        //int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
+        //int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
+        int size = lastLoadedPolicy.getSize();
+        int full = lastLoadedPolicy.getFull();
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
         boolean computerFirst;
@@ -84,7 +75,6 @@ public class GamePanelController {
         else computerFirst = true;
 
         Game newGame = new Game(size, full);
-        //newGame.addMove(4,Sign.CROSS);
 
         State.degree = size;
         Human human = new Human("You", sign, newGame);
@@ -92,10 +82,15 @@ public class GamePanelController {
         if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
         else computer = new Computer("computer", Sign.CIRCLE, newGame);
 
+
         computer.setPolicy(lastLoadedPolicy);
+        computer.setProgressBar(this.dynamicProgressBar);
 
 
         HumanVsComputer gameBoard = new HumanVsComputer(newGame, human, computer, computerFirst);
+        // dodanie planszy komputerowemu graczowi
+        computer.game_board = gameBoard;
+
         gameBoard.setVerdictLabel(verdictLabel);
         borderStackPane.getChildren().clear();
         borderStackPane.getChildren().add(gameBoard);
@@ -125,12 +120,13 @@ public class GamePanelController {
             @Override
             protected void succeeded() {
                 System.out.println("Koniec");
+
                 playButton.setDisable(false);
-                playButton.setText("RESET");
-                playButton.fire();
+                resetButton.setVisible(true);
+                resetButton.fire();
             }
         };
-        //loadProgressBar.progressProperty().bind(load.progressProperty());
+
         loadProgress.progressProperty().bind(load.progressProperty());
         loadProgress.setVisible(true);
         Thread thread = new Thread(load);
@@ -143,42 +139,6 @@ public class GamePanelController {
     @FXML
     private StackPane borderStackPane;
 
-    private void buildGameTypeChoiceBox(){
-        gameTypeChoiceBox.getItems().add(TICTACTOE);
-        gameTypeChoiceBox.getItems().add(FourOnFour);
-        gameTypeChoiceBox.getItems().add(GOMOKU);
-        gameTypeChoiceBox.getItems().add(CUSTOM);
-        gameTypeChoiceBox.getSelectionModel().select(0);
-
-
-        gameTypeChoiceBox.getSelectionModel()
-                .selectedIndexProperty()
-                .addListener((v, oldValue, newValue) -> {
-
-                    GameType value = gameTypeChoiceBox.getItems().get((int) newValue);
-                    lock = true;
-                    switch (value){
-                        case GOMOKU:
-                            sizeOfGameBoardSpinner.getValueFactory().setValue(GOMOKU_SIZE);
-                            winningNumberOfSignsSpinner.getValueFactory().setValue(GOMOKU_FULL);
-                            break;
-                        case TICTACTOE:
-                            sizeOfGameBoardSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
-                            winningNumberOfSignsSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
-                            break;
-                        case FourOnFour:
-                            sizeOfGameBoardSpinner.getValueFactory().setValue(FourOnFour_VALUE);
-                            winningNumberOfSignsSpinner.getValueFactory().setValue(FourOnFour_VALUE);
-                            break;
-                        case CUSTOM:
-                            customSettingsPanel.setExpanded(true);
-                            break;
-
-                    }
-                    lock = false;
-
-                });
-    }
     private void buildPolicyChoiceBox() throws IOException {
         policyChoiceBox.getItems().clear();
         ArrayList<String> list = new ArrayList<>();
@@ -192,30 +152,6 @@ public class GamePanelController {
         }
         policyChoiceBox.getSelectionModel().select(0);
     }
-    private void buildSpinners(){
-        SpinnerValueFactory sizeSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
-        SpinnerValueFactory numberSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
-
-        sizeOfGameBoardSpinner.setValueFactory(sizeSVF);
-        winningNumberOfSignsSpinner.setValueFactory(numberSVF);
-
-        sizeOfGameBoardSpinner.getValueFactory()
-                .valueProperty()
-                .addListener((v, oldValue, newValue)->{
-                    if(!lock){
-                        gameTypeChoiceBox.getSelectionModel().select(CUSTOM);
-                    }
-
-
-        });
-        winningNumberOfSignsSpinner.getValueFactory()
-                .valueProperty()
-                .addListener((v, oldValue, newValue)->{
-                    if(!lock){
-                        gameTypeChoiceBox.getSelectionModel().select(CUSTOM);
-                    }
-                });
-    }
 
     private void buildSignChoiceBox(){
         signChoiceBox.getItems().add(Sign.CIRCLE);
@@ -224,23 +160,17 @@ public class GamePanelController {
     }
     @FXML
     void initialize() throws IOException {
+
         loadProgress.setVisible(false);
 
-        buildGameTypeChoiceBox();
         buildPolicyChoiceBox();
         buildSignChoiceBox();
-        buildSpinners();
-
-        lock = true;
-        sizeOfGameBoardSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
-        winningNumberOfSignsSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
-        lock = false;
-
 
         borderStackPane.setMinWidth(GameBoard.SIZE);
         borderStackPane.setMinHeight(GameBoard.SIZE);
         borderStackPane.setMinHeight(GameBoard.SIZE);
         listFilesForFolder(new File("policy"));
+
 
     }
 
@@ -286,26 +216,7 @@ public class GamePanelController {
                 policy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CIRCLE));
                 break;
         }
-/*        //System.out.println(crossPolicy.getSign().toString());
-        //System.out.println(crossPolicy.getRounds());
-        //System.out.println(crossPolicy.getExpRate());
-        String message = "rounds: "+policy.getRounds()+"\n";
-        message+="expRate: "+policy.getExpRate()+"\n";
-        State.degree = 3;
-        //System.out.println("Uwaga "+State.degree);
-        //crossPolicy.getTree().showTree(3);
 
-        Leaf tree = policy.getTree();
-        tree.rate = 0;
-        tree.rating();
-        message+="Rate: "+tree.rate;
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Policy details");
-        alert.setHeaderText("Information of \""+policyName+"\" policy");
-        alert.setContentText(message);
-
-        alert.showAndWait();*/
-        //
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/TreeViewPanel.fxml"));
         StackPane stackPane = loader.load();
         TreeViewPanelController treeViewPanelController = loader.getController();
@@ -317,7 +228,6 @@ public class GamePanelController {
         treeViewPanelController.setPolicy(policy);
 
         primaryStage.setTitle(policyName+" - tree view");
-        //primaryStage.setMaximized(true);
         primaryStage.setResizable(false);
         primaryStage.show();
 
