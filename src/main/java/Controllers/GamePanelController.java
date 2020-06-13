@@ -41,23 +41,16 @@ public class GamePanelController {
     private boolean lock = false;
 
     @FXML
+    private Button resetButton;
+
+    @FXML
     private Button playButton;
-    @FXML
-    private TitledPane customSettingsPanel;
-    @FXML
-    private ChoiceBox<GameType> gameTypeChoiceBox;
 
     @FXML
     private ChoiceBox<String> policyChoiceBox;
 
     @FXML
     private ChoiceBox<Sign> signChoiceBox;
-
-    @FXML
-    private Spinner<Integer> sizeOfGameBoardSpinner;
-
-    @FXML
-    private Spinner<Integer> winningNumberOfSignsSpinner;
 
     @FXML
     private Label verdictLabel;
@@ -71,8 +64,10 @@ public class GamePanelController {
         }
 
 
-        int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
-        int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
+        //int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
+        //int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
+        int size = lastLoadedPolicy.getSize();
+        int full = lastLoadedPolicy.getFull();
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
         boolean computerFirst;
@@ -127,8 +122,8 @@ public class GamePanelController {
                 System.out.println("Koniec");
 
                 playButton.setDisable(false);
-                playButton.setText("RESET");
-                playButton.fire();
+                resetButton.setVisible(true);
+                resetButton.fire();
             }
         };
 
@@ -144,42 +139,6 @@ public class GamePanelController {
     @FXML
     private StackPane borderStackPane;
 
-    private void buildGameTypeChoiceBox(){
-        gameTypeChoiceBox.getItems().add(TICTACTOE);
-        gameTypeChoiceBox.getItems().add(FourOnFour);
-        gameTypeChoiceBox.getItems().add(GOMOKU);
-        gameTypeChoiceBox.getItems().add(CUSTOM);
-        gameTypeChoiceBox.getSelectionModel().select(0);
-
-
-        gameTypeChoiceBox.getSelectionModel()
-                .selectedIndexProperty()
-                .addListener((v, oldValue, newValue) -> {
-
-                    GameType value = gameTypeChoiceBox.getItems().get((int) newValue);
-                    lock = true;
-                    switch (value){
-                        case GOMOKU:
-                            sizeOfGameBoardSpinner.getValueFactory().setValue(GOMOKU_SIZE);
-                            winningNumberOfSignsSpinner.getValueFactory().setValue(GOMOKU_FULL);
-                            break;
-                        case TICTACTOE:
-                            sizeOfGameBoardSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
-                            winningNumberOfSignsSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
-                            break;
-                        case FourOnFour:
-                            sizeOfGameBoardSpinner.getValueFactory().setValue(FourOnFour_VALUE);
-                            winningNumberOfSignsSpinner.getValueFactory().setValue(FourOnFour_VALUE);
-                            break;
-                        case CUSTOM:
-                            customSettingsPanel.setExpanded(true);
-                            break;
-
-                    }
-                    lock = false;
-
-                });
-    }
     private void buildPolicyChoiceBox() throws IOException {
         policyChoiceBox.getItems().clear();
         ArrayList<String> list = new ArrayList<>();
@@ -193,30 +152,6 @@ public class GamePanelController {
         }
         policyChoiceBox.getSelectionModel().select(0);
     }
-    private void buildSpinners(){
-        SpinnerValueFactory sizeSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
-        SpinnerValueFactory numberSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
-
-        sizeOfGameBoardSpinner.setValueFactory(sizeSVF);
-        winningNumberOfSignsSpinner.setValueFactory(numberSVF);
-
-        sizeOfGameBoardSpinner.getValueFactory()
-                .valueProperty()
-                .addListener((v, oldValue, newValue)->{
-                    if(!lock){
-                        gameTypeChoiceBox.getSelectionModel().select(CUSTOM);
-                    }
-
-
-        });
-        winningNumberOfSignsSpinner.getValueFactory()
-                .valueProperty()
-                .addListener((v, oldValue, newValue)->{
-                    if(!lock){
-                        gameTypeChoiceBox.getSelectionModel().select(CUSTOM);
-                    }
-                });
-    }
 
     private void buildSignChoiceBox(){
         signChoiceBox.getItems().add(Sign.CIRCLE);
@@ -228,22 +163,13 @@ public class GamePanelController {
 
         loadProgress.setVisible(false);
 
-        buildGameTypeChoiceBox();
         buildPolicyChoiceBox();
         buildSignChoiceBox();
-        buildSpinners();
-
-        lock = true;
-        sizeOfGameBoardSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
-        winningNumberOfSignsSpinner.getValueFactory().setValue(TICTACTOE_VALUE);
-        lock = false;
-
 
         borderStackPane.setMinWidth(GameBoard.SIZE);
         borderStackPane.setMinHeight(GameBoard.SIZE);
         borderStackPane.setMinHeight(GameBoard.SIZE);
         listFilesForFolder(new File("policy"));
-
 
 
     }

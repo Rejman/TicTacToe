@@ -79,7 +79,7 @@ public abstract class GameBoard extends StackPane {
         GridPane gridPane = new GridPane();
         stackPane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         int sizeOfField = size / sizeOfBoard;
-        Field.setSize(sizeOfField,15,20);
+        Field.setSize(sizeOfField,45,30);
         int numberOfSignInBoardHash = 0;
         char[] table = boardHash.toCharArray();
 
@@ -90,10 +90,10 @@ public abstract class GameBoard extends StackPane {
                 field.addLigtingEffect();
                 switch (table[numberOfSignInBoardHash]){
                     case 'O':
-                        field.drawCircle(Color.BLUE);
+                        field.drawCircle(Color.BLACK);
                         break;
                     case 'X':
-                        field.drawCross(Color.GREEN);
+                        field.drawCircle(Color.WHITE);
                         break;
                 }
                 gridPane.add(field, j, i);
@@ -118,12 +118,10 @@ public abstract class GameBoard extends StackPane {
         Field.setSize(sizeOfField,45,30);
         switch (value) {
             case CROSS:
-                field.drawCircle(Color.BLACK);
-
+                field.drawCircle(Color.WHITE);
                 break;
             case CIRCLE:
-                field.drawCircle(Color.WHITE);
-
+                field.drawCircle(Color.BLACK);
                 break;
         }
 
