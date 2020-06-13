@@ -7,8 +7,7 @@ Implementacja algorytmu "uczenie ze wzmocnieniem" (Reinforcement Learning) do gr
 Do poprawnego działania wymagane są:
 - system Mircrosoft Windows
 - Java Runtime Environment
-- w tej samej lokalizaji co plik [TicTacToe.exe](https://github.com/Rejman/TicTacToe/blob/DEVELOP/TicTacToe.exe?raw=true), musi znajdować się folder o nazwie "policy"
-- [Download](https://github.com/Rejman/TicTacToe/blob/DEVELOP/TicTacToe.exe?raw=true)
+- w tej samej lokalizaji co plik [TicTacToe.exe](https://github.com/Rejman/TicTacToe/blob/feature/tree-penetrator/TicTacToe.exe?raw=true)
 
 
 

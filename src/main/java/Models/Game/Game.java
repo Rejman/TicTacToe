@@ -1,7 +1,5 @@
 package Models.Game;
 
-import javafx.geometry.Pos;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +29,9 @@ public class Game {
     private ArrayList<Integer> emptyFields;
 
 
+    public int getNumberOfFields() {
+        return numberOfFields;
+    }
 
     public Game(int size, int full) {
 
@@ -43,12 +44,17 @@ public class Game {
 
     }
 
+    public int getFull() {
+        return full;
+    }
+
     public ResultMatrix getResultMatrix() {
         return resultMatrix;
     }
 
     public void setResultMatrix(ResultMatrix resultMatrix) {
         this.resultMatrix = resultMatrix;
+        setEmptyFields();
     }
 
     /**
@@ -74,9 +80,18 @@ public class Game {
      * reset game to initial settings
      */
     public void reset(){
-        verdict = Verdict.NOBODY;
-        setEmptyFields();
-        resultMatrix.clearMatrix();
+        if(started==null){
+            verdict = Verdict.NOBODY;
+            setEmptyFields();
+            resultMatrix.clearMatrix();
+        }else{
+            verdict = Verdict.NOBODY;
+            setEmptyFields();
+            resultMatrix.clearMatrix();
+            //Test.startMoves(this);
+            this.setGameStatus(started);
+        }
+
     }
 
     /**
@@ -95,6 +110,31 @@ public class Game {
             lastMove = field;
             if(numberOfMove>=numberOfMovesWitchoutVerdict){
                 this.verdict = setVerdict();
+            }
+        }
+    }
+    public void addMoveWithoutVerdict(int field, Sign sign){
+        emptyFields.remove(new Integer(field));
+        numberOfMove++;
+        resultMatrix.add(field, sign);
+    }
+
+    private ResultMatrix started = null;
+    public void setGameStatus(ResultMatrix resultMatrix){
+        started = resultMatrix.clone();
+        Sign[][] values = started.getValues();
+        for(int i=0;i<started.degree;i++){
+            for(int j=0;j<started.degree;j++){
+                switch (values[i][j]){
+                    case CIRCLE:
+                        addMove(Position.convertToNumber(new Position(i,j),started.degree), Sign.CIRCLE);
+                        break;
+                    case CROSS:
+                        addMove(Position.convertToNumber(new Position(i,j),started.degree), Sign.CROSS);
+                        break;
+                    case NONE:
+                        break;
+                }
             }
         }
     }
