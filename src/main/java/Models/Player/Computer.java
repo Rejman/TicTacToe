@@ -27,6 +27,8 @@ public class Computer extends Player {
     private Leaf nextMove;
     private ArrayList<Leaf> moves;
 
+    public static boolean dynamicLearning = true;
+
     private ProgressBar progressBar;
 
     public Leaf getLastMove() {
@@ -170,10 +172,10 @@ public class Computer extends Player {
 
             //System.out.println("NIEZNANY");
 
-            if(trueGame && selectedFields.size()>0){
+            if(trueGame && selectedFields.size()>0 && dynamicLearning){
 
                 //DynamicLearningTask dynamicLearningTask = new DynamicLearningTask(game,0.3,10000,this.value, progressBar);
-                DynamicSymulation symulation = new DynamicSymulation(game, 0.3, 1000, this.value);
+                DynamicSymulation symulation = new DynamicSymulation(game, this.value);
 
                 FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/DynamicLearning.fxml"));
                 StackPane stackPane = null;

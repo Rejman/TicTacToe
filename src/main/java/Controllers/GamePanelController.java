@@ -7,9 +7,11 @@ import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
 import RL.DynamicLearning;
+import RL.DynamicSymulation;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -75,8 +77,18 @@ public class GamePanelController {
     private Label verdictLabel;
     @FXML
     private ProgressIndicator loadProgress;
+    private void setDynamicLearningSettings(){
+        double expRate =expRateSlider.getValue();
+        expRate = expRate/100;
+        int rounds = (int) roundsSlider.getValue();
+        rounds = rounds*100;
+
+        DynamicSymulation.expRate = expRate;
+        DynamicSymulation.rounds = rounds;
+    }
     @FXML
     void play(ActionEvent event) {
+        this.setDynamicLearningSettings();
         if(lastLoadedPolicy==null){
             loadPolicy();
             return;
@@ -281,10 +293,12 @@ public class GamePanelController {
         if(selected){
             dynamicLearningButton.setText("ON");
             dynamicSettingsGridPanel.setDisable(false);
+            Computer.dynamicLearning = true;
         }
         else{
             dynamicLearningButton.setText("OFF");
             dynamicSettingsGridPanel.setDisable(true);
+            Computer.dynamicLearning = false;
         }
     }
 }
