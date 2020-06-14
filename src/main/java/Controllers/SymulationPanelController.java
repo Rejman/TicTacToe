@@ -48,6 +48,7 @@ public class SymulationPanelController {
         double expRate = expRateSlider.getValue();
         int rounds = (int)roundsSlider.getValue();
         expRate = expRate/100;
+        rounds = rounds * 1000;
         baseSymulation = new BaseSymulation(Integer.parseInt(size), Integer.parseInt(number), expRate, rounds);
         System.out.println(expRate);
         State.degree = Integer.parseInt(size);
@@ -96,7 +97,7 @@ public class SymulationPanelController {
                                 Number old_val, Number new_val) {
                 //cappuccino.setOpacity(new_val.doubleValue());
                 roundsSlider.setValue(Math.round(new_val.doubleValue()));
-                roundsLabel.setText(""+(int)roundsSlider.getValue());
+                roundsLabel.setText(""+(int)roundsSlider.getValue()+" 000");
             }
         });
 
@@ -109,7 +110,7 @@ public class SymulationPanelController {
             }
         });
 
-        roundsSlider.setValue(10000);
+        roundsSlider.setValue(10);
         expRateSlider.setValue(30.0);
     }
 /*    public static void runSaveAlert(String filename, Policy policyCross, Policy policyCircle){
