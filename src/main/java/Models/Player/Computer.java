@@ -286,12 +286,14 @@ public class Computer extends Player {
             okColumn = canSbWin(column);
 
             boolean okFDiag = false;
-            boolean okGDiag = false;
-
             List fallingDiagonal = actualResultMatrix.findFallingDiagonal(field);
             if(fallingDiagonal.size()>=game.getFull()){
                 okFDiag = canSbWin(fallingDiagonal);
-                List growingDiagonal = actualResultMatrix.findGrowingDiagonal(field);
+            }
+
+            boolean okGDiag = false;
+            List growingDiagonal = actualResultMatrix.findGrowingDiagonal(field);
+            if(fallingDiagonal.size()>=game.getFull()){
                 okGDiag = canSbWin(growingDiagonal);
             }
             if(okColumn || okRow || okFDiag || okGDiag) selected.add(field);
