@@ -34,7 +34,12 @@ public abstract class GameBoard extends StackPane {
         this.verdictLabel = label;
         label.setText("");
     }
-
+    public void lock(){
+        gridPane.setDisable(true);
+    }
+    public void unlock(){
+        gridPane.setDisable(false);
+    }
     public GameBoard(Game game) {
         verdictLabel = new Label();
         this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));

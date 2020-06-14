@@ -254,8 +254,9 @@ public class Computer extends Player {
 
         game.addMove(action, this.value);
 
-
-
+        if(trueGame == true && game_board != null){
+            game_board.unlock();
+        }
         return action;
     }
 
