@@ -17,6 +17,7 @@ import java.io.IOException;
 public class SymulationPanelController {
 
 
+
     @FXML
     private Slider roundsSlider;
     @FXML

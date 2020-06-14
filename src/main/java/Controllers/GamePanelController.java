@@ -10,12 +10,15 @@ import RL.DynamicLearning;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -30,6 +33,22 @@ import static Models.Gui.GameType.*;
 
 public class GamePanelController {
 
+    @FXML
+    private GridPane dynamicSettingsGridPanel;
+    @FXML
+    private Slider roundsSlider;
+
+    @FXML
+    private Label roundsLabel;
+
+    @FXML
+    private Slider expRateSlider;
+
+    @FXML
+    private Label expRateLabel;
+
+    @FXML
+    private ToggleButton dynamicLearningButton;
     @FXML
     public ProgressBar dynamicProgressBar;
 
@@ -170,6 +189,7 @@ public class GamePanelController {
         borderStackPane.setMinHeight(GameBoard.SIZE);
         borderStackPane.setMinHeight(GameBoard.SIZE);
         listFilesForFolder(new File("policy"));
+        buildSliders();
 
 
     }
@@ -231,5 +251,40 @@ public class GamePanelController {
         primaryStage.setResizable(false);
         primaryStage.show();
 
+    }
+    private void buildSliders(){
+
+        roundsSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                //cappuccino.setOpacity(new_val.doubleValue());
+                roundsSlider.setValue(Math.round(new_val.doubleValue()));
+                roundsLabel.setText(""+(int)roundsSlider.getValue()+"00");
+            }
+        });
+
+        expRateSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                //cappuccino.setOpacity(new_val.doubleValue());
+                //roundsSlider.setValue(Math.round(new_val.doubleValue()));
+                expRateLabel.setText(String.format("%.2f", new_val)+ "%");
+            }
+        });
+
+        roundsSlider.setValue(10);
+        expRateSlider.setValue(30.0);
+    }
+    @FXML
+    void offOnDynamicLearning(ActionEvent event) {
+        boolean selected = dynamicLearningButton.isSelected();
+        if(selected){
+            dynamicLearningButton.setText("ON");
+            dynamicSettingsGridPanel.setDisable(false);
+        }
+        else{
+            dynamicLearningButton.setText("OFF");
+            dynamicSettingsGridPanel.setDisable(true);
+        }
     }
 }
