@@ -125,8 +125,13 @@ public class Computer extends Player {
 
         double value =0.0;
         nextMove = new Leaf("");
+        ArrayList<Integer> selectedFields;
+        if(trueGame){
+            selectedFields = this.selectMovements(true, true);
+        }else{
+            selectedFields = this.selectMovements(true, false);
+        }
 
-        ArrayList<Integer> selectedFields = this.selectMovements(false);
 
         int action = 0;
 
@@ -269,12 +274,13 @@ public class Computer extends Player {
             System.out.println(State.showAsBoards(states));;
         }
     }
-    private ArrayList<Integer> selectMovements(boolean on){
+    private ArrayList<Integer> selectMovements(boolean on, boolean showInfo){
         ArrayList<Integer> selected = new ArrayList<>();
         ResultMatrix actualResultMatrix = game.getResultMatrix();
         if(on == false){
             return game.getEmptyFields();
         }
+        if(showInfo)    System.out.println("HEADERS     "+"COLUMN"+"\t"+"ROW "+"\t"+"FDIAG"+"\t"+"GDIAG");
         for (Integer field:game.getEmptyFields()
              ) {
             boolean okRow = false;
@@ -293,11 +299,11 @@ public class Computer extends Player {
 
             boolean okGDiag = false;
             List growingDiagonal = actualResultMatrix.findGrowingDiagonal(field);
-            if(fallingDiagonal.size()>=game.getFull()){
+            if(growingDiagonal.size()>=game.getFull()){
                 okGDiag = canSbWin(growingDiagonal);
             }
             if(okColumn || okRow || okFDiag || okGDiag) selected.add(field);
-
+            if(showInfo)    System.out.println("Field: "+field+" -> "+okColumn+"\t"+okRow+"\t"+okFDiag+"\t"+okGDiag);
 
         }
 
