@@ -129,6 +129,11 @@ public class GamePanelController {
     }
     private void loadPolicy(){
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+
+        if(policyName == null){
+            lastLoadedPolicy = null;
+            return;
+        }
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
         if(sign==Sign.CROSS){
             sign=Sign.CIRCLE;
