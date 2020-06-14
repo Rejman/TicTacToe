@@ -286,23 +286,32 @@ public class Computer extends Player {
             boolean okRow = false;
             Sign[] row = actualResultMatrix.findRow(field);
             okRow = canSbWin(row);
+            if(okRow){
+                selected.add(field);
+            }
 
             boolean okColumn = false;
             Sign[] column = actualResultMatrix.findColumn(field);
             okColumn = canSbWin(column);
-
+            if(okColumn){
+                selected.add(field);
+            }
             boolean okFDiag = false;
             List fallingDiagonal = actualResultMatrix.findFallingDiagonal(field);
             if(fallingDiagonal.size()>=game.getFull()){
                 okFDiag = canSbWin(fallingDiagonal);
             }
-
+            if(okFDiag){
+                selected.add(field);
+            }
             boolean okGDiag = false;
             List growingDiagonal = actualResultMatrix.findGrowingDiagonal(field);
             if(growingDiagonal.size()>=game.getFull()){
                 okGDiag = canSbWin(growingDiagonal);
             }
-            if(okColumn || okRow || okFDiag || okGDiag) selected.add(field);
+            if(okGDiag){
+                selected.add(field);
+            }
             if(showInfo)    System.out.println("Field: "+field+" -> "+okColumn+"\t"+okRow+"\t"+okFDiag+"\t"+okGDiag);
 
         }
