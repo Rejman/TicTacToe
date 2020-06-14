@@ -131,7 +131,7 @@ public class Computer extends Player {
         }else{
             selectedFields = this.selectMovements(true, false);
         }
-
+        ArrayList<Integer> selectedFieldsNoDuplcates = removeDuplicates(selectedFields);
 
         int action = 0;
 
@@ -144,7 +144,7 @@ public class Computer extends Player {
             //if move is form policy
             double valueMax = Integer.MIN_VALUE;
 
-            for (Integer field:selectedFields
+            for (Integer field:selectedFieldsNoDuplcates
             ) {
                 ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
                 nextResultMatrix.add(field,this.value);
@@ -353,7 +353,26 @@ public class Computer extends Player {
         }
         return !(x>0 && o>0);
     }
+    public static <T> ArrayList<T> removeDuplicates(ArrayList<T> list)
+    {
 
+        // Create a new ArrayList
+        ArrayList<T> newList = new ArrayList<T>();
+
+        // Traverse through the first list
+        for (T element : list) {
+
+            // If this element is not present in newList
+            // then add it
+            if (!newList.contains(element)) {
+
+                newList.add(element);
+            }
+        }
+
+        // return the new list
+        return newList;
+    }
 
 
 }
