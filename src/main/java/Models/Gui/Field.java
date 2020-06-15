@@ -2,11 +2,14 @@ package Models.Gui;
 
 
 
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.Lighting;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 public class Field extends Canvas {
     private static double size = 100;
@@ -35,6 +38,17 @@ public class Field extends Canvas {
 
     public void clear(){
         graphicsContext.clearRect(0,0, size, size);
+    }
+    public void drawNumber(int number){
+
+        graphicsContext.setLineWidth(1);
+        graphicsContext.setTextAlign(TextAlignment.CENTER);
+        graphicsContext.setTextBaseline(VPos.CENTER);
+        graphicsContext.setFont(new Font("Arial",50));
+        graphicsContext.setStroke(Color.GRAY);
+        double y = size/2;
+        graphicsContext.strokeText(""+number,y,y);
+
     }
     public void drawCircle(Color color){
         graphicsContext.setLineWidth(bold);

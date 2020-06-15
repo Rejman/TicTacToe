@@ -41,6 +41,7 @@ public class HumanVsComputer extends GameBoard {
         }
     }
     protected void click(Field field) {
+
         lock();
         int numberOfField = allFields.indexOf(field);
 

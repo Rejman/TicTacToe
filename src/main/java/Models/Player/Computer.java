@@ -339,6 +339,8 @@ public class Computer extends Player {
                     line = "";
                 }
             }
+            if(game_board != null)  game_board.showRates(values);
+
         }
         return selected;
     }

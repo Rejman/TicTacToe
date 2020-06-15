@@ -1,6 +1,8 @@
 package Models.Gui;
 
 import Models.Game.Game;
+import Models.Game.Position;
+import Models.Game.ResultMatrix;
 import Models.Game.Sign;
 import RL.Policy.Tree.Leaf;
 import javafx.event.EventHandler;
@@ -13,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +80,34 @@ public abstract class GameBoard extends StackPane {
 
         });
     }
+    public void showRates(ArrayList<Integer> rates){
+        hideRates();
+        int id = 0;
+        for (Field field:allFields
+             ) {
+            field.drawNumber(rates.get(id));
+            id++;
+        }
+    }
+    public void hideRates(){
+        ResultMatrix resultMatrix = game.getResultMatrix();
+        int id =0;
+        for (Field field:allFields
+        ) {
+            field.clear();
+            Position pos = Position.convertToPositon(id,resultMatrix.getDegree());
+            Sign sign = resultMatrix.getValues()[pos.row][pos.column];
+            switch (sign){
+                case CIRCLE:
+                    field.drawCircle(Color.BLACK);
+                    break;
+                case CROSS:
+                    field.drawCircle(Color.WHITE);
+            }
+            id++;
 
+        }
+    }
     public static StackPane draw(int size, String boardHash, int sizeOfBoard){
         StackPane stackPane = new StackPane();
 
