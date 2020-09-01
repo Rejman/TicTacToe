@@ -151,6 +151,8 @@ public abstract class GameBoard extends StackPane {
 
     protected void addSignToField(Field field, Sign value) {
         Field.setSize(sizeOfField,45,30);
+        field.setDisable(true);
+        
         switch (value) {
             case CROSS:
                 field.drawCircle(Color.WHITE);

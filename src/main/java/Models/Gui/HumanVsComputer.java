@@ -5,6 +5,8 @@ import Models.Player.Computer;
 import Models.Player.Human;
 import javafx.scene.Cursor;
 
+import java.awt.event.MouseEvent;
+
 public class HumanVsComputer extends GameBoard {
 
     private Human human;
@@ -41,7 +43,7 @@ public class HumanVsComputer extends GameBoard {
         }
     }
     protected void click(Field field) {
-
+        //field.setDisable(true);
         lock();
         int numberOfField = allFields.indexOf(field);
 
