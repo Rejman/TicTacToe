@@ -77,6 +77,7 @@ public class HumanVsComputer extends GameBoard {
     }
 
     public void computerMove(){
+
         int id = computer.move(0, true);
         Field temp = (Field) gridPane.getChildren().get(id);
         addSignToField(temp, computer.getValue());

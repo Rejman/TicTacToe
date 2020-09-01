@@ -173,7 +173,7 @@ public class Computer extends Player {
         }
 
         //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
-        if(value==0.0 || lastMove.getChildren().size()<=2) {
+        if(value==0.0 || lastMove.getChildren().size()<=0) {
 
             //System.out.println("NIEZNANY");
 
