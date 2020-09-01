@@ -38,7 +38,7 @@
                         <Spinner fx:id="winningNumberOfSignsSpinner" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="Experience rate" />
                         <Label text="Rounds" GridPane.rowIndex="1" />
-                        <Slider fx:id="roundsSlider" majorTickUnit="1.0" max="1000000.0" min="1.0" minorTickCount="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Slider fx:id="roundsSlider" blockIncrement="1.0" majorTickUnit="1.0" max="500.0" min="1.0" minorTickCount="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="roundsLabel" text="0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Slider fx:id="expRateSlider" blockIncrement="1.0" majorTickUnit="1.0" min="1.0" minorTickCount="1" GridPane.columnIndex="1" />
                         <Label fx:id="expRateLabel" text="0" GridPane.columnIndex="2" />

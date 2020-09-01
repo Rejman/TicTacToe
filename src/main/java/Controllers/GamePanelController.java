@@ -7,15 +7,20 @@ import Models.Player.Computer;
 import Models.Player.Human;
 import IO.Serialize;
 import RL.DynamicLearning;
+import RL.DynamicSymulation;
 import RL.Policy.Policy;
 import RL.Policy.State;
 import RL.Policy.Tree.Leaf;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -30,6 +35,22 @@ import static Models.Gui.GameType.*;
 
 public class GamePanelController {
 
+    @FXML
+    private GridPane dynamicSettingsGridPanel;
+    @FXML
+    private Slider roundsSlider;
+
+    @FXML
+    private Label roundsLabel;
+
+    @FXML
+    private Slider expRateSlider;
+
+    @FXML
+    private Label expRateLabel;
+
+    @FXML
+    private ToggleButton dynamicLearningButton;
     @FXML
     public ProgressBar dynamicProgressBar;
 
@@ -56,8 +77,18 @@ public class GamePanelController {
     private Label verdictLabel;
     @FXML
     private ProgressIndicator loadProgress;
+    private void setDynamicLearningSettings(){
+        double expRate =expRateSlider.getValue();
+        expRate = expRate/100;
+        int rounds = (int) roundsSlider.getValue();
+        rounds = rounds*100;
+
+        DynamicSymulation.expRate = expRate;
+        DynamicSymulation.rounds = rounds;
+    }
     @FXML
     void play(ActionEvent event) {
+        this.setDynamicLearningSettings();
         if(lastLoadedPolicy==null){
             loadPolicy();
             return;
@@ -98,6 +129,11 @@ public class GamePanelController {
     }
     private void loadPolicy(){
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+
+        if(policyName == null){
+            lastLoadedPolicy = null;
+            return;
+        }
         Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
         if(sign==Sign.CROSS){
             sign=Sign.CIRCLE;
@@ -119,7 +155,6 @@ public class GamePanelController {
 
             @Override
             protected void succeeded() {
-                System.out.println("Koniec");
 
                 playButton.setDisable(false);
                 resetButton.setVisible(true);
@@ -170,6 +205,7 @@ public class GamePanelController {
         borderStackPane.setMinHeight(GameBoard.SIZE);
         borderStackPane.setMinHeight(GameBoard.SIZE);
         listFilesForFolder(new File("policy"));
+        buildSliders();
 
 
     }
@@ -231,5 +267,42 @@ public class GamePanelController {
         primaryStage.setResizable(false);
         primaryStage.show();
 
+    }
+    private void buildSliders(){
+
+        roundsSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                //cappuccino.setOpacity(new_val.doubleValue());
+                roundsSlider.setValue(Math.round(new_val.doubleValue()));
+                roundsLabel.setText(""+(int)roundsSlider.getValue()+"00");
+            }
+        });
+
+        expRateSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                //cappuccino.setOpacity(new_val.doubleValue());
+                //roundsSlider.setValue(Math.round(new_val.doubleValue()));
+                expRateLabel.setText(String.format("%.2f", new_val)+ "%");
+            }
+        });
+
+        roundsSlider.setValue(10);
+        expRateSlider.setValue(30.0);
+    }
+    @FXML
+    void offOnDynamicLearning(ActionEvent event) {
+        boolean selected = dynamicLearningButton.isSelected();
+        if(selected){
+            dynamicLearningButton.setText("ON");
+            dynamicSettingsGridPanel.setDisable(false);
+            Computer.dynamicLearning = true;
+        }
+        else{
+            dynamicLearningButton.setText("OFF");
+            dynamicSettingsGridPanel.setDisable(true);
+            Computer.dynamicLearning = false;
+        }
     }
 }

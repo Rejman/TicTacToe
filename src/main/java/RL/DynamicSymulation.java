@@ -11,12 +11,12 @@ import Tools.Stoper;
 public class DynamicSymulation extends Symulation {
 
     private Sign firstMove;
+    public static double expRate;
+    public static int rounds;
 
-    public DynamicSymulation(Game game, double expRate, int rounds, Sign firstMove) {
+    public DynamicSymulation(Game game, Sign firstMove) {
         this.stoper = new Stoper();
         this.game = game;
-        this.expRate = expRate;
-        this.rounds = rounds;
         this.firstMove = firstMove;
 
         Game newGame = new Game(this.game.getSize(),this.game.getFull());
