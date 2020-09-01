@@ -125,8 +125,13 @@ public class Computer extends Player {
 
         double value =0.0;
         nextMove = new Leaf("");
-
-        ArrayList<Integer> selectedFields = this.selectMovements(false);
+        ArrayList<Integer> selectedFields;
+        if(trueGame){
+            selectedFields = this.selectMovements(true, true);
+        }else{
+            selectedFields = this.selectMovements(true, false);
+        }
+        ArrayList<Integer> selectedFieldsNoDuplcates = removeDuplicates(selectedFields);
 
         int action = 0;
 
@@ -139,7 +144,7 @@ public class Computer extends Player {
             //if move is form policy
             double valueMax = Integer.MIN_VALUE;
 
-            for (Integer field:selectedFields
+            for (Integer field:selectedFieldsNoDuplcates
             ) {
                 ResultMatrix nextResultMatrix = game.getResultMatrix().clone();
                 nextResultMatrix.add(field,this.value);
@@ -168,7 +173,7 @@ public class Computer extends Player {
         }
 
         //gdy ruch ma wartość 0.0 (czyli gdy go nie rozpoznano w polityce)
-        if(value==0.0) {
+        if(value==0.0 || lastMove.getChildren().size()<=0) {
 
             //System.out.println("NIEZNANY");
 
@@ -248,7 +253,6 @@ public class Computer extends Player {
             action = nextMove.getState().indexOf(oppositeSign);
         }*/
 
-        if(trueGame) showMoves();
         lastMove = nextMove;
         this.moves.add(lastMove);
 
@@ -269,7 +273,12 @@ public class Computer extends Player {
             System.out.println(State.showAsBoards(states));;
         }
     }
-    private ArrayList<Integer> selectMovements(boolean on){
+    private ArrayList<Integer> selectMovements(boolean on, boolean showInfo){
+        ArrayList<Integer> values = new ArrayList<>();
+        for(int i=0;i<game.getNumberOfFields();i++){
+            values.add(i,0);
+        }
+
         ArrayList<Integer> selected = new ArrayList<>();
         ResultMatrix actualResultMatrix = game.getResultMatrix();
         if(on == false){
@@ -277,29 +286,103 @@ public class Computer extends Player {
         }
         for (Integer field:game.getEmptyFields()
              ) {
+            int old = values.get(field);
+
             boolean okRow = false;
             Sign[] row = actualResultMatrix.findRow(field);
-            okRow = canSbWin(row);
+            int rating = fieldEvaluation(row);
+            for(int i=0;i<rating;i++){
+                selected.add(field);
+            }
+            old+=rating;
+
 
             boolean okColumn = false;
             Sign[] column = actualResultMatrix.findColumn(field);
-            okColumn = canSbWin(column);
+            rating = fieldEvaluation(column);
+            for(int i=0;i<rating;i++){
+                selected.add(field);
+            }
+            old+=rating;
+
 
             boolean okFDiag = false;
-            boolean okGDiag = false;
-
             List fallingDiagonal = actualResultMatrix.findFallingDiagonal(field);
             if(fallingDiagonal.size()>=game.getFull()){
-                okFDiag = canSbWin(fallingDiagonal);
-                List growingDiagonal = actualResultMatrix.findGrowingDiagonal(field);
-                okGDiag = canSbWin(growingDiagonal);
-            }
-            if(okColumn || okRow || okFDiag || okGDiag) selected.add(field);
+                rating = fieldEvaluation(fallingDiagonal);
+                for(int i=0;i<rating;i++){
+                    selected.add(field);
+                }
+                old+=rating;
 
+            }
+            boolean okGDiag = false;
+            List growingDiagonal = actualResultMatrix.findGrowingDiagonal(field);
+            if(growingDiagonal.size()>=game.getFull()){
+                rating = fieldEvaluation(growingDiagonal);
+                for(int i=0;i<rating;i++){
+                    selected.add(field);
+                }
+                old+=rating;
+
+            }
+
+            System.out.println("rating: "+rating);
+            values.set(field,old);
+        }
+        if(showInfo){
+            String line = "";
+            for(int i=1;i<game.getNumberOfFields()+1;i++){
+                line = line+values.get(i-1)+'\t';
+                if(i%game.getSize()==0){
+                    System.out.println(line);
+                    line = "";
+                }
+            }
+            if(game_board != null)  game_board.showRates(values);
 
         }
-
         return selected;
+    }
+    private int fieldEvaluation(Sign[] line){
+        int x = 0;
+        int o = 0;
+        for (Sign sign:line
+        ) {
+            switch (sign){
+                case CIRCLE:
+                    x++;
+                    break;
+                case CROSS:
+                    o++;
+                    break;
+            }
+        }
+        if((x>1 && o==0)||(o>1 && x==0)) return 2;
+        if(x>0 && o>0) return 0;
+        else return 1;
+
+    }
+    private int fieldEvaluation(List line){
+        int x = 0;
+        int o = 0;
+        for (Object elem:line
+        ) {
+            Sign sign = (Sign) elem;
+            switch (sign){
+                case CIRCLE:
+                    x++;
+                    break;
+                case CROSS:
+                    o++;
+                    break;
+            }
+        }
+        System.out.println("x:"+x+" o:"+o);
+        if((x>1 && o==0)||(o>1 && x==0)) return 2;
+        if(x>0 && o>0) return 0;
+        else return 1;
+
     }
     private boolean canSbWin(Sign[] line){
 
@@ -336,7 +419,26 @@ public class Computer extends Player {
         }
         return !(x>0 && o>0);
     }
+    public static <T> ArrayList<T> removeDuplicates(ArrayList<T> list)
+    {
 
+        // Create a new ArrayList
+        ArrayList<T> newList = new ArrayList<T>();
+
+        // Traverse through the first list
+        for (T element : list) {
+
+            // If this element is not present in newList
+            // then add it
+            if (!newList.contains(element)) {
+
+                newList.add(element);
+            }
+        }
+
+        // return the new list
+        return newList;
+    }
 
 
 }
