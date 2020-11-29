@@ -268,7 +268,7 @@ public class Computer extends Player {
         System.out.println("Ruchy: "+lastMove.getChildren().size());
         for(int i=0;i<lastMove.getChildren().size();i++){
             Leaf l = lastMove.getChildren().get(i);
-            Set<String> states = State.allternatveState(l.getState());
+            Set<String> states = State.alternativeStates(l.getState());
             System.out.println("Ruch "+(i+1)+"________________________________"+l.getValue());
             System.out.println(State.showAsBoards(states));;
         }

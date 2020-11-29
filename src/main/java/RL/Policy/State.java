@@ -39,27 +39,15 @@ public abstract class State {
         }
         return newState;
     }
-    public static Set<String> allternatveState(String state){
-        Set<String> allState = new HashSet<>();
+    public static Set<String> alternativeStates(String state){
+        Set<String> allStates = new HashSet<>();
 
         for(int i=0;i<=3;i++){
-            allState.add(state);
-            allState.add(mirror(state));
+            allStates.add(state);
+            allStates.add(mirror(state));
             state = turnLeft(state);
         }
-        /*String[] array = new String[allState.size()];
-        allState.toArray(array);*/
-
-        return allState;
-    }
-    public static void showAsBoard(String state){
-        String[] rows = new String[degree];
-        String newState = new String();
-        int index = 0;
-        for(int i=0;i<degree*degree;i+=degree){
-            System.out.println(state.substring(i,i+degree));
-            index++;
-        }
+        return allStates;
     }
 
     public static String showAsBoards(Set<String> states){
@@ -79,20 +67,6 @@ public abstract class State {
             board+=line+"\n";
         }
         return board;
-    }
-
-    public static void main(String[] args) {
-
-        String state1 = "XO--------------";
-        Set<String> alters = allternatveState(state1);
-        for (String s:alters
-             ) {
-            showAsBoard(s);
-            System.out.println("__________");
-        }
-        String state2 = "----OX----------";
-        System.out.println(alters.contains(state2));
-        showAsBoard(state2);
     }
 
 }

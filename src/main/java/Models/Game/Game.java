@@ -4,46 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    //it defines how big is the game board
-    //also the bigest number of possible moves
+
     private int numberOfFields;
-    //it defines how many the same type of signs
-    //must be next to each other to win the game
     private int full;
-    //determines how many moves must be done before
-    //start issuing the verdict
-    private int numberOfMovesWitchoutVerdict;
-    //this is a number of column and rows
-    //width & height of game board
+    private int numberOfMovesWithoutVerdict;
     private int size;
-    //actual number of ended movements
     private int numberOfMove;
-    //last move field's number
     private int lastMove;
-    //variable keeps last verdict
     private Verdict verdict = Verdict.NOBODY;
-    //Square matrix with all player's movements
     private ResultMatrix resultMatrix;
-    //it keeps only empty fields (witch Sign.NONE)
-    //defines which movements can be used yet
     private ArrayList<Integer> emptyFields;
-
-
-    public int getNumberOfFields() {
-        return numberOfFields;
-    }
 
     public Game(int size, int full) {
 
         this.size = size;
         this.full = full;
-        this.numberOfMovesWitchoutVerdict = full*2-1;
+        this.numberOfMovesWithoutVerdict = full*2-1;
         this.numberOfFields = size*size;
         this.resultMatrix = new ResultMatrix(size);
         setEmptyFields();
 
     }
-
+    public int getNumberOfFields() {
+        return numberOfFields;
+    }
     public int getFull() {
         return full;
     }
@@ -108,7 +92,7 @@ public class Game {
             numberOfMove++;
             resultMatrix.add(field, sign);
             lastMove = field;
-            if(numberOfMove>=numberOfMovesWitchoutVerdict){
+            if(numberOfMove>=numberOfMovesWithoutVerdict){
                 this.verdict = setVerdict();
             }
         }
