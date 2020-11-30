@@ -327,7 +327,6 @@ public class Computer extends Player {
 
             }
 
-            System.out.println("rating: "+rating);
             values.set(field,old);
         }
         if(showInfo){
@@ -378,7 +377,6 @@ public class Computer extends Player {
                     break;
             }
         }
-        System.out.println("x:"+x+" o:"+o);
         if((x>1 && o==0)||(o>1 && x==0)) return 2;
         if(x>0 && o>0) return 0;
         else return 1;

@@ -84,6 +84,7 @@ public class BaseSymulation extends Symulation {
     @Override
     protected void succeeded() {
         System.out.println("Learning time: "+stoper.getTime()+" minutes");
+        System.out.println("Learning time: "+stoper.getSeconds()+" seconds");
         button.setDisable(false);
         if(autoSave.isSelected()) button.fire();
     }
