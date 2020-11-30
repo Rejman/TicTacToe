@@ -46,9 +46,9 @@ public class BaseSymulation extends Symulation {
 
         crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate,game.getSize(),game.getFull()));
         circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate,game.getSize(),game.getFull()));
-        Logger.add("\nnew symulation: ("+game.getSize()+"x"+game.getFull()+")");
-        Logger.add(rounds+" - rounds\n");
-        Logger.add(expRate+" - expRate\n");
+        Logger.add(game.getSize()+"x"+game.getFull()+" ");
+        Logger.add(expRate+" ");
+        Logger.add(rounds+" ");
 
         for (int i = 0; i < rounds; i++) {
             Verdict verdict;
@@ -85,7 +85,7 @@ public class BaseSymulation extends Symulation {
 
     @Override
     protected void succeeded() {
-        Logger.add(stoper.getTime()+" ("+(int)stoper.getSeconds()+") - learning time\n");
+        Logger.add(+stoper.getSeconds()+" ");
         System.out.println("Learning time: "+stoper.getTime()+" minutes");
         System.out.println("Learning time: "+stoper.getSeconds()+" seconds");
         button.setDisable(false);

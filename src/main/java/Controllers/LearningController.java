@@ -13,6 +13,8 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class LearningController {
@@ -63,7 +65,6 @@ public class LearningController {
 
             @Override
             protected void succeeded() {
-                Logger.add(filename+" - saved\n");
                 parent.close();
             }
         };
@@ -94,6 +95,8 @@ public class LearningController {
     }
     @FXML
     void initialize() {
-        fileNameTextField.setText(new Date().getTime()+"");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
+        LocalDateTime now = LocalDateTime.now();
+        fileNameTextField.setText(dtf.format(now));
     }
 }

@@ -59,9 +59,7 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        Logger.add("open aplication "+dtf.format(now)+"\n");
+
     }
 
     private void loadNewView(String name){
