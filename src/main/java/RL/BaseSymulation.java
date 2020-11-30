@@ -85,7 +85,7 @@ public class BaseSymulation extends Symulation {
 
     @Override
     protected void succeeded() {
-        Logger.add(+stoper.getSeconds()+" ");
+        Logger.add((int)stoper.getSeconds()+"\n");
         System.out.println("Learning time: "+stoper.getTime()+" minutes");
         System.out.println("Learning time: "+stoper.getSeconds()+" seconds");
         button.setDisable(false);
