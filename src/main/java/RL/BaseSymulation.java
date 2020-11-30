@@ -5,6 +5,7 @@ import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Player.Computer;
 import RL.Policy.Policy;
+import Tools.Logger;
 import Tools.Stoper;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -45,8 +46,9 @@ public class BaseSymulation extends Symulation {
 
         crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate,game.getSize(),game.getFull()));
         circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate,game.getSize(),game.getFull()));
-        System.out.println(rounds);
-
+        Logger.add("\nnew symulation:\n");
+        Logger.add(rounds+" - rounds\n");
+        Logger.add(expRate+" - expRate\n");
 
         for (int i = 0; i < rounds; i++) {
             Verdict verdict;
@@ -83,6 +85,7 @@ public class BaseSymulation extends Symulation {
 
     @Override
     protected void succeeded() {
+        Logger.add(stoper.getTime()+" ("+(int)stoper.getSeconds()+") - learning time\n");
         System.out.println("Learning time: "+stoper.getTime()+" minutes");
         System.out.println("Learning time: "+stoper.getSeconds()+" seconds");
         button.setDisable(false);

@@ -2,10 +2,13 @@ package Controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
 import RL.Policy.Policy;
+import Tools.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,6 +59,9 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        Logger.add("open aplication "+dtf.format(now)+"\n");
     }
 
     private void loadNewView(String name){

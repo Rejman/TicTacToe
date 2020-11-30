@@ -21,13 +21,5 @@ public class Stoper {
         return minutes + " min, "+seconds+" sec";
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        Stoper stoper = new Stoper();
-        stoper.start();
-        Thread.sleep(64000);
-        stoper.stop();
-        System.out.println(stoper.getTime());
-    }
-
 }
 

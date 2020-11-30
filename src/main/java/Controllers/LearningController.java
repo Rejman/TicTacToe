@@ -2,6 +2,7 @@ package Controllers;
 
 import IO.Serialize;
 import RL.BaseSymulation;
+import Tools.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -62,6 +63,7 @@ public class LearningController {
 
             @Override
             protected void succeeded() {
+                Logger.add(filename+" - saved\n");
                 parent.close();
             }
         };
