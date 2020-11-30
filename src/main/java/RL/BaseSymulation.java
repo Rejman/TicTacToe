@@ -46,7 +46,7 @@ public class BaseSymulation extends Symulation {
 
         crossPlayer.setPolicy(new Policy(Sign.CROSS, rounds, expRate,game.getSize(),game.getFull()));
         circlePlayer.setPolicy(new Policy(Sign.CIRCLE, rounds, expRate,game.getSize(),game.getFull()));
-        Logger.add("\nnew symulation:\n");
+        Logger.add("\nnew symulation: ("+game.getSize()+"x"+game.getFull()+")");
         Logger.add(rounds+" - rounds\n");
         Logger.add(expRate+" - expRate\n");
 
