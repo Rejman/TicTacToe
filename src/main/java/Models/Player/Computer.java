@@ -19,15 +19,21 @@ import java.io.IOException;
 import java.util.*;
 
 public class Computer extends Player {
-    //object that chooses random movement
+
     public HumanVsComputer game_board = null;
     private Random generator = new Random();
     private Policy policy;
     private Leaf lastMove;
     private Leaf nextMove;
     private ArrayList<Leaf> moves;
-
     public static boolean dynamicLearning = true;
+
+    public Computer(String name, Sign value, Game game) {
+        super(name, value, game);
+        policy = new Policy(this.value,0,0, game.getSize(), game.getFull());
+        moves = new ArrayList<>();
+        resetMoves();
+    }
 
     private ProgressBar progressBar;
 
@@ -53,20 +59,6 @@ public class Computer extends Player {
 
     public void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
-    }
-
-    /**
-     * @param name
-     * @param value
-     * @param game
-     */
-    public Computer(String name, Sign value, Game game) {
-        super(name, value, game);
-
-        policy = new Policy(this.value,0,0, game.getSize(), game.getFull());
-        //lastMove = policy.getTree();
-        moves = new ArrayList<>();
-        resetMoves();
     }
 
     public ArrayList<Leaf> getMoves() {
@@ -115,13 +107,6 @@ public class Computer extends Player {
         return move(exp_rate, false);
     }
     public int move(double exp_rate, boolean trueGame){
-/*        if(trueGame){
-            Policy newPolicy = DynamicLearning.train(game,0.3,10000,value);
-            System.out.println("POLITYKA: "+policy.getTree().getChildren());
-            this.setPolicy(newPolicy);
-
-        }*/
-
 
         double value =0.0;
         nextMove = new Leaf("");
