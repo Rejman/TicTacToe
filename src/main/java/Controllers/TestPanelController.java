@@ -50,7 +50,7 @@ public class TestPanelController {
         String size =  sizeOfGameBoardSpinner.getValue().toString();
         String number = winningNumberOfSignsSpinner.getValue().toString();
         String steps = stepsSpinner.getValue().toString();
-        System.out.println(steps);
+        System.out.println("steps: "+steps);
         double expRate = expRateSlider.getValue();
         int start = (int)startSlider.getValue();
 
@@ -93,7 +93,7 @@ public class TestPanelController {
     private void buildSpinners(){
         SpinnerValueFactory sizeSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
         SpinnerValueFactory numberSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
-        SpinnerValueFactory stepsSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50);
+        SpinnerValueFactory stepsSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99999999);
 
         sizeOfGameBoardSpinner.setValueFactory(sizeSVF);
         winningNumberOfSignsSpinner.setValueFactory(numberSVF);

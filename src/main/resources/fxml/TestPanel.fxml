@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.TestPanelController">
    <children>
       <VBox alignment="TOP_CENTER" spacing="5.0">
@@ -33,8 +32,8 @@
                <children>
                   <Label text="Size of game board" GridPane.rowIndex="3" />
                   <Label text="Winning number of signs" GridPane.rowIndex="4" />
-                  <Spinner fx:id="sizeOfGameBoardSpinner" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Spinner fx:id="winningNumberOfSignsSpinner" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Spinner fx:id="sizeOfGameBoardSpinner" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Spinner fx:id="winningNumberOfSignsSpinner" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <Button mnemonicParsing="false" onAction="#test" text="Start test" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                   <Label text="start" />
                   <Label text="steps" GridPane.rowIndex="1" />
@@ -43,7 +42,7 @@
                   <Label fx:id="expRateLabel" text="0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <Slider fx:id="startSlider" blockIncrement="1.0" majorTickUnit="1.0" min="1.0" minorTickCount="1" GridPane.columnIndex="1" />
                   <Label fx:id="startLabel" text="0" GridPane.columnIndex="2" />
-                  <Spinner fx:id="stepsSpinner" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Spinner fx:id="stepsSpinner" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
