@@ -53,7 +53,7 @@ public class MainController {
     @FXML
     void initialize() {
         stackPane.getChildren().clear();
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/GamePanel.fxml"));
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/TestPanel.fxml"));
         try {
             stackPane.getChildren().add((Node) loader.load());
         } catch (IOException e) {
