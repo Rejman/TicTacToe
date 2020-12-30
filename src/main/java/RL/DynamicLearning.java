@@ -12,17 +12,9 @@ public abstract class DynamicLearning {
         newGame.setGameStatus(oldGame.getResultMatrix());
 
         BaseSymulation baseSymulation = new BaseSymulation(newGame, expRate, rounds);
-        if(sign==Sign.CIRCLE){
-            //symulation.train(Sign.CIRCLE);
-        }else{
-            //symulation.train(Sign.CROSS);
-        }
-
 
         if(sign==Sign.CROSS) return baseSymulation.getFirstPlayerPolicy();
         else if(sign==Sign.CIRCLE) return baseSymulation.getSecondPlayerPolicy();
         else return null;
-
-
     }
 }

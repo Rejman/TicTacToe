@@ -177,6 +177,22 @@ public class Computer extends Player {
                 DynamicLearningController dynamicLearningController = loader.getController();
                 dynamicLearningController.setSymulation(symulation);
                 Scene scene = new Scene(stackPane);
+                //
+                try{
+                    Stage stage = new Stage();
+                }catch (IllegalStateException exception){
+                    System.out.println("TERAZ");
+                    action = randomMove(selectedFields);
+                    lastMove = nextMove;
+                    this.moves.add(lastMove);
+
+                    game.addMove(action, this.value);
+
+                    if(trueGame == true && game_board != null){
+                        game_board.unlock();
+                    }
+                    return action;
+                }
                 Stage stage = new Stage();
                 stage.setScene(scene);
                 stage.setTitle("Dynamic Learning");
@@ -323,7 +339,7 @@ public class Computer extends Player {
                     line = "";
                 }
             }
-            if(game_board != null)  game_board.showRates(values);
+            //if(game_board != null)  game_board.showRates(values);
 
         }
         return selected;
