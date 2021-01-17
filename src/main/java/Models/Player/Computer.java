@@ -297,7 +297,6 @@ public class Computer extends Player {
             }
             old+=rating;
 
-
             boolean okColumn = false;
             Sign[] column = actualResultMatrix.findColumn(field);
             rating = fieldEvaluation(column);
@@ -305,7 +304,6 @@ public class Computer extends Player {
                 selected.add(field);
             }
             old+=rating;
-
 
             boolean okFDiag = false;
             List fallingDiagonal = actualResultMatrix.findFallingDiagonal(field);
@@ -327,9 +325,9 @@ public class Computer extends Player {
                 old+=rating;
 
             }
-
             values.set(field,old);
         }
+        //if(game_board != null)  game_board.showRates(values);
         if(showInfo){
             String line = "";
             for(int i=1;i<game.getNumberOfFields()+1;i++){
