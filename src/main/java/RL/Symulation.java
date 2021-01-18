@@ -17,10 +17,10 @@ public abstract class Symulation extends Task<Void> {
     protected double expRate;
     protected int rounds;
 
-    //cross is always first
     public Computer crossPlayer;
     public Computer circlePlayer;
     protected Game game;
+
     @Override
     protected Void call() throws Exception {
         return null;

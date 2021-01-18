@@ -83,6 +83,9 @@ public class HumanVsComputer extends GameBoard {
         int id = computer.move(0, true);
         Field temp = (Field) gridPane.getChildren().get(id);
         addSignToField(temp, computer.getValue());
+
+
+
     }
 
     private void modifyVerdictLabel(){
