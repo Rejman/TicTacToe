@@ -42,7 +42,6 @@ public class SymulationPanelController {
     @FXML
     void train(ActionEvent event) throws IOException, InterruptedException {
 
-
         String size =  sizeOfGameBoardSpinner.getValue().toString();
         String number = winningNumberOfSignsSpinner.getValue().toString();
 

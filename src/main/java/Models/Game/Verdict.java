@@ -4,5 +4,5 @@ public enum Verdict {
     CROSS,
     CIRCLE,
     DRAW,
-    NOBODY,
+    NOBODY
 }

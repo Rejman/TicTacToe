@@ -81,6 +81,14 @@ public abstract class Serialize {
 
         return true;
     }
+    public static long getPolicySize(String name, Sign sign){
+        try {
+            return Files.size(Paths.get(pathToFile(name, sign)));
+        } catch (IOException e) {
+            System.out.println("no file "+name);
+        }
+        return -1;
+    }
     public static String pathToFile(String filename, Sign sign){
         String path = "policy/";
         return path+filename+"."+sign.toString();
