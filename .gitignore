@@ -37,3 +37,4 @@ launch4j.xml
 # Exceptions
 
 !*.jar
+!*policy.rar
