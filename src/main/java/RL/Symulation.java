@@ -39,7 +39,7 @@ public abstract class Symulation extends Task<Void> {
                 break;
             default:
                 setReward(0.1, crossPlayer);
-                setReward(0.5, circlePlayer);
+                setReward(0.8, circlePlayer);
                 break;
         }
 
