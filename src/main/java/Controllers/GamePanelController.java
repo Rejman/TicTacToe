@@ -71,7 +71,7 @@ public class GamePanelController {
     private ChoiceBox<String> policyChoiceBox;
 
     @FXML
-    private ChoiceBox<Sign> signChoiceBox;
+    private ChoiceBox<String> signChoiceBox;
 
     @FXML
     private Label verdictLabel;
@@ -97,21 +97,33 @@ public class GamePanelController {
 
         //int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
         //int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
+        System.out.println("TO jest polityka dla komutera: "+lastLoadedPolicy.getSign());
         int size = lastLoadedPolicy.getSize();
         int full = lastLoadedPolicy.getFull();
-        Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
+        String color = signChoiceBox.getSelectionModel().getSelectedItem();
+        Sign sign;
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
         boolean computerFirst;
-        if(sign==Sign.CROSS) computerFirst = false;
-        else computerFirst = true;
+        if(color.equals("WHITE")){
+            computerFirst = false;
+            sign = Sign.CROSS;
+        }
+        else{
+            computerFirst = true;
+            sign = Sign.CIRCLE;
+        }
 
         Game newGame = new Game(size, full);
 
         State.degree = size;
         Human human = new Human("You", sign, newGame);
         Computer computer;
-        if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
-        else computer = new Computer("computer", Sign.CIRCLE, newGame);
+        if(sign==Sign.CIRCLE){
+            computer = new Computer("computer", Sign.CROSS, newGame);
+        }
+        else{
+            computer = new Computer("computer", Sign.CIRCLE, newGame);
+        }
 
 
         computer.setPolicy(lastLoadedPolicy);
@@ -134,8 +146,10 @@ public class GamePanelController {
             lastLoadedPolicy = null;
             return;
         }
-        Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
-        if(sign==Sign.CROSS){
+        String color = signChoiceBox.getSelectionModel().getSelectedItem();
+        Sign sign;
+        //tu ma byc odwrotnie -> (CROSS) a sign = CIRCLE
+        if(color.equals("WHITE")){
             sign=Sign.CIRCLE;
         }else{
             sign=Sign.CROSS;
@@ -189,8 +203,10 @@ public class GamePanelController {
     }
 
     private void buildSignChoiceBox(){
-        signChoiceBox.getItems().add(Sign.CIRCLE);
-        signChoiceBox.getItems().add(Sign.CROSS);
+        /*signChoiceBox.getItems().add(Sign.CIRCLE);
+        signChoiceBox.getItems().add(Sign.CROSS);*/
+        signChoiceBox.getItems().add("BLACK");
+        signChoiceBox.getItems().add("WHITE");
         signChoiceBox.getSelectionModel().select(0);
     }
     @FXML
@@ -243,12 +259,12 @@ public class GamePanelController {
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
         Policy policy =null;
 
-        Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
-        switch (sign){
-            case CROSS:
+        String color = signChoiceBox.getSelectionModel().getSelectedItem();
+        switch (color){
+            case "WHITE":
                 policy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CROSS));
                 break;
-            case CIRCLE:
+            case "BLACK":
                 policy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CIRCLE));
                 break;
         }
