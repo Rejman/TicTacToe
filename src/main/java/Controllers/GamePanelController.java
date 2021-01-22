@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static Models.Gui.GameType.*;
 
@@ -90,7 +91,7 @@ public class GamePanelController {
     void play(ActionEvent event) {
         this.setDynamicLearningSettings();
         if(lastLoadedPolicy==null){
-            loadPolicy();
+            loadPolicy(resetButton, true);
             return;
         }
 
@@ -137,28 +138,39 @@ public class GamePanelController {
         gameBoard.setVerdictLabel(verdictLabel);
         borderStackPane.getChildren().clear();
         borderStackPane.getChildren().add(gameBoard);
-
+        loadProgress.setVisible(false);
     }
-    private void loadPolicy(){
+    private boolean loadPolicy(Button button, boolean reverse){
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
 
         if(policyName == null){
             lastLoadedPolicy = null;
-            return;
+            return false;
         }
+
         String color = signChoiceBox.getSelectionModel().getSelectedItem();
+        if(reverse){
+            switch (color){
+                case "WHITE":
+                    color="BLACK";
+                    break;
+                case "BLACK":
+                    color="WHITE";
+                    break;
+            }
+        }
         Sign sign;
-        //tu ma byc odwrotnie -> (CROSS) a sign = CIRCLE
         if(color.equals("WHITE")){
-            sign=Sign.CIRCLE;
-        }else{
             sign=Sign.CROSS;
+        }else{
+            sign=Sign.CIRCLE;
         }
         Sign finalSign = sign;
         Task<Void> load = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 playButton.setDisable(true);
+                infoButton.setDisable(true);
                 if(policyChoiceBox.getItems().isEmpty()){
                     lastLoadedPolicy = null;
                 }else{
@@ -171,8 +183,9 @@ public class GamePanelController {
             protected void succeeded() {
 
                 playButton.setDisable(false);
+                infoButton.setDisable(false);
                 resetButton.setVisible(true);
-                resetButton.fire();
+                button.fire();
             }
         };
 
@@ -181,7 +194,7 @@ public class GamePanelController {
         Thread thread = new Thread(load);
 
         thread.start();
-
+        return true;
     }
     @FXML
     private StackPane stackPane;
@@ -243,31 +256,36 @@ public class GamePanelController {
     }
     @FXML
     void deletePolicy(ActionEvent event) throws IOException {
-        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete");
+        //alert.setContentText("Are you ok with this?");
 
-        boolean deleted = Serialize.deletePolicy(policyName);
-        if(deleted==true){
-            buildPolicyChoiceBox();
+        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+        if(policyName!=null){
+            alert.setHeaderText("Do you want to delete \""+policyName+"\" policy?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+
+                boolean deleted = Serialize.deletePolicy(policyName);
+                if(deleted==true){
+                    buildPolicyChoiceBox();
+                }
+            }
         }
 
     }
 
 
-
+    @FXML
+    private Button infoButton;
     @FXML
     void infoPolicy(ActionEvent event) throws IOException {
-        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
-        Policy policy =null;
+        if(lastLoadedPolicy==null){
+            boolean isExist = loadPolicy(infoButton, false);
 
-        String color = signChoiceBox.getSelectionModel().getSelectedItem();
-        switch (color){
-            case "WHITE":
-                policy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CROSS));
-                break;
-            case "BLACK":
-                policy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CIRCLE));
-                break;
+            return;
         }
+
 
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/TreeViewPanel.fxml"));
         StackPane stackPane = loader.load();
@@ -277,11 +295,13 @@ public class GamePanelController {
         Stage primaryStage = new Stage();
         primaryStage.setScene(scene);
         treeViewPanelController.setStage(primaryStage);
-        treeViewPanelController.setPolicy(policy);
+        treeViewPanelController.setPolicy(lastLoadedPolicy);
 
-        primaryStage.setTitle(policyName+" - tree view");
+        //primaryStage.setTitle(policyName+" - tree view");
         primaryStage.setResizable(false);
         primaryStage.show();
+        lastLoadedPolicy = null;
+        loadProgress.setVisible(false);
 
     }
     private void buildSliders(){
