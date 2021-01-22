@@ -1,7 +1,7 @@
 # TicTacToe
 
 ### Pliki do pobrania:
-- [TicTacToe.exe](https://github.com/Rejman/TicTacToe/blob/master/TicTacToe.exe?raw=true) aplikacja (ostatnia akutalizacja: 19.01.2021)
+- [TicTacToe.exe](https://github.com/Rejman/TicTacToe/blob/master/TicTacToe.exe?raw=true) aplikacja (ostatnia akutalizacja: 22.01.2021)
 - [policy.rar](https://github.com/Rejman/TicTacToe/raw/master/policy%20expamles/policy.rar) przykładowe polityki gier
 
 ### Opis
