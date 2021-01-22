@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static Models.Gui.GameType.*;
 
@@ -71,7 +72,7 @@ public class GamePanelController {
     private ChoiceBox<String> policyChoiceBox;
 
     @FXML
-    private ChoiceBox<Sign> signChoiceBox;
+    private ChoiceBox<String> signChoiceBox;
 
     @FXML
     private Label verdictLabel;
@@ -90,28 +91,40 @@ public class GamePanelController {
     void play(ActionEvent event) {
         this.setDynamicLearningSettings();
         if(lastLoadedPolicy==null){
-            loadPolicy();
+            loadPolicy(resetButton, true);
             return;
         }
 
 
         //int size = sizeOfGameBoardSpinner.getValueFactory().getValue();
         //int full = winningNumberOfSignsSpinner.getValueFactory().getValue();
+        System.out.println("TO jest polityka dla komutera: "+lastLoadedPolicy.getSign());
         int size = lastLoadedPolicy.getSize();
         int full = lastLoadedPolicy.getFull();
-        Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
+        String color = signChoiceBox.getSelectionModel().getSelectedItem();
+        Sign sign;
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
         boolean computerFirst;
-        if(sign==Sign.CROSS) computerFirst = false;
-        else computerFirst = true;
+        if(color.equals("WHITE")){
+            computerFirst = false;
+            sign = Sign.CROSS;
+        }
+        else{
+            computerFirst = true;
+            sign = Sign.CIRCLE;
+        }
 
         Game newGame = new Game(size, full);
 
         State.degree = size;
         Human human = new Human("You", sign, newGame);
         Computer computer;
-        if(sign==Sign.CIRCLE) computer = new Computer("computer", Sign.CROSS, newGame);
-        else computer = new Computer("computer", Sign.CIRCLE, newGame);
+        if(sign==Sign.CIRCLE){
+            computer = new Computer("computer", Sign.CROSS, newGame);
+        }
+        else{
+            computer = new Computer("computer", Sign.CIRCLE, newGame);
+        }
 
 
         computer.setPolicy(lastLoadedPolicy);
@@ -125,26 +138,39 @@ public class GamePanelController {
         gameBoard.setVerdictLabel(verdictLabel);
         borderStackPane.getChildren().clear();
         borderStackPane.getChildren().add(gameBoard);
-
+        loadProgress.setVisible(false);
     }
-    private void loadPolicy(){
+    private boolean loadPolicy(Button button, boolean reverse){
         String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
 
         if(policyName == null){
             lastLoadedPolicy = null;
-            return;
+            return false;
         }
-        Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
-        if(sign==Sign.CROSS){
-            sign=Sign.CIRCLE;
-        }else{
+
+        String color = signChoiceBox.getSelectionModel().getSelectedItem();
+        if(reverse){
+            switch (color){
+                case "WHITE":
+                    color="BLACK";
+                    break;
+                case "BLACK":
+                    color="WHITE";
+                    break;
+            }
+        }
+        Sign sign;
+        if(color.equals("WHITE")){
             sign=Sign.CROSS;
+        }else{
+            sign=Sign.CIRCLE;
         }
         Sign finalSign = sign;
         Task<Void> load = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 playButton.setDisable(true);
+                infoButton.setDisable(true);
                 if(policyChoiceBox.getItems().isEmpty()){
                     lastLoadedPolicy = null;
                 }else{
@@ -157,8 +183,9 @@ public class GamePanelController {
             protected void succeeded() {
 
                 playButton.setDisable(false);
+                infoButton.setDisable(false);
                 resetButton.setVisible(true);
-                resetButton.fire();
+                button.fire();
             }
         };
 
@@ -167,7 +194,7 @@ public class GamePanelController {
         Thread thread = new Thread(load);
 
         thread.start();
-
+        return true;
     }
     @FXML
     private StackPane stackPane;
@@ -189,8 +216,10 @@ public class GamePanelController {
     }
 
     private void buildSignChoiceBox(){
-        signChoiceBox.getItems().add(Sign.CIRCLE);
-        signChoiceBox.getItems().add(Sign.CROSS);
+        /*signChoiceBox.getItems().add(Sign.CIRCLE);
+        signChoiceBox.getItems().add(Sign.CROSS);*/
+        signChoiceBox.getItems().add("BLACK");
+        signChoiceBox.getItems().add("WHITE");
         signChoiceBox.getSelectionModel().select(0);
     }
     @FXML
@@ -227,31 +256,36 @@ public class GamePanelController {
     }
     @FXML
     void deletePolicy(ActionEvent event) throws IOException {
-        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete");
+        //alert.setContentText("Are you ok with this?");
 
-        boolean deleted = Serialize.deletePolicy(policyName);
-        if(deleted==true){
-            buildPolicyChoiceBox();
+        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
+        if(policyName!=null){
+            alert.setHeaderText("Do you want to delete \""+policyName+"\" policy?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+
+                boolean deleted = Serialize.deletePolicy(policyName);
+                if(deleted==true){
+                    buildPolicyChoiceBox();
+                }
+            }
         }
 
     }
 
 
-
+    @FXML
+    private Button infoButton;
     @FXML
     void infoPolicy(ActionEvent event) throws IOException {
-        String policyName = policyChoiceBox.getSelectionModel().getSelectedItem();
-        Policy policy =null;
+        if(lastLoadedPolicy==null){
+            boolean isExist = loadPolicy(infoButton, false);
 
-        Sign sign = signChoiceBox.getSelectionModel().getSelectedItem();
-        switch (sign){
-            case CROSS:
-                policy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CROSS));
-                break;
-            case CIRCLE:
-                policy = Serialize.loadPolicy(Serialize.pathToFile(policyName, Sign.CIRCLE));
-                break;
+            return;
         }
+
 
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/TreeViewPanel.fxml"));
         StackPane stackPane = loader.load();
@@ -261,11 +295,13 @@ public class GamePanelController {
         Stage primaryStage = new Stage();
         primaryStage.setScene(scene);
         treeViewPanelController.setStage(primaryStage);
-        treeViewPanelController.setPolicy(policy);
+        treeViewPanelController.setPolicy(lastLoadedPolicy);
 
-        primaryStage.setTitle(policyName+" - tree view");
+        //primaryStage.setTitle(policyName+" - tree view");
         primaryStage.setResizable(false);
         primaryStage.show();
+        lastLoadedPolicy = null;
+        loadProgress.setVisible(false);
 
     }
     private void buildSliders(){

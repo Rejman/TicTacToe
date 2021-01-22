@@ -19,7 +19,7 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         mainController.setMainStage(primaryStage);
-        primaryStage.setTitle("Tic Tac Toe");
+        primaryStage.setTitle("Tic Tac Toe (Reinforcement Learning)");
         primaryStage.show();
     }
 }
