@@ -1,6 +1,7 @@
 package Controllers;
 
 
+import Models.Game.Sign;
 import Models.Game.Verdict;
 import Models.Gui.Field;
 import Models.Gui.GameBoard;
@@ -73,7 +74,16 @@ public class TreeViewPanelController {
         loadTree(root);
 
         history.add(root);
-        signLabel.setText(policy.getSign().toString());
+
+        switch (policy.getSign()){
+            case CIRCLE:
+                signLabel.setText("BLACK");
+                break;
+            case CROSS:
+                signLabel.setText("WHITE");
+                break;
+
+        }
         roundsLabel.setText(policy.getRounds()+"");
         expRateLabel.setText((int)(policy.getExpRate()*100)+" %");
 

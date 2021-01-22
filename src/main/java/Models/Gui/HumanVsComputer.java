@@ -98,11 +98,11 @@ public class HumanVsComputer extends GameBoard {
         if(verdict==Verdict.CIRCLE) sign = Sign.CIRCLE;
 
         if(human.getValue()==sign){
-            this.verdictLabel.setText(human.getName()+" WON");
+            this.verdictLabel.setText(human.getName()+" won");
 
         }
-        if(computer.getValue()==sign) this.verdictLabel.setText(computer.getName()+" WON");
-        if(verdict==Verdict.DRAW) this.verdictLabel.setText("DRAW");
+        if(computer.getValue()==sign) this.verdictLabel.setText(computer.getName()+" won");
+        if(verdict==Verdict.DRAW) this.verdictLabel.setText("draw");
 
 
     }
